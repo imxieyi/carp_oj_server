@@ -1,5 +1,6 @@
 package org.ai.carp.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.DigestUtils;
@@ -18,12 +19,37 @@ public class User {
     private static final String salt = "2RmlZNyLBTftD#bq#wFvB1kmyDk*V46V";
 
     @Id
-    public String id;
+    private String id;
 
-    public String username;
-    public String password;
+    private String username;
+    private String password;
 
-    public int type;
+    private int type;
+
+    public String getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public User() {}
 
