@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface CARPCaseRepository extends MongoRepository<CARPCase, String> {
 
+    CARPCase findCARPCaseById(String id);
     List<CARPCase> findCARPCasesByUser(User user);
     List<CARPCase> findCARPCasesByDataset(Dataset dataset);
 

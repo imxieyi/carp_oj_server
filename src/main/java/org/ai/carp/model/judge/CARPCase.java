@@ -1,21 +1,32 @@
 package org.ai.carp.model.judge;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.user.User;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 @Document(collection = "cases")
 public class CARPCase {
 
     // Status
     public static final int WAITING = 0;
-    public static final int RUNNING = 1;
-    public static final int FINISHED = 2;
+    public static final int QUEUED = 1;
+    public static final int RUNNING = 2;
+    public static final int FINISHED = 3;
 
     @Id
     private String id;
@@ -121,6 +132,57 @@ public class CARPCase {
 
     public int getExitcode() {
         return exitcode;
+    }
+
+    private String buildConfig() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("entry", "CARP_solver.py");
+        node.put("data", "data.dat");
+        node.put("parameters", "$data -t $time");
+        node.put("time", dataset.getTime());
+        node.put("memory", dataset.getMemory());
+        node.put("cpu", dataset.getCpu());
+        return mapper.writeValueAsString(node);
+    }
+
+    @JsonIgnore
+    public String getWorkerJson() throws IOException {
+        ByteArrayInputStream bais = new ByteArrayInputStream(archive.getData());
+        ZipInputStream zis = new ZipInputStream(bais);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(baos);
+        // Write config
+        ZipEntry config = new ZipEntry("config.json");
+        zos.putNextEntry(config);
+        zos.write(buildConfig().getBytes());
+        zos.closeEntry();
+        // Write data
+        ZipEntry data = new ZipEntry("data/data.dat");
+        zos.putNextEntry(data);
+        zos.write(dataset.getData().getBytes());
+        zos.closeEntry();
+        // Copy program
+        ZipEntry origin;
+        byte[] buffer = new byte[2048];
+        while ((origin = zis.getNextEntry()) != null) {
+            ZipEntry target = new ZipEntry("program/" + origin.getName());
+            zos.putNextEntry(target);
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                zos.write(buffer, 0, len);
+            }
+            zos.closeEntry();
+        }
+        zis.close();
+        zos.close();
+        // Encode to json
+        String encodedArchive = Base64.getEncoder().encodeToString(baos.toByteArray());
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode node = mapper.createObjectNode();
+        node.put("jid", id);
+        node.put("data", encodedArchive);
+        return mapper.writeValueAsString(node);
     }
 
     @Override
