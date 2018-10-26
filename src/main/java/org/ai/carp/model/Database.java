@@ -68,7 +68,13 @@ public class Database {
             users.insert(new User("test", User.getHash("123")));
         }
         User user = getUsers().findByUsername("test");
+        User nu = getUsers().findByUsername("gg");
+        if (nu != null) {
+            throw new RuntimeException("gg");
+        }
         logger.info(user.toString());
+        user.setPassword(User.getHash("234"));
+        getUsers().save(user);
         if (datasets.count() == 0) {
             datasets.insert(new Dataset("test", 30, 1024, 8, ""));
         }
