@@ -2,6 +2,7 @@ package org.ai.carp.controller.websocket;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ai.carp.controller.util.CARPUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.runner.JudgePool;
@@ -93,7 +94,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
                     carpCase.setStderr(rootNode.get("stderr").asText());
                     carpCase.setErrOverflow(rootNode.get("stderr_overflow").asBoolean());
                     carpCase.setExitcode(rootNode.get("exitcode").asInt());
-                    // TODO: Validate solution and calculate cost
+                    CARPUtils.checkResult(carpCase);
                     Database.getInstance().getCarpCases().save(carpCase);
                     JudgePool.getInstance().removeTask(uid, carpCase);
                     return;
