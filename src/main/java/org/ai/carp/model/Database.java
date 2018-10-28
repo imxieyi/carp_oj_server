@@ -22,7 +22,7 @@ public class Database {
 
     private static final Logger logger = LoggerFactory.getLogger(Database.class);
 
-    private static Database ourInstance = new Database();
+    private static Database ourInstance;
 
     public static Database getInstance() {
         return ourInstance;
@@ -60,12 +60,13 @@ public class Database {
     }
 
     private Database() {
+        ourInstance = this;
     }
 
     @PostConstruct
     public void testDB() {
         if (users.count() == 0) {
-            users.insert(new User("test", User.getHash("123")));
+            users.insert(new User("test", "123"));
         }
         User user = getUsers().findByUsername("test");
         User nu = getUsers().findByUsername("gg");
@@ -73,7 +74,7 @@ public class Database {
             throw new RuntimeException("gg");
         }
         logger.info(user.toString());
-        user.setPassword(User.getHash("234"));
+        user.setPassword("234");
         getUsers().save(user);
         if (datasets.count() == 0) {
             datasets.insert(new Dataset("test", 30, 1024, 8, ""));
