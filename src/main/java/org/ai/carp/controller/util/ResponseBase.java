@@ -1,11 +1,15 @@
-package org.ai.carp.controller;
+package org.ai.carp.controller.util;
 
-public abstract class ResponseBase {
+public class ResponseBase {
 
     private boolean ok;
     private String reason;
 
-    protected ResponseBase(boolean ok, String reason) {
+    public ResponseBase(String reason) {
+        this(false, reason);
+    }
+
+    public ResponseBase(boolean ok, String reason) {
         this.ok = ok;
         this.reason = reason;
     }

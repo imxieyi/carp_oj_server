@@ -1,6 +1,6 @@
 package org.ai.carp.controller.user;
 
-import org.ai.carp.controller.ResponseBase;
+import org.ai.carp.controller.util.ResponseBase;
 
 public class ChangeInfoResponse extends ResponseBase {
 

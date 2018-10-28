@@ -1,6 +1,6 @@
 package org.ai.carp.controller.login;
 
-import org.ai.carp.controller.ResponseBase;
+import org.ai.carp.controller.util.ResponseBase;
 
 class LoginResponse extends ResponseBase {
 

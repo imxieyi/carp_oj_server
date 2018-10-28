@@ -1,5 +1,6 @@
 package org.ai.carp.controller.login;
 
+import org.ai.carp.controller.util.ResponseBase;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
@@ -15,9 +16,9 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
     @GetMapping
-    public LoginResponse get(@RequestParam("user") String username,
-                             @RequestParam("pass") String password,
-                             HttpSession session) {
+    public ResponseBase get(@RequestParam("user") String username,
+                            @RequestParam("pass") String password,
+                            HttpSession session) {
         String current = (String) session.getAttribute("uid");
         if (current != null) {
             return new LoginResponse(true, "Already logged in!", current);

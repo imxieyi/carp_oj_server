@@ -1,33 +1,26 @@
 package org.ai.carp.controller.user;
 
-import org.ai.carp.controller.ResponseBase;
-import org.ai.carp.model.Database;
+import org.ai.carp.controller.util.ResponseBase;
+import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.user.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user/info")
 public class UserInfoController {
 
     @GetMapping
-    public UserInfoResponse get(HttpSession session) {
-        String uid = (String) session.getAttribute("uid");
-        if (uid == null) {
-            return new UserInfoResponse("Not logged in!");
+    public ResponseBase get(HttpSession session) {
+        Object opt = UserUtils.getUser(session, User.MAX);
+        if (opt instanceof ResponseBase) {
+            return (ResponseBase)opt;
         }
-        Optional<User> optionalUser = Database.getInstance().getUsers().findById(uid);
-        if (!optionalUser.isPresent()) {
-            // Session should be destroyed
-            session.invalidate();
-            return new UserInfoResponse("User does not exist!");
-        }
-        User user = optionalUser.get();
-        return new UserInfoResponse(true, "", uid, user.getUsername(), user.getType());
+        User user = (User)opt;
+        return new UserInfoResponse(true, "", user.getId(), user.getUsername(), user.getType());
     }
 
 }

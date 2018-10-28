@@ -12,9 +12,10 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     // Types
-    public static final int ADMIN = 0;
-    public static final int USER = 1;
-    public static final int WORKER = 2;
+    public static final int ADMIN = 100;
+    public static final int WORKER = 200;
+    public static final int USER = 300;
+    public static final int MAX = 1000; // Never use
 
     private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
