@@ -1,6 +1,6 @@
 package org.ai.carp.controller.login;
 
-import org.ai.carp.controller.util.ResponseBase;
+import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
@@ -16,25 +16,25 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
     @GetMapping
-    public ResponseBase get(@RequestParam("user") String username,
+    public LoginResponse get(@RequestParam("user") String username,
                             @RequestParam("pass") String password,
                             HttpSession session) {
         String current = (String) session.getAttribute("uid");
         if (current != null) {
-            return new LoginResponse(true, "Already logged in!", current);
+            return new LoginResponse(current);
         }
         if (StringUtils.isEmpty(username)) {
-            return new LoginResponse("No username!");
+            throw new InvalidRequestException("No username!");
         }
         if (StringUtils.isEmpty(password)) {
-            return new LoginResponse("No password!");
+            throw new InvalidRequestException("No password!");
         }
         User user = Database.getInstance().getUsers().findByUsername(username);
         if (user != null && user.passwordMatches(password)) {
             session.setAttribute("uid", user.getId());
-            return new LoginResponse(true, null, user.getId());
+            return new LoginResponse(user.getId());
         }
-        return new LoginResponse("Wrong username or password!");
+        throw new InvalidRequestException("Wrong username or password!");
     }
 
 }

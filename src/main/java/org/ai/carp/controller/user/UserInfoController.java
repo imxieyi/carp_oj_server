@@ -1,6 +1,5 @@
 package org.ai.carp.controller.user;
 
-import org.ai.carp.controller.util.ResponseBase;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.user.User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,29 +13,20 @@ import javax.servlet.http.HttpSession;
 public class UserInfoController {
 
     @GetMapping
-    public ResponseBase get(HttpSession session) {
-        Object opt = UserUtils.getUser(session, User.MAX);
-        if (opt instanceof ResponseBase) {
-            return (ResponseBase)opt;
-        }
-        User user = (User)opt;
-        return new UserInfoResponse(true, null, user.getId(), user.getUsername(), user.getType());
+    public UserInfoResponse get(HttpSession session) {
+        User user = UserUtils.getUser(session, User.MAX);
+        return new UserInfoResponse(user.getId(), user.getUsername(), user.getType());
     }
 
 }
 
-class UserInfoResponse extends ResponseBase {
+class UserInfoResponse {
 
     private String uid;
     private String username;
     private int type;
 
-    UserInfoResponse(String reason) {
-        this(false, reason, null, null, -1);
-    }
-
-    UserInfoResponse(boolean ok, String reason, String uid, String username, int type) {
-        super(ok, reason);
+    UserInfoResponse(String uid, String username, int type) {
         this.uid = uid;
         this.username = username;
         this.type = type;

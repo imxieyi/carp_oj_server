@@ -1,6 +1,6 @@
 package org.ai.carp.controller.user;
 
-import org.ai.carp.controller.util.ResponseBase;
+import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.user.User;
@@ -17,29 +17,25 @@ import javax.servlet.http.HttpSession;
 public class ChangePasswordController {
 
     @GetMapping
-    public ResponseBase get(@RequestParam("old") String oldP,
+    public ChangeInfoResponse get(@RequestParam("old") String oldP,
                             @RequestParam("new") String newP,
                             HttpSession session) {
         if (StringUtils.isEmpty(oldP)) {
-            return new ChangeInfoResponse("No old password!");
+            throw new InvalidRequestException("No old password!");
         }
         if (StringUtils.isEmpty(newP)) {
-            return new ChangeInfoResponse("No new password!");
+            throw new InvalidRequestException("No new password!");
         }
         if (newP.length() > 32) {
-            return new ChangeInfoResponse("Password too long!");
+            throw new InvalidRequestException("Password too long!");
         }
-        Object opt = UserUtils.getUser(session, User.MAX);
-        if (opt instanceof ResponseBase) {
-            return (ResponseBase) opt;
-        }
-        User user = (User) opt;
+        User user = UserUtils.getUser(session, User.MAX);
         if (!user.passwordMatches(oldP)) {
-            return new ChangeInfoResponse("Wrong old password!");
+            throw new InvalidRequestException("Wrong old password!");
         }
         user.setPassword(newP);
         Database.getInstance().getUsers().save(user);
-        return new ChangeInfoResponse(true, null);
+        return new ChangeInfoResponse();
     }
 
 }

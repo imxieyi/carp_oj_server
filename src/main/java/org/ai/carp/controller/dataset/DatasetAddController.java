@@ -1,6 +1,6 @@
 package org.ai.carp.controller.dataset;
 
-import org.ai.carp.controller.util.ResponseBase;
+import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.Dataset;
@@ -18,47 +18,39 @@ import javax.servlet.http.HttpSession;
 public class DatasetAddController {
 
     @PostMapping
-    public ResponseBase post(@RequestBody PostDataset dataset, HttpSession session) {
-        Object opt = UserUtils.getUser(session, User.ADMIN);
-        if (opt instanceof ResponseBase) {
-            return (ResponseBase)opt;
-        }
+    public DatasetAddResponse post(@RequestBody PostDataset dataset, HttpSession session) {
+        UserUtils.getUser(session, User.ADMIN);
         if (StringUtils.isEmpty(dataset.name)) {
-            return new DatasetAddResponse("No name specified!");
+            throw new InvalidRequestException("No name specified!");
         }
         if (Database.getInstance().getDatasets().findDatasetByName(dataset.name) != null) {
-            return new DatasetAddResponse("Dataset name already exists!");
+            throw new InvalidRequestException("Dataset name already exists!");
         }
         if (StringUtils.isEmpty(dataset.data)) {
-            return new DatasetAddResponse("No data!");
+            throw new InvalidRequestException("No data!");
         }
         if (dataset.cpu <= 0) {
-            return new DatasetAddResponse("No cpu!");
+            throw new InvalidRequestException("No cpu!");
         }
         if (dataset.memory <= 0) {
-            return new DatasetAddResponse("No memory!");
+            throw new InvalidRequestException("No memory!");
         }
         if (dataset.time <= 0) {
-            return new DatasetAddResponse("No time!");
+            throw new InvalidRequestException("No time!");
         }
         Dataset inserted = Database.getInstance().getDatasets().insert(
                 new Dataset(dataset.name, dataset.time, dataset.memory, dataset.cpu, dataset.data)
         );
-        return new DatasetAddResponse(true, null, inserted.getId());
+        return new DatasetAddResponse(inserted.getId());
     }
 
 }
 
-class DatasetAddResponse extends ResponseBase {
+class DatasetAddResponse {
 
     private String id;
 
-    public DatasetAddResponse(String reason) {
-        this(false, reason, null);
-    }
-
-    public DatasetAddResponse(boolean ok, String reason, String id) {
-        super(ok, reason);
+    public DatasetAddResponse(String id) {
         this.id = id;
     }
 
