@@ -1,0 +1,38 @@
+package org.ai.carp.controller.judge;
+
+import org.ai.carp.controller.exceptions.InvalidRequestException;
+import org.ai.carp.controller.util.UserUtils;
+import org.ai.carp.model.Database;
+import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.user.User;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/judge/top")
+public class QueryTopController {
+
+    @GetMapping
+    public QueryTopResult get(@RequestParam("dataset") String did, HttpSession session) {
+        UserUtils.getUser(session, User.USER);
+        if (StringUtils.isEmpty(did)) {
+            throw new InvalidRequestException("No dataset id!");
+        }
+        Optional<Dataset> dataset = Database.getInstance().getDatasets().findById(did);
+        if (!dataset.isPresent()) {
+            throw new InvalidRequestException("Invalid dataset!");
+        }
+        List<CARPCase> allCarpCases = Database.getInstance().getCarpCases()
+                .findCARPCasesByDatasetAndStatusAndValidOrderByCostAsc(dataset.get(), CARPCase.FINISHED, true);
+        return new QueryTopResult(allCarpCases);
+    }
+
+}

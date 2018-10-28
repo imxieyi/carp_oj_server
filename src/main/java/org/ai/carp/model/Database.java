@@ -86,11 +86,11 @@ public class Database {
         if (carpCases.count() == 0) {
             carpCases.insert(new CARPCase(user, dataset, new Binary("test".getBytes())));
         }
-        List<CARPCase> cases = getCarpCases().findCARPCasesByUser(user);
+        List<CARPCase> cases = getCarpCases().findCARPCasesByUserOrderBySubmitTimeDesc(user);
         for (CARPCase c : cases) {
             logger.info(c.toString());
         }
-        cases = getCarpCases().findCARPCasesByDataset(dataset);
+        cases = getCarpCases().findCARPCasesByDatasetOrderBySubmitTimeDesc(dataset);
         ObjectMapper mapper = new ObjectMapper();
         for (CARPCase c : cases) {
             logger.info(c.toString());

@@ -119,12 +119,22 @@ public class CARPCase {
         return id;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }
 
+    public String getUserName() {
+        return user.getUsername();
+    }
+
+    @JsonIgnore
     public Dataset getDataset() {
         return dataset;
+    }
+
+    public String getDatasetName() {
+        return dataset.getName();
     }
 
     @JsonIgnore
