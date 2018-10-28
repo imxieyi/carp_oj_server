@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.ai.carp.controller.websocket.WebsocketHandler;
 import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.user.User;
 import org.bson.types.Binary;
@@ -49,10 +50,13 @@ public class CARPCase {
     // Result
     private boolean timedout;
     private String stdout;
+    private boolean outOverflow;
     private String stderr;
+    private boolean errOverflow;
     private double time;
     private int exitcode;
     private String path;
+    private boolean valid;
     private int cost;
 
     public CARPCase(User user, Dataset dataset, Binary archive) {
@@ -83,6 +87,14 @@ public class CARPCase {
         this.stderr = stderr;
     }
 
+    public void setOutOverflow(boolean outOverflow) {
+        this.outOverflow = outOverflow;
+    }
+
+    public void setErrOverflow(boolean errOverflow) {
+        this.errOverflow = errOverflow;
+    }
+
     public void setTime(double time) {
         this.time = time;
     }
@@ -93,6 +105,10 @@ public class CARPCase {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 
     public void setCost(int cost) {
@@ -137,9 +153,17 @@ public class CARPCase {
         return stdout;
     }
 
+    public boolean isOutOverflow() {
+        return outOverflow;
+    }
+
     @JsonIgnore
     public String getStderr() {
         return stderr;
+    }
+
+    public boolean isErrOverflow() {
+        return errOverflow;
     }
 
     public double getTime() {
@@ -152,6 +176,10 @@ public class CARPCase {
 
     public String getPath() {
         return path;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 
     public int getCost() {
@@ -203,10 +231,13 @@ public class CARPCase {
         // Encode to json
         String encodedArchive = Base64.getEncoder().encodeToString(baos.toByteArray());
         ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
-        node.put("jid", id);
-        node.put("data", encodedArchive);
-        return mapper.writeValueAsString(node);
+        ObjectNode dataNode = mapper.createObjectNode();
+        dataNode.put("jid", id);
+        dataNode.put("data", encodedArchive);
+        ObjectNode rootNode = mapper.createObjectNode();
+        rootNode.put("type", WebsocketHandler.CASE_DATA);
+        rootNode.put("payload", dataNode);
+        return mapper.writeValueAsString(rootNode);
     }
 
     @Override

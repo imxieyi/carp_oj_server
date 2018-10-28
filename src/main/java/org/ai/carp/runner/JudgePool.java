@@ -62,7 +62,7 @@ public class JudgePool {
                     worker.getValue().session.sendMessage(new TextMessage(data));
                     CARPCase carpCase = Database.getInstance().getCarpCases().findCARPCaseById(jid);
                     carpCase.setStatus(CARPCase.QUEUED);
-                    Database.getInstance().getCarpCases().save(carpCase);
+                    carpCase = Database.getInstance().getCarpCases().save(carpCase);
                     worker.getValue().jobs.add(carpCase);
                     return worker.getKey();
                 } catch (IOException e) {

@@ -16,9 +16,9 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
     @GetMapping
-    public LoginResponse get(@RequestParam("user") String username,
-                            @RequestParam("pass") String password,
-                            HttpSession session) {
+    public LoginResponse get(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             HttpSession session) {
         String current = (String) session.getAttribute("uid");
         if (current != null) {
             throw new InvalidRequestException("Already logged in!");

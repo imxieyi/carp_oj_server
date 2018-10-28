@@ -2,6 +2,8 @@ package org.ai.carp.controller.websocket;
 
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.user.User;
+import org.ai.carp.runner.JudgePool;
+import org.ai.carp.runner.JudgeWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.ServerHttpRequest;
@@ -26,7 +28,13 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
                 try {
                     User user = UserUtils.getUser(httpSession, User.WORKER);
                     if (user.getType() == User.WORKER) {
+                        JudgeWorker worker = JudgePool.getInstance().getWorker(user.getId());
+                        if (worker != null) {
+                            // Already logged in
+                            return false;
+                        }
                         // Accept connection
+                        attributes.put("uid", user.getId());
                         return super.beforeHandshake(request, response, wsHandler, attributes);
                     }
                 } catch (Exception ignored) {
