@@ -8,6 +8,7 @@ import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.user.User;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.ByteArrayInputStream;
@@ -31,9 +32,11 @@ public class CARPCase {
     @Id
     private String id;
 
+    @DBRef
     private User user;
 
     // Submission
+    @DBRef
     private Dataset dataset;
     private Binary archive;
     private int status;
@@ -46,6 +49,8 @@ public class CARPCase {
     private String stderr;
     private double time;
     private int exitcode;
+    private String path;
+    private int cost;
 
     public CARPCase(User user, Dataset dataset, Binary archive) {
         this.user = user;
@@ -81,6 +86,14 @@ public class CARPCase {
 
     public void setExitcode(int exitcode) {
         this.exitcode = exitcode;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
     }
 
     public String getId() {
@@ -132,6 +145,14 @@ public class CARPCase {
 
     public int getExitcode() {
         return exitcode;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public int getCost() {
+        return cost;
     }
 
     private String buildConfig() throws JsonProcessingException {
@@ -187,7 +208,7 @@ public class CARPCase {
 
     @Override
     public String toString() {
-        return String.format("CARPCase[id=%s, user=%s, dataset=%s, status=%d]",
-                id, user.getUsername(), dataset.getName(), status);
+        return String.format("CARPCase[id=%s, user=%s, dataset=%s, status=%d, cost=%d]",
+                id, user.getUsername(), dataset.getName(), status, cost);
     }
 }

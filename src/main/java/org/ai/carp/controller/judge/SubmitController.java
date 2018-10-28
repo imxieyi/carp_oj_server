@@ -1,0 +1,60 @@
+package org.ai.carp.controller.judge;
+
+import org.ai.carp.controller.exceptions.InvalidRequestException;
+import org.ai.carp.controller.util.ArchiveUtils;
+import org.ai.carp.controller.util.UserUtils;
+import org.ai.carp.model.Database;
+import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.user.User;
+import org.bson.types.Binary;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/api/judge/submit")
+public class SubmitController {
+
+    @PostMapping
+    public SubmitResponse post(@RequestBody PostCase postCase, HttpSession session) {
+        User user = UserUtils.getUser(session, User.USER);
+        if (StringUtils.isEmpty(postCase.dataset)) {
+            throw new InvalidRequestException("No dataset!");
+        }
+        if (StringUtils.isEmpty(postCase.data)) {
+            throw new InvalidRequestException("No data!");
+        }
+        Optional<Dataset> dataset = Database.getInstance().getDatasets().findById(postCase.dataset);
+        if (!dataset.isPresent()) {
+            throw new InvalidRequestException("Invalid dataset!");
+        }
+        Binary archive = ArchiveUtils.convertSubmission(postCase.data);
+        CARPCase carpCase = Database.getInstance().getCarpCases().insert(new CARPCase(user, dataset.get(), archive));
+        return new SubmitResponse(carpCase.getId());
+    }
+
+}
+
+class SubmitResponse {
+
+    private String jid;
+
+    public SubmitResponse(String jid) {
+        this.jid = jid;
+    }
+
+    public String getJid() {
+        return jid;
+    }
+}
+
+class PostCase {
+    public String dataset;
+    public String data;
+}
