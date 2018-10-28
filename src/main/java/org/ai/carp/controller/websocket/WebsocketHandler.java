@@ -95,7 +95,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
                     carpCase.setExitcode(rootNode.get("exitcode").asInt());
                     // TODO: Validate solution and calculate cost
                     Database.getInstance().getCarpCases().save(carpCase);
-                    worker.jobs.remove(carpCase);
+                    JudgePool.getInstance().removeTask(uid, carpCase);
                     return;
                 }
             }

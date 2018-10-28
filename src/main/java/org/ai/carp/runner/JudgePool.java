@@ -46,13 +46,8 @@ public class JudgePool {
 
     public synchronized void removeTask(String wid, CARPCase carpCase) {
         JudgeWorker worker = workers.get(wid);
-        for (CARPCase c : worker.jobs) {
-            if (c.getId().equals(carpCase.getId())) {
-                worker.jobs.remove(c);
-                notifyAll();
-                return;
-            }
-        }
+        worker.jobs.remove(carpCase);
+        notifyAll();
     }
 
     public synchronized String dispatchJob(String jid, String data) {

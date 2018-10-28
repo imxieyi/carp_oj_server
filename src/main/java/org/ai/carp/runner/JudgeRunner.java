@@ -29,7 +29,7 @@ public class JudgeRunner implements Runnable {
                         synchronized (JudgePool.getInstance()) {
                             while (worker == null) {
                                 logger.info("No worker available for judging");
-                                JudgePool.getInstance().wait();
+                                JudgePool.getInstance().wait(10000);
                                 worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
                             }
                         }
