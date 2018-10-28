@@ -1,25 +1,15 @@
 package org.ai.carp.controller.user;
 
-public class ChangeInfoResponse {
+import org.ai.carp.controller.ResponseBase;
 
-    private boolean ok;
-    private String reason;
+public class ChangeInfoResponse extends ResponseBase {
 
-    ChangeInfoResponse(String reason) {
+    public ChangeInfoResponse(String reason) {
         this(false, reason);
     }
 
-    ChangeInfoResponse(boolean ok, String reason) {
-        this.ok = ok;
-        this.reason = reason;
-    }
-
-    public boolean isOk() {
-        return ok;
-    }
-
-    public String getReason() {
-        return reason;
+    public ChangeInfoResponse(boolean ok, String reason) {
+        super(ok, reason);
     }
 
 }

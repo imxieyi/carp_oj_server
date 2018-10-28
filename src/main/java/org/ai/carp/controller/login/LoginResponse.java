@@ -1,9 +1,9 @@
 package org.ai.carp.controller.login;
 
-class LoginResponse {
+import org.ai.carp.controller.ResponseBase;
 
-    private boolean ok;
-    private String reason;
+class LoginResponse extends ResponseBase {
+
     private String uid;
 
     LoginResponse(String reason) {
@@ -11,17 +11,8 @@ class LoginResponse {
     }
 
     LoginResponse(boolean ok, String reason, String uid) {
-        this.ok = ok;
-        this.reason = reason;
+        super(ok, reason);
         this.uid = uid;
-    }
-
-    public boolean isOk() {
-        return ok;
-    }
-
-    public String getReason() {
-        return reason;
     }
 
     public String getUid() {

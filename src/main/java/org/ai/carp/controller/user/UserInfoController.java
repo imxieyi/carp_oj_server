@@ -1,5 +1,6 @@
 package org.ai.carp.controller.user;
 
+import org.ai.carp.controller.ResponseBase;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.user.User;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +32,8 @@ public class UserInfoController {
 
 }
 
-class UserInfoResponse {
+class UserInfoResponse extends ResponseBase {
 
-    private boolean ok;
-    private String reason;
     private String uid;
     private String username;
     private int type;
@@ -44,19 +43,10 @@ class UserInfoResponse {
     }
 
     UserInfoResponse(boolean ok, String reason, String uid, String username, int type) {
-        this.ok = ok;
-        this.reason = reason;
+        super(ok, reason);
         this.uid = uid;
         this.username = username;
         this.type = type;
-    }
-
-    public boolean isOk() {
-        return ok;
-    }
-
-    public String getReason() {
-        return reason;
     }
 
     public String getUid() {
