@@ -1,4 +1,4 @@
-package org.ai.carp.controller;
+package org.ai.carp.controller.websocket;
 
 import org.ai.carp.runner.JudgeRunner;
 import org.slf4j.Logger;

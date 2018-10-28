@@ -68,6 +68,7 @@ public class Database {
         if (users.count() == 0) {
             users.insert(new User("test", "123"));
             users.insert(new User("root", "123", User.ROOT));
+            users.insert(new User("judge", "123", User.WORKER));
         }
         User user = getUsers().findByUsername("test");
         User nu = getUsers().findByUsername("gg");
