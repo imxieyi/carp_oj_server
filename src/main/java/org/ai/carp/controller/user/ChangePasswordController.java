@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 public class ChangePasswordController {
 
     @GetMapping
-    public ChangeInfoResponse get(@RequestParam("old") String oldP,
+    public ChangePasswordResponse get(@RequestParam("old") String oldP,
                             @RequestParam("new") String newP,
                             HttpSession session) {
         if (StringUtils.isEmpty(oldP)) {
@@ -35,7 +35,10 @@ public class ChangePasswordController {
         }
         user.setPassword(newP);
         Database.getInstance().getUsers().save(user);
-        return new ChangeInfoResponse();
+        return new ChangePasswordResponse();
     }
 
+}
+
+class ChangePasswordResponse {
 }

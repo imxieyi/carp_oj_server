@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     // Types
+    public static final int ROOT = 0;
     public static final int ADMIN = 100;
     public static final int WORKER = 200;
     public static final int USER = 300;
@@ -25,7 +26,6 @@ public class User {
     @Indexed(unique = true)
     private String username;
     private String password;
-
     private int type;
 
     public String getId() {

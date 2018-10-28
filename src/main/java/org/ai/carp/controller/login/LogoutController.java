@@ -12,13 +12,26 @@ import javax.servlet.http.HttpSession;
 public class LogoutController {
 
     @GetMapping
-    public LoginResponse get(HttpSession session) {
+    public LogoutResponse get(HttpSession session) {
         String uid = (String) session.getAttribute("uid");
         if (uid == null) {
             throw new InvalidRequestException("Not logged in!");
         }
         session.invalidate();
-        return new LoginResponse(uid);
+        return new LogoutResponse(uid);
     }
 
+}
+
+class LogoutResponse {
+
+    private String uid;
+
+    LogoutResponse(String uid) {
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return uid;
+    }
 }

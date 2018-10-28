@@ -21,7 +21,7 @@ public class LoginController {
                             HttpSession session) {
         String current = (String) session.getAttribute("uid");
         if (current != null) {
-            return new LoginResponse(current);
+            throw new InvalidRequestException("Already logged in!");
         }
         if (StringUtils.isEmpty(username)) {
             throw new InvalidRequestException("No username!");
@@ -32,10 +32,28 @@ public class LoginController {
         User user = Database.getInstance().getUsers().findByUsername(username);
         if (user != null && user.passwordMatches(password)) {
             session.setAttribute("uid", user.getId());
-            return new LoginResponse(user.getId());
+            return new LoginResponse(user.getId(), user.getType());
         }
         throw new InvalidRequestException("Wrong username or password!");
     }
 
 }
 
+class LoginResponse {
+
+    private String uid;
+    private int type;
+
+    LoginResponse(String uid, int type) {
+        this.uid = uid;
+        this.type = type;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public int getType() {
+        return type;
+    }
+}
