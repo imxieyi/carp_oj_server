@@ -18,7 +18,7 @@ public class LogoutController {
             return new LoginResponse("Not logged in!");
         }
         session.invalidate();
-        return new LoginResponse(true, "", uid);
+        return new LoginResponse(true, null, uid);
     }
 
 }

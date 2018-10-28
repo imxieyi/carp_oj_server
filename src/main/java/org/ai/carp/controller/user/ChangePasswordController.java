@@ -39,7 +39,7 @@ public class ChangePasswordController {
         }
         user.setPassword(newP);
         Database.getInstance().getUsers().save(user);
-        return new ChangeInfoResponse(true, "");
+        return new ChangeInfoResponse(true, null);
     }
 
 }

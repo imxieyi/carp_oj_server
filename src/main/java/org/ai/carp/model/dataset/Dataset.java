@@ -2,6 +2,7 @@ package org.ai.carp.model.dataset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "datasets")
@@ -10,10 +11,12 @@ public class Dataset {
     @Id
     private String id;
 
+    @Indexed(unique = true)
     private String name;
     private int time;
     private int memory;
     private int cpu;
+    private String data;
 
     public String getId() {
         return id;
@@ -40,7 +43,8 @@ public class Dataset {
         return data;
     }
 
-    private String data;
+    private Dataset() {
+    }
 
     public Dataset(String name, int time, int memory, int cpu, String data) {
         this.name = name;

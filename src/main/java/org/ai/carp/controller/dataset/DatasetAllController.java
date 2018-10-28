@@ -36,7 +36,7 @@ class DatasetAllResponse extends ResponseBase {
     }
 
     public DatasetAllResponse(List<Dataset> datasets) {
-        this(true, "", datasets);
+        this(true, null, datasets);
     }
 
     public DatasetAllResponse(boolean ok, String reason, List<Dataset> datasets) {

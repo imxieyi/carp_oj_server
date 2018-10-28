@@ -32,7 +32,7 @@ public class LoginController {
         User user = Database.getInstance().getUsers().findByUsername(username);
         if (user != null && user.passwordMatches(password)) {
             session.setAttribute("uid", user.getId());
-            return new LoginResponse(true, "", user.getId());
+            return new LoginResponse(true, null, user.getId());
         }
         return new LoginResponse("Wrong username or password!");
     }

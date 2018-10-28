@@ -7,7 +7,7 @@ class LoginResponse extends ResponseBase {
     private String uid;
 
     LoginResponse(String reason) {
-        this(false, reason, "");
+        this(false, reason, null);
     }
 
     LoginResponse(boolean ok, String reason, String uid) {

@@ -20,7 +20,7 @@ public class UserInfoController {
             return (ResponseBase)opt;
         }
         User user = (User)opt;
-        return new UserInfoResponse(true, "", user.getId(), user.getUsername(), user.getType());
+        return new UserInfoResponse(true, null, user.getId(), user.getUsername(), user.getType());
     }
 
 }
@@ -32,7 +32,7 @@ class UserInfoResponse extends ResponseBase {
     private int type;
 
     UserInfoResponse(String reason) {
-        this(false, reason, "", "", -1);
+        this(false, reason, null, null, -1);
     }
 
     UserInfoResponse(boolean ok, String reason, String uid, String username, int type) {
