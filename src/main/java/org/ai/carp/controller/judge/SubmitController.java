@@ -7,6 +7,7 @@ import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
+import org.ai.carp.runner.JudgeRunner;
 import org.bson.types.Binary;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,7 @@ public class SubmitController {
         }
         Binary archive = ArchiveUtils.convertSubmission(postCase.data);
         CARPCase carpCase = Database.getInstance().getCarpCases().insert(new CARPCase(user, dataset.get(), archive));
+        JudgeRunner.queue.add(carpCase);
         return new SubmitResponse(carpCase.getId());
     }
 

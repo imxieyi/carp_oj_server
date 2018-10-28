@@ -11,5 +11,6 @@ public interface CARPCaseRepository extends MongoRepository<CARPCase, String> {
     CARPCase findCARPCaseById(String id);
     List<CARPCase> findCARPCasesByUser(User user);
     List<CARPCase> findCARPCasesByDataset(Dataset dataset);
+    List<CARPCase> findCARPCasesByDatasetOrderByCost(Dataset dataset);
 
 }

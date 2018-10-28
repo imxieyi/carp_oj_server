@@ -8,6 +8,7 @@ import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.user.User;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -33,10 +34,12 @@ public class CARPCase {
     private String id;
 
     @DBRef
+    @Indexed
     private User user;
 
     // Submission
     @DBRef
+    @Indexed
     private Dataset dataset;
     private Binary archive;
     private int status;

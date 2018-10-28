@@ -26,12 +26,14 @@ public class JudgeRunner implements Runnable {
                     try {
                         String encodedCase = c.getWorkerJson();
                         String worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
-                        if (worker == null) {
-                            // No worker available
-                            JudgePool.getInstance().wait();
-                        } else {
-                            logger.info("Case {} dispatched to worker {}", c.getId(), worker);
+                        synchronized (JudgePool.getInstance()) {
+                            while (worker == null) {
+                                logger.info("No worker available for judging");
+                                JudgePool.getInstance().wait();
+                                worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
+                            }
                         }
+                        logger.info("Case {} dispatched to worker {}", c.getId(), worker);
                     } catch (IOException e) {
                         logger.error("Case {} is broken", c.getId());
                         // TODO: Handle invalid cases
