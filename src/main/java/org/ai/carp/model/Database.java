@@ -1,21 +1,15 @@
 package org.ai.carp.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.dataset.DatasetRepository;
-import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.judge.CARPCaseRepository;
 import org.ai.carp.model.user.User;
 import org.ai.carp.model.user.UserRepository;
-import org.bson.types.Binary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @Component
 public class Database {
@@ -64,41 +58,9 @@ public class Database {
     }
 
     @PostConstruct
-    public void testDB() {
+    public void initDB() {
         if (users.count() == 0) {
-            users.insert(new User("test", "123"));
             users.insert(new User("root", "123", User.ROOT));
-            users.insert(new User("judge", "123", User.WORKER));
-        }
-        User user = getUsers().findByUsername("test");
-        User nu = getUsers().findByUsername("gg");
-        if (nu != null) {
-            throw new RuntimeException("gg");
-        }
-        logger.info(user.toString());
-        user.setPassword("234");
-        getUsers().save(user);
-        if (datasets.count() == 0) {
-            datasets.insert(new Dataset("test", 30, 1024, 8, ""));
-        }
-        Dataset dataset = getDatasets().findDatasetByName("test");
-        logger.info(dataset.toString());
-        if (carpCases.count() == 0) {
-            carpCases.insert(new CARPCase(user, dataset, new Binary("test".getBytes())));
-        }
-        List<CARPCase> cases = getCarpCases().findCARPCasesByUserOrderBySubmitTimeDesc(user);
-        for (CARPCase c : cases) {
-            logger.info(c.toString());
-        }
-        cases = getCarpCases().findCARPCasesByDatasetOrderBySubmitTimeDesc(dataset);
-        ObjectMapper mapper = new ObjectMapper();
-        for (CARPCase c : cases) {
-            logger.info(c.toString());
-            try {
-                logger.info(mapper.writeValueAsString(c));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
