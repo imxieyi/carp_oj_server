@@ -198,7 +198,8 @@ A typical response looks like:
             "valid": true,
             "cost": 0,
             "userId": "5bd5fb02044caa5674861349",
-            "datasetId": "5bd5fb0a044caa567486134d"
+            "datasetId": "5bd5fb0a044caa567486134d",
+            "workerName": "judge"
         }
     ]
 }
@@ -228,7 +229,8 @@ A typical response looks like:
     "valid": false,
     "cost": 0,
     "datasetId": "5bd5fb0a044caa567486134d",
-    "userId": "5bd5fb02044caa5674861349"
+    "userId": "5bd5fb02044caa5674861349",
+    "workerName": "judge"
 }
 ```
 
@@ -256,6 +258,21 @@ A typical response looks like:
 
 **Each user appears only once, order by cost asc, time asc, submitTime asc.**
 
+##### Get remaining submit time
+
+`GET /api/judge/remain`
+
+*Allowed user types:* ROOT, ADMIN, WORKER, USER
+
+*Response:*
+
+```json
+{
+    "remain": 6,
+    "total": 10
+}
+```
+
 ##### Submit data for judging
 
 `POST /api/judge/submit`
@@ -275,7 +292,8 @@ A typical response looks like:
 
 ```json
 {
-    "cid": "5bd6a0170a44aa105c5927e9"
+    "cid": "5bd6a0170a44aa105c5927e9",
+    "remain": 6
 }
 ```
 
