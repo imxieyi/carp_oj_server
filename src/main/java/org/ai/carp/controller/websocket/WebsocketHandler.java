@@ -62,14 +62,14 @@ public class WebsocketHandler extends TextWebSocketHandler {
         if (type == WORKER_TICK) {
             // TODO: Regularly check for worker status
         } else if (type == CASE_START) {
-            String jid = rootNode.get("jid").asText();
-            if (StringUtils.isEmpty(jid)) {
+            String cid = rootNode.get("cid").asText();
+            if (StringUtils.isEmpty(cid)) {
                 return;
             }
             double timestamp = rootNode.get("timestamp").asDouble();
             Date date = new Date((long)(timestamp * 1000d));
             for (CARPCase carpCase : worker.jobs) {
-                if (carpCase.getId().equals(jid)) {
+                if (carpCase.getId().equals(cid)) {
                     carpCase.setStatus(CARPCase.RUNNING);
                     carpCase.setJudgeTime(date);
                     CARPCase newCase = Database.getInstance().getCarpCases().save(carpCase);
@@ -79,13 +79,13 @@ public class WebsocketHandler extends TextWebSocketHandler {
                 }
             }
         } else if (type == CASE_RESULT) {
-            String jid = rootNode.get("jid").asText();
-            if (StringUtils.isEmpty(jid)) {
+            String cid = rootNode.get("cid").asText();
+            if (StringUtils.isEmpty(cid)) {
                 return;
             }
             double timestamp = rootNode.get("timestamp").asDouble();
             for (CARPCase carpCase : worker.jobs) {
-                if (carpCase.getId().equals(jid)) {
+                if (carpCase.getId().equals(cid)) {
                     carpCase.setStatus(CARPCase.FINISHED);
                     double judgeTime = (double) carpCase.getJudgeTime().getTime() / 1000d;
                     carpCase.setTime(timestamp - judgeTime);

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class JudgePool {
 
@@ -55,20 +56,21 @@ public class JudgePool {
         notifyAll();
     }
 
-    public synchronized String dispatchJob(String jid, String data) {
+    public synchronized String dispatchJob(String cid, String data) throws IOException {
         for (Map.Entry<String, JudgeWorker> worker : workers.entrySet()) {
             if (worker.getValue().jobs.size() < worker.getValue().maxJobs) {
-                try {
-                    worker.getValue().session.sendMessage(new TextMessage(data));
-                    CARPCase carpCase = Database.getInstance().getCarpCases().findCARPCaseById(jid);
-                    carpCase.setStatus(CARPCase.QUEUED);
-                    carpCase.setJudgeWorker(worker.getValue().user);
-                    carpCase = Database.getInstance().getCarpCases().save(carpCase);
-                    worker.getValue().jobs.add(carpCase);
-                    return worker.getKey();
-                } catch (IOException e) {
-                    logger.error(e.toString());
+                worker.getValue().session.sendMessage(new TextMessage(data));
+                Optional<CARPCase> optionalCARPCase = Database.getInstance().getCarpCases().findById(cid);
+                if (!optionalCARPCase.isPresent()) {
+                    logger.error("WTF! Case {} does not exist!", cid);
+                    throw new IOException("Case does not exist!");
                 }
+                CARPCase carpCase = optionalCARPCase.get();
+                carpCase.setStatus(CARPCase.QUEUED);
+                carpCase.setJudgeWorker(worker.getValue().user);
+                carpCase = Database.getInstance().getCarpCases().save(carpCase);
+                worker.getValue().jobs.add(carpCase);
+                return worker.getKey();
             }
         }
         return null;

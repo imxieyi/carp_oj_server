@@ -263,7 +263,7 @@ public class CARPCase {
         String encodedArchive = Base64.getEncoder().encodeToString(baos.toByteArray());
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode dataNode = mapper.createObjectNode();
-        dataNode.put("jid", id);
+        dataNode.put("cid", id);
         dataNode.put("data", encodedArchive);
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.put("type", WebsocketHandler.CASE_DATA);
