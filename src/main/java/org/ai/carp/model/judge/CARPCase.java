@@ -31,6 +31,8 @@ public class CARPCase {
     public static final int RUNNING = 2;
     public static final int FINISHED = 3;
 
+    public static final int DAILY_LIMIT = 10;
+
     @Id
     private String id;
 

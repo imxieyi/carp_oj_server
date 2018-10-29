@@ -1,7 +1,9 @@
 package org.ai.carp.controller.judge;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
+import org.ai.carp.controller.exceptions.PermissionDeniedException;
 import org.ai.carp.controller.util.ArchiveUtils;
+import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.Dataset;
@@ -34,6 +36,10 @@ public class SubmitController {
         Optional<Dataset> dataset = Database.getInstance().getDatasets().findById(postCase.dataset);
         if (!dataset.isPresent()) {
             throw new InvalidRequestException("Invalid dataset!");
+        }
+        if (user.getType() == User.USER &&
+                CaseUtils.countPreviousDay(user) >= CARPCase.DAILY_LIMIT) {
+            throw new PermissionDeniedException("You have reached daily limits on submission!");
         }
         Binary archive = ArchiveUtils.convertSubmission(postCase.data);
         CARPCase carpCase = Database.getInstance().getCarpCases().insert(new CARPCase(user, dataset.get(), archive));
