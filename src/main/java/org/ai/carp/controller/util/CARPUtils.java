@@ -11,9 +11,11 @@ public class CARPUtils {
             return;
         }
         if (carpCase.getExitcode() != 0) {
+            carpCase.setReason("Exit code is not zero");
             return;
         }
         if (StringUtils.isEmpty(carpCase.getStdout())) {
+            carpCase.setReason("No output");
             return;
         }
         Dataset dataset = carpCase.getDataset();

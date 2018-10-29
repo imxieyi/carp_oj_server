@@ -62,6 +62,7 @@ public class CARPCase {
     private String path;
     private boolean valid;
     private int cost;
+    private String reason;
 
     public CARPCase(User user, Dataset dataset, Binary archive) {
         this.user = user;
@@ -121,6 +122,10 @@ public class CARPCase {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public String getId() {
@@ -215,6 +220,10 @@ public class CARPCase {
 
     public int getCost() {
         return cost;
+    }
+
+    public String getReason() {
+        return reason;
     }
 
     private String buildConfig() throws JsonProcessingException {

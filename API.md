@@ -55,6 +55,7 @@ API Reference
 |path|string|carp result|
 |valid|bool|is result valid|
 |cost|int|path cost|
+|reason|string|invalid reason|
 
 **Status codes:**
 
@@ -198,6 +199,7 @@ A typical response looks like:
             "exitcode": 0,
             "valid": true,
             "cost": 0,
+            "reason": "",
             "userId": "5bd5fb02044caa5674861349",
             "datasetId": "5bd5fb0a044caa567486134d",
             "workerName": "judge"
@@ -229,6 +231,7 @@ A typical response looks like:
     "exitcode": 0,
     "valid": false,
     "cost": 0,
+    "reason": null,
     "datasetId": "5bd5fb0a044caa567486134d",
     "userId": "5bd5fb02044caa5674861349",
     "workerName": "judge"
