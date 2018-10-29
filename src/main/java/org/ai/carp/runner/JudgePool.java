@@ -42,6 +42,9 @@ public class JudgePool {
 
     public synchronized void removeWorker(String id) {
         JudgeWorker worker = workers.get(id);
+        if (worker == null) {
+            return;
+        }
         for (CARPCase carpCase : worker.jobs) {
             carpCase.setStatus(CARPCase.WAITING);
             Database.getInstance().getCarpCases().save(carpCase);

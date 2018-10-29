@@ -43,6 +43,12 @@ public class WebsocketHandler extends TextWebSocketHandler {
         String uid = (String) session.getAttributes().get("uid");
         JudgeWorker worker = JudgePool.getInstance().getWorker(uid);
         if (type == WORKER_INFO) {
+            String infoUid = rootNode.get("uid").asText();
+            if (!uid.equals(infoUid)) {
+                logger.error("Wrong worker uid {}, closing session...", infoUid);
+                session.close();
+                return;
+            }
             if (worker == null) {
                 worker = new JudgeWorker();
                 worker.user = Database.getInstance().getUsers().findById(uid).get();
@@ -61,6 +67,12 @@ public class WebsocketHandler extends TextWebSocketHandler {
         }
         if (type == WORKER_TICK) {
             // TODO: Regularly check for worker status
+            String tickUid = rootNode.get("uid").asText();
+            if (!uid.equals(tickUid)) {
+                // Wrong worker
+                logger.error("Wrong worker uid {}, closing session...", tickUid);
+                session.close();
+            }
         } else if (type == CASE_START) {
             String cid = rootNode.get("cid").asText();
             if (StringUtils.isEmpty(cid)) {
