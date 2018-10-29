@@ -320,7 +320,8 @@ A typical response looks like:
 
 ```json
 {
-    "uid": "5bd5fb0a044caa567486134c"
+    "uid": "5bd5fb0a044caa567486134c",
+    "type": 300
 }
 ```
 
