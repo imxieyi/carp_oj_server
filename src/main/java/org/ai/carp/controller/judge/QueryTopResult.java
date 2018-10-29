@@ -2,7 +2,9 @@ package org.ai.carp.controller.judge;
 
 import org.ai.carp.model.judge.CARPCase;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class QueryTopResult {
 
@@ -10,12 +12,8 @@ public class QueryTopResult {
 
     public QueryTopResult(List<CARPCase> cases) {
         carpCases = new ArrayList<>();
-        Set<String> uids = new HashSet<>();
         for (CARPCase c : cases) {
-            if (!uids.contains(c.getUser().getId())) {
-                carpCases.add(new CARPCaseLite(c));
-                uids.add(c.getUser().getId());
-            }
+            carpCases.add(new CARPCaseLite(c));
         }
     }
 
