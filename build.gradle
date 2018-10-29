@@ -31,9 +31,9 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-websocket')
     implementation('org.springframework.session:spring-session-data-mongodb')
     // https://mvnrepository.com/artifact/es.moki.ratelimitj/ratelimitj-core
-    compile group: 'es.moki.ratelimitj', name: 'ratelimitj-core'
+    compile group: 'es.moki.ratelimitj', name: 'ratelimitj-core', version: '0.5.0'
     // https://mvnrepository.com/artifact/es.moki.ratelimitj/ratelimitj-inmemory
-    compile group: 'es.moki.ratelimitj', name: 'ratelimitj-inmemory'
+    compile group: 'es.moki.ratelimitj', name: 'ratelimitj-inmemory', version: '0.5.0'
     runtimeOnly('org.springframework.boot:spring-boot-devtools')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
     testImplementation('org.springframework.security:spring-security-test')
