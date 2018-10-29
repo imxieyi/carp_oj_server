@@ -305,14 +305,22 @@ A typical response looks like:
 
 ##### Login
 
-`GET /api/login?username={USERNAME}&password={PASSWORD}`
+`POST /api/login`
+
+*Request body:*
+
+```json
+{
+    "username": "user",
+    "password": "123"
+}
+```
 
 *Response:*
 
 ```json
 {
-    "uid": "5bd5fb0a044caa567486134c",
-    "type": 300
+    "uid": "5bd5fb0a044caa567486134c"
 }
 ```
 
@@ -350,7 +358,16 @@ A typical response looks like:
 
 ##### Change password for logged in user
 
-`GET /api/user/change/password?old={OLD_PASSWORD}&new={NEW_PASSWORD}`
+`POST /api/user/change/password`
+
+*Request body:*
+
+```json
+{
+	"old": "111",
+	"new": "123"
+}
+```
 
 *Allowed user types:* ROOT, ADMIN, WORKER, USER
 
@@ -358,6 +375,7 @@ A typical response looks like:
 
 ```json
 {
+    "uid": "5bd6ffd10a44aa129c547ff5"
 }
 ```
 
