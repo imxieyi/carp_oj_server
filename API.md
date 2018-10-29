@@ -364,8 +364,8 @@ A typical response looks like:
 
 ```json
 {
-	"old": "111",
-	"new": "123"
+    "old": "111",
+    "new": "123"
 }
 ```
 
