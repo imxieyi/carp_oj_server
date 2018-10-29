@@ -22,6 +22,9 @@ public class UserUtils {
         if (optionalUser.get().getType() > maxType) {
             throw new PermissionDeniedException("Permission denied!");
         }
+        if (optionalUser.get().getType() == User.WORKER && maxType != User.MAX && maxType != User.WORKER) {
+            throw new PermissionDeniedException("Not available for worker!");
+        }
         return optionalUser.get();
     }
 
