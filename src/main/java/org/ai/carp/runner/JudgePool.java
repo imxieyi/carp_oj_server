@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,10 @@ public class JudgePool {
         notifyAll();
     }
 
+    public synchronized Collection<JudgeWorker> getWorkers() {
+        return workers.values();
+    }
+
     public synchronized void removeWorker(String id) {
         JudgeWorker worker = workers.get(id);
         for (CARPCase carpCase : worker.jobs) {
@@ -57,6 +62,7 @@ public class JudgePool {
                     worker.getValue().session.sendMessage(new TextMessage(data));
                     CARPCase carpCase = Database.getInstance().getCarpCases().findCARPCaseById(jid);
                     carpCase.setStatus(CARPCase.QUEUED);
+                    carpCase.setJudgeWorker(worker.getValue().user);
                     carpCase = Database.getInstance().getCarpCases().save(carpCase);
                     worker.getValue().jobs.add(carpCase);
                     return worker.getKey();

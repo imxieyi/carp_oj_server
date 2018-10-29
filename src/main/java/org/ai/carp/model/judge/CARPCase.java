@@ -48,6 +48,8 @@ public class CARPCase {
     private int status;
     private Date submitTime;
     private Date judgeTime;
+    @DBRef
+    private User judgeWorker;
 
     // Result
     private boolean timedout;
@@ -75,6 +77,10 @@ public class CARPCase {
 
     public void setJudgeTime(Date judge_time) {
         this.judgeTime = judge_time;
+    }
+
+    public void setJudgeWorker(User judgeWorker) {
+        this.judgeWorker = judgeWorker;
     }
 
     public void setTimedout(boolean timedout) {
@@ -154,6 +160,18 @@ public class CARPCase {
 
     public Date getJudgeTime() {
         return judgeTime;
+    }
+
+    @JsonIgnore
+    public User getJudgeWorker() {
+        return judgeWorker;
+    }
+
+    public String getWorkerName() {
+        if (judgeWorker == null) {
+            return null;
+        }
+        return judgeWorker.getUsername();
     }
 
     public boolean isTimedout() {

@@ -1,10 +1,14 @@
 package org.ai.carp.runner;
 
+import org.ai.carp.model.Database;
 import org.ai.carp.model.judge.CARPCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -28,7 +32,7 @@ public class JudgeRunner implements Runnable {
                         String worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
                         synchronized (JudgePool.getInstance()) {
                             while (worker == null) {
-                                logger.info("No worker available for judging");
+                                logger.info("No worker available for judging, {} remains", queue.size() + 1);
                                 JudgePool.getInstance().wait(10000);
                                 worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
                             }
@@ -39,7 +43,30 @@ public class JudgeRunner implements Runnable {
                         // TODO: Handle invalid cases
                     }
                 } else {
-                    // TODO: Check for dead jobs
+                    // Check for dead jobs
+                    List<CARPCase> deadCases = Database.getInstance().getCarpCases()
+                            .findCARPCasesByStatusIsNot(CARPCase.FINISHED);
+                    if (deadCases.isEmpty()) {
+                        continue;
+                    }
+                    Map<String, CARPCase> deadCasesMap = new HashMap<>();
+                    for (CARPCase carpCase : deadCases) {
+                        deadCasesMap.put(carpCase.getId(), carpCase);
+                    }
+                    for (JudgeWorker worker : JudgePool.getInstance().getWorkers()) {
+                        for (CARPCase carpCase : worker.jobs) {
+                            deadCasesMap.remove(carpCase.getId());
+                        }
+                    }
+                    for (CARPCase inQueue : queue) {
+                        deadCasesMap.remove(inQueue.getId());
+                    }
+                    for (CARPCase deadCase : deadCasesMap.values()) {
+                        deadCase.setStatus(CARPCase.WAITING);
+                        CARPCase saved = Database.getInstance().getCarpCases().save(deadCase);
+                        queue.add(saved);
+                    }
+                    logger.info("Restart {} dead cases.", deadCasesMap.size());
                 }
             }
         } catch (InterruptedException e) {

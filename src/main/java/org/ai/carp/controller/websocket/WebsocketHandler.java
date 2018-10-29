@@ -45,6 +45,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
         if (type == WORKER_INFO) {
             if (worker == null) {
                 worker = new JudgeWorker();
+                worker.user = Database.getInstance().getUsers().findById(uid).get();
                 JudgePool.getInstance().putWorker(uid, worker);
             }
             worker.session = session;
