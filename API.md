@@ -44,6 +44,7 @@ API Reference
 |status|int||
 |submitTime|date||
 |judgeTime|date||
+|judgeWorker|User||
 |timedout|bool||
 |stdout|string||
 |outOverflow|bool|stdout exceeds limit|
