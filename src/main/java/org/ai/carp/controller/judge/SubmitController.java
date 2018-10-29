@@ -44,7 +44,8 @@ public class SubmitController {
         Binary archive = ArchiveUtils.convertSubmission(postCase.data);
         CARPCase carpCase = Database.getInstance().getCarpCases().insert(new CARPCase(user, dataset.get(), archive));
         JudgeRunner.queue.add(carpCase);
-        return new SubmitResponse(carpCase.getId());
+        int remain = CARPCase.DAILY_LIMIT - CaseUtils.countPreviousDay(user);
+        return new SubmitResponse(carpCase.getId(), remain);
     }
 
 }
@@ -52,13 +53,19 @@ public class SubmitController {
 class SubmitResponse {
 
     private String cid;
+    private int remain;
 
-    public SubmitResponse(String cid) {
+    public SubmitResponse(String cid, int remain) {
         this.cid = cid;
+        this.remain = remain;
     }
 
     public String getCid() {
         return cid;
+    }
+
+    public int getRemain() {
+        return remain;
     }
 }
 
