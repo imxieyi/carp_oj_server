@@ -30,7 +30,7 @@ public class LoginController {
         User user = Database.getInstance().getUsers().findByUsername(request.username);
         if (user != null && user.passwordMatches(request.password)) {
             session.setAttribute("uid", user.getId());
-            return new LoginResponse(user.getId());
+            return new LoginResponse(user.getId(), user.getType());
         }
         throw new InvalidRequestException("Wrong username or password!");
     }
@@ -45,12 +45,18 @@ class LoginRequest {
 class LoginResponse {
 
     private String uid;
+    private int type;
 
-    LoginResponse(String uid) {
+    LoginResponse(String uid, int type) {
         this.uid = uid;
+        this.type = type;
     }
 
     public String getUid() {
         return uid;
+    }
+
+    public int getType() {
+        return type;
     }
 }
