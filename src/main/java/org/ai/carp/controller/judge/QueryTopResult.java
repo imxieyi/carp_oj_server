@@ -27,14 +27,14 @@ public class QueryTopResult {
 class CARPCaseLite {
 
     private String userName;
-    private String datasetName;
+    private String datasetId;
     private Date submitTime;
     private double time;
     private int cost;
 
     public CARPCaseLite(CARPCase carpCase) {
-        this.userName = carpCase.getUserName();
-        this.datasetName = carpCase.getDatasetName();
+        this.userName = carpCase.getUser().getUsername();
+        this.datasetId = carpCase.getId();
         this.cost = carpCase.getCost();
         this.submitTime = carpCase.getSubmitTime();
         this.time = carpCase.getTime();
@@ -44,8 +44,8 @@ class CARPCaseLite {
         return userName;
     }
 
-    public String getDatasetName() {
-        return datasetName;
+    public String getDatasetId() {
+        return datasetId;
     }
 
     public int getCost() {

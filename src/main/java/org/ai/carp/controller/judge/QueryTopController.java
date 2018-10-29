@@ -31,7 +31,7 @@ public class QueryTopController {
             throw new InvalidRequestException("Invalid dataset!");
         }
         List<CARPCase> allCarpCases = Database.getInstance().getCarpCases()
-                .findCARPCasesByDatasetAndStatusAndValidOrderByCostAsc(dataset.get(), CARPCase.FINISHED, true);
+                .findCARPCasesByDatasetAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(dataset.get(), CARPCase.FINISHED, true);
         return new QueryTopResult(allCarpCases);
     }
 

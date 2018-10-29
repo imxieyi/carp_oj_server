@@ -124,8 +124,8 @@ public class CARPCase {
         return user;
     }
 
-    public String getUserName() {
-        return user.getUsername();
+    public String getUserId() {
+        return user.getId();
     }
 
     @JsonIgnore
@@ -133,8 +133,8 @@ public class CARPCase {
         return dataset;
     }
 
-    public String getDatasetName() {
-        return dataset.getName();
+    public String getDatasetId() {
+        return dataset.getId();
     }
 
     @JsonIgnore
@@ -184,6 +184,7 @@ public class CARPCase {
         return exitcode;
     }
 
+    @JsonIgnore
     public String getPath() {
         return path;
     }
