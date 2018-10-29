@@ -45,14 +45,14 @@ public class SubmitController {
 
 class SubmitResponse {
 
-    private String jid;
+    private String cid;
 
-    public SubmitResponse(String jid) {
-        this.jid = jid;
+    public SubmitResponse(String cid) {
+        this.cid = cid;
     }
 
-    public String getJid() {
-        return jid;
+    public String getCid() {
+        return cid;
     }
 }
 
