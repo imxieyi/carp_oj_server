@@ -155,7 +155,7 @@ A typical response looks like:
 
 `GET /api/dataset/all`
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
+*Allowed user types:* ROOT, ADMIN, USER
 
 *Response:*
 
@@ -179,7 +179,7 @@ A typical response looks like:
 
 `GET /api/judge/all`
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
+*Allowed user types:* ROOT, ADMIN, USER
 
 *Response:*
 
@@ -212,7 +212,7 @@ A typical response looks like:
 
 `GET /api/judge/query?cid={CASE_ID}`
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
+*Allowed user types:* ROOT, ADMIN, USER
 
 *Response:*
 
@@ -239,7 +239,7 @@ A typical response looks like:
 
 `GET /api/judge/top?did={DATASET_ID}`
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
+*Allowed user types:* ROOT, ADMIN, USER
 
 *Response:*
 
@@ -263,7 +263,7 @@ A typical response looks like:
 
 `GET /api/judge/remain`
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
+*Allowed user types:* ROOT, ADMIN, USER
 
 *Response:*
 
@@ -287,7 +287,7 @@ A typical response looks like:
 }
 ```
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
+*Allowed user types:* ROOT, ADMIN, USER
 
 *Response:*
 
@@ -304,8 +304,6 @@ A typical response looks like:
 
 `GET /api/login?username={USERNAME}&password={PASSWORD}`
 
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
-
 *Response:*
 
 ```json
@@ -320,8 +318,6 @@ A typical response looks like:
 ##### Logout
 
 `GET /api/logout`
-
-*Allowed user types:* ROOT, ADMIN, WORKER, USER
 
 *Response:*
 
