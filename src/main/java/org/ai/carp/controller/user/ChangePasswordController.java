@@ -18,7 +18,7 @@ import javax.servlet.http.HttpSession;
 public class ChangePasswordController {
 
     @PostMapping
-    public ChangePasswordResponse get(@RequestBody ChangePasswordRequest request, HttpSession session) {
+    public ChangePasswordResponse post(@RequestBody ChangePasswordRequest request, HttpSession session) {
         if (StringUtils.isEmpty(request.oldP)) {
             throw new InvalidRequestException("No old password!");
         }

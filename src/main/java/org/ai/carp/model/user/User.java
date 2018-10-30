@@ -14,8 +14,8 @@ public class User {
     // Types
     public static final int ROOT = 0;
     public static final int ADMIN = 100;
-    public static final int WORKER = 200;
-    public static final int USER = 300;
+    public static final int USER = 200;
+    public static final int WORKER = 300;
     public static final int MAX = 1000; // Never use
 
     private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

@@ -19,8 +19,8 @@ API Reference
 |---|---|
 |ROOT|0|
 |ADMIN|100|
-|WORKER|200|
-|USER|300|
+|USER|200|
+|WORKER|300|
 
 ### Dataset
 
@@ -321,7 +321,7 @@ A typical response looks like:
 ```json
 {
     "uid": "5bd5fb0a044caa567486134c",
-    "type": 300
+    "type": 200
 }
 ```
 
@@ -353,7 +353,7 @@ A typical response looks like:
 {
     "uid": "5bd5fb0a044caa567486134c",
     "username": "user",
-    "type": 300
+    "type": 200
 }
 ```
 
