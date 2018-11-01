@@ -178,7 +178,7 @@ A typical response looks like:
 
 ##### Query all for logged in user
 
-`GET /api/judge/all`
+`GET /api/judge/get?page={PAGE}&size={SIZE}`
 
 *Allowed user types:* ROOT, ADMIN, USER
 
@@ -188,27 +188,28 @@ A typical response looks like:
 {
     "carpCases": [
         {
-            "id": "5bd602c4044caa5464b356e0",
+            "id": "5bdacbaea6d72a1b48b63784",
             "status": 3,
-            "submitTime": "2018-10-28T18:41:08.775+0000",
-            "judgeTime": "2018-10-28T18:41:10.171+0000",
+            "submitTime": "2018-11-01T09:47:26.263+0000",
+            "judgeTime": "2018-11-01T09:47:25.511+0000",
             "timedout": false,
             "outOverflow": false,
             "errOverflow": false,
-            "time": 9.969951629638672,
+            "time": 12.249048709869385,
             "exitcode": 0,
             "valid": true,
             "cost": 0,
-            "reason": "",
-            "userId": "5bd5fb02044caa5674861349",
-            "datasetId": "5bd5fb0a044caa567486134d",
+            "reason": null,
+            "datasetId": "5bd7ddbca6d72a2e908da716",
+            "userId": "5bd7d6d6a6d72a2e908da712",
             "workerName": "judge"
         }
-    ]
+    ],
+    "total": 1
 }
 ```
 
-**Ordered by submitTime desc.**
+**Page start from 0. Ordered by submitTime desc.**
 
 ##### Query by case id
 
