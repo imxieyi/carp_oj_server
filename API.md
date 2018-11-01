@@ -124,6 +124,30 @@ A typical response looks like:
 }
 ```
 
+##### Change password for user
+
+`POST /api/admin/user/change/password`
+
+*Request body:*
+
+```json
+{
+  "username": "user",
+  "password": "pass"
+}
+```
+
+*Allowed user types:*
+
+- ROOT: ADMIN, WORKER, USER
+- ADMIN: USER
+
+*Response:*
+
+```
+done
+```
+
 ### Dataset
 
 ##### Add dataset
