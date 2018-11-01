@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 @RestController
 @RequestMapping("/api/admin/user/change/password")
-public class ChangePasswordController {
+public class AdminChangePasswordController {
 
     @PostMapping
     public String post(@RequestBody AdminChangePasswordRequest request, HttpSession session) {
