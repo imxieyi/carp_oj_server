@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("/api/system/addtestdata")
+@RequestMapping("/api/admin/system/addtestdata")
 public class AddTestDataController {
 
     @GetMapping

@@ -89,7 +89,7 @@ A typical response looks like:
 
 ##### Add test data
 
-`GET /api/system/addtestdata`
+`GET /api/admin/system/addtestdata`
 
 *Allowed user types:* ROOT
 
@@ -99,7 +99,7 @@ A typical response looks like:
 
 ##### Add dataset
 
-`POST /api/dataset/add`
+`POST /api/admin/dataset/add`
 
 *Request body:*
 
