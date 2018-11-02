@@ -1,4 +1,4 @@
-package org.ai.carp.controller.dataset;
+package org.ai.carp.controller.admin.dataset;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.UserUtils;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/dataset/add")
+@RequestMapping("/api/admin/dataset/add")
 public class DatasetAddController {
 
     @PostMapping

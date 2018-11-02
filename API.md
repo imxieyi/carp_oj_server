@@ -95,6 +95,34 @@ A typical response looks like:
 
 *Response:* `done` if finished successfully.
 
+#### Dataset
+
+##### Add dataset
+
+`POST /api/dataset/add`
+
+*Request body:*
+
+```json
+{
+  "name" : "small-1",
+  "time" : 10,
+  "memory" : 256,
+  "cpu" : 1,
+  "data" : "NAME : small-1\nVERTICES : 12..."
+}
+```
+
+*Allowed user types:* ROOT, ADMIN
+
+*Response:*
+
+```json
+{
+  "id": "Object id of the added dataset"
+}
+```
+
 #### User
 
 ##### Add user
@@ -149,32 +177,6 @@ done
 ```
 
 ### Dataset
-
-##### Add dataset
-
-`POST /api/dataset/add`
-
-*Request body:*
-
-```json
-{
-  "name" : "small-1",
-  "time" : 10,
-  "memory" : 256,
-  "cpu" : 1,
-  "data" : "NAME : small-1\nVERTICES : 12..."
-}
-```
-
-*Allowed user types:* ROOT, ADMIN
-
-*Response:*
-
-```json
-{
-  "id": "Object id of the added dataset"
-}
-```
 
 ##### Query all datasets
 
