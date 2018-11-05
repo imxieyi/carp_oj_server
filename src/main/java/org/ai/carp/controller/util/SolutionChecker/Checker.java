@@ -87,8 +87,10 @@ public class Checker {
     private int getField(String line, String field) {
         Pattern p = Pattern.compile("\\d+");
         Matcher m = p.matcher(line);
-        assert m.find();
-        return Integer.parseInt(m.group(0));
+        if (!m.find()) {
+            throw new IllegalStateException("Invalid dataset!");
+        }
+        return Integer.parseInt(m.group());
 
     }
 
