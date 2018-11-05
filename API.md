@@ -267,7 +267,7 @@ done
 
 ##### Query leaderboard for dataset
 
-`GET /api/judge/top?did={DATASET_ID}`
+`GET /api/judge/top?dataset={DATASET_ID}`
 
 *Allowed user types:* ROOT, ADMIN, USER
 

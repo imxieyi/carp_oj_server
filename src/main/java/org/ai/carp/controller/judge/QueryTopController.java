@@ -1,11 +1,9 @@
 package org.ai.carp.controller.judge;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
-import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.judge.CARPCase;
-import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +20,6 @@ public class QueryTopController {
 
     @GetMapping
     public QueryTopResult get(@RequestParam("dataset") String did, HttpSession session) {
-        UserUtils.getUser(session, User.USER);
         if (StringUtils.isEmpty(did)) {
             throw new InvalidRequestException("No dataset id!");
         }
