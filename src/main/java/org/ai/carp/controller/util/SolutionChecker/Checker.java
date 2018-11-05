@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Checker {
     private CARPCase carpCase;
     private String solutionOut;
-    private String datasetString ;
+    private String datasetString;
     private List<String> solutionTrips = new ArrayList<>();
     private int solutionGivenCost = -1;
     private UndirWeightedGraph graph;
@@ -92,17 +92,24 @@ public class Checker {
 
     }
 
+    public enum NodeType {
+        TASKLEFT, TASKRIGHT, DEPOT
+    }
+
     public boolean checkSolution() {
+
         // check tasks first
         Set<Edge> remainTasks = new HashSet<>(this.graph.getTasks());
         Pattern taskEdgePattern = Pattern.compile("\\(\\s*'?\\d+'?\\s*,\\s*'?\\d+'?\\s*\\)");
         List<Node> wholeRoute = new ArrayList<>();
+        List<NodeType> nodeType = new ArrayList<>();
         Node depot = graph.getNode(graph.getDeport());
         for (String trip : this.solutionTrips) {
             // for each trip
             int load = 0;
             int count = 0;
             wholeRoute.add(depot);
+            nodeType.add(NodeType.DEPOT);
             Matcher m = taskEdgePattern.matcher(trip);
             while (m.find()) {
                 // for each task
@@ -112,34 +119,36 @@ public class Checker {
                 Matcher m2 = taskNodePattern.matcher(taskStr);
                 int count2 = 0;
                 int[] nodeId = new int[2];
-                while(m2.find()){
+                while (m2.find()) {
                     nodeId[count2++] = Integer.parseInt(m2.group());
                 }
-                if (count2!=2){
+                if (count2 != 2) {
                     this.carpCase.setValid(false);
                     this.carpCase.setReason("Invalid tasks in some trip.");
                     return false;
                 }
                 Node nodePair[] = {graph.getNode(nodeId[0]), graph.getNode(nodeId[1])};
                 Edge taskEdge = new Edge(nodePair[0], nodePair[1]);
-                System.out.println(taskEdge.getDemand());
-                if (remainTasks.contains(taskEdge)){
+                // System.out.println(taskEdge.getDemand());
+                if (remainTasks.contains(taskEdge)) {
                     remainTasks.remove(taskEdge);
                     int demand = graph.getTaskDemand(taskEdge);
                     load += demand;
-                    System.out.println(load);
-                    if (load>graph.getCapacity()){
+                    // System.out.println(load);
+                    if (load > graph.getCapacity()) {
                         this.carpCase.setValid(false);
                         this.carpCase.setReason("Exceeding Capacity Detected.");
                         return false;
                     }
-                }else{
+                } else {
                     this.carpCase.setValid(false);
                     this.carpCase.setReason("Invalid tasks in some trip or duplicated tasks.");
                     return false;
                 }
                 wholeRoute.add(nodePair[0]);
                 wholeRoute.add(nodePair[1]);
+                nodeType.add(NodeType.TASKLEFT);
+                nodeType.add(NodeType.TASKRIGHT);
                 // System.out.println(remainTasks.size());
             }
             if (count == 0) {
@@ -148,10 +157,42 @@ public class Checker {
                 return false;
             }
             wholeRoute.add(depot);
+            nodeType.add(NodeType.DEPOT);
+        }
+        if (!remainTasks.isEmpty()) {
+            this.carpCase.setValid(false);
+            this.carpCase.setReason("There are still tasks not accomplished.");
+            return false;
         }
 
-        // TODO: Add up the total cost of the route
+        // Add up the total cost of the route
+        int totalCost = 0, idx = 1;
+        Node lastNode = null;
+        for (Node curNode : wholeRoute) {
+            if (lastNode == null) {
+                lastNode = curNode;
+                continue;
+            }
+            int cost;
+            if (nodeType.get(idx - 1) == NodeType.TASKLEFT && nodeType.get(idx) == NodeType.TASKRIGHT) {
+                cost = graph.getEdgeCost(new Edge(lastNode, curNode));
+            } else {
+                cost = lastNode.getShortestPathCost(curNode);
+            }
 
-        return true;
+            totalCost += cost;
+            lastNode = curNode;
+            idx += 1;
+        }
+        this.carpCase.setCost(totalCost);
+        if (totalCost != this.solutionGivenCost) {
+            this.carpCase.setValid(false);
+            this.carpCase.setReason("Wrong cost calculation.");
+            return false;
+        } else {
+            this.carpCase.setValid(true);
+            this.carpCase.setReason("Solution Accepted.");
+            return true;
+        }
     }
 }

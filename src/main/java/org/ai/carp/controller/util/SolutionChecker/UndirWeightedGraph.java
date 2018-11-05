@@ -12,6 +12,7 @@ class UndirWeightedGraph {
     private Set<Edge> edges = new HashSet<>();
     private Set<Edge> tasks = new HashSet<>();
     private Map<Edge, Integer> demandMap = new HashMap<>();
+    private Map<Edge, Integer> costMap = new HashMap<>();
 
     void setNumVertices(int numVertices) {
         this.numVertices = numVertices;
@@ -33,10 +34,15 @@ class UndirWeightedGraph {
             demandMap.put(newEdge, demand);
             tasks.add(newEdge);
         }
+        costMap.put(newEdge, cost);
     }
 
     int getTaskDemand(Edge edge) {
         return demandMap.getOrDefault(edge, 0);
+    }
+
+    int getEdgeCost(Edge edge) {
+        return costMap.getOrDefault(edge, 0);
     }
 
     private void addDirectedEdge(Node sourceNode, Node destNode, int weight, int demand) {
@@ -62,7 +68,7 @@ class UndirWeightedGraph {
     }
 
     private Node addNewNode(int nodeId) {
-        Node node = new Node(nodeId);
+        Node node = new Node(nodeId, this);
         nodeMap.put(nodeId, node);
         nodes.add(node);
         numVertices += 1;
@@ -115,6 +121,10 @@ class UndirWeightedGraph {
 
     Set<Edge> getTasks() {
         return tasks;
+    }
+
+    public Set<Node> getNodes() {
+        return nodes;
     }
 }
 
