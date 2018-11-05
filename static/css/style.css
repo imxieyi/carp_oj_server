@@ -429,6 +429,7 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
 #fh5co-rank {
+  margin-top: 100px;
   border-top: 3px solid #dd356e;
   border-bottom: 3px solid #dd356e;
   min-height: 1000px;
