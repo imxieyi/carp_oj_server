@@ -1,6 +1,5 @@
 package org.ai.carp.controller.util.SolutionChecker;
 
-import org.ai.carp.controller.util.SolutionChecker.Edge;
 import org.ai.carp.model.judge.CARPCase;
 
 import java.util.*;
@@ -36,9 +35,7 @@ public class Checker {
         Scanner scanner = new Scanner(this.datasetString);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (line.startsWith("VERTICES")) {
-                graph.setNumVertices(getField(line, "VERTICES"));
-            } else if (line.startsWith("CAPACITY")) {
+            if (line.startsWith("CAPACITY")) {
                 graph.setCapacity(getField(line, "CAPACITY"));
             } else if (line.startsWith("DEPOT")) {
                 graph.setDeport(getField(line, "DEPOT"));
@@ -95,7 +92,7 @@ public class Checker {
     }
 
     public enum NodeType {
-        TASKLEFT, TASKRIGHT, DEPOT
+        TASK_LEFT, TASK_RIGHT, DEPOT
     }
 
     public boolean checkSolution() {
@@ -149,9 +146,8 @@ public class Checker {
                 }
                 wholeRoute.add(nodePair[0]);
                 wholeRoute.add(nodePair[1]);
-                nodeType.add(NodeType.TASKLEFT);
-                nodeType.add(NodeType.TASKRIGHT);
-                // System.out.println(remainTasks.size());
+                nodeType.add(NodeType.TASK_LEFT);
+                nodeType.add(NodeType.TASK_RIGHT);
             }
             if (count == 0) {
                 this.carpCase.setValid(false);
@@ -176,7 +172,7 @@ public class Checker {
                 continue;
             }
             int cost;
-            if (nodeType.get(idx - 1) == NodeType.TASKLEFT && nodeType.get(idx) == NodeType.TASKRIGHT) {
+            if (nodeType.get(idx - 1) == NodeType.TASK_LEFT && nodeType.get(idx) == NodeType.TASK_RIGHT) {
                 cost = graph.getEdgeCost(new Edge(lastNode, curNode));
             } else {
                 cost = lastNode.getShortestPathCost(curNode);

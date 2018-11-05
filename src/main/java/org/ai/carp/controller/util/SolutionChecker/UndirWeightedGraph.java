@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 class UndirWeightedGraph {
-    private int numVertices = 0;
     private int capacity = 0;
     private int deport = 0;
     private Set<Node> nodes = new HashSet<>();
@@ -13,10 +12,6 @@ class UndirWeightedGraph {
     private Set<Edge> tasks = new HashSet<>();
     private Map<Edge, Integer> demandMap = new HashMap<>();
     private Map<Edge, Integer> costMap = new HashMap<>();
-
-    void setNumVertices(int numVertices) {
-        this.numVertices = numVertices;
-    }
 
     void addEdge(List<Integer> params) {
         /*
@@ -71,7 +66,6 @@ class UndirWeightedGraph {
         Node node = new Node(nodeId, this);
         nodeMap.put(nodeId, node);
         nodes.add(node);
-        numVertices += 1;
         return node;
     }
 
@@ -115,16 +109,10 @@ class UndirWeightedGraph {
         this.checkNode(deport);
     }
 
-    public Set<Edge> getEdges() {
-        return edges;
-    }
 
     Set<Edge> getTasks() {
         return tasks;
     }
 
-    public Set<Node> getNodes() {
-        return nodes;
-    }
 }
 

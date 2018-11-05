@@ -17,10 +17,6 @@ class Edge {
         this.nodePair[1] = b;
     }
 
-    public Node[] getNode_pair() {
-        return nodePair;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -41,19 +37,4 @@ class Edge {
         return result;
     }
 
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
-    int getDemand() {
-        return demand;
-    }
-
-    public void setDemand(int demand) {
-        this.demand = demand;
-    }
 }
