@@ -4,6 +4,7 @@ import org.ai.carp.model.dataset.Dataset;
 import org.ai.carp.model.judge.CARPCase;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -11,9 +12,9 @@ import java.io.InputStream;
 
 public class CARPUtilsTests {
 
-    CARPCase carpCase, carpCase2;
+    static CARPCase carpCase, carpCase2;
 
-    private String readResource(String name) throws IOException {
+    private static String readResource(String name) throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream is = classLoader.getResourceAsStream(name);
         byte[] bytes = new byte[is.available()];
@@ -23,8 +24,8 @@ public class CARPUtilsTests {
         return data;
     }
 
-    @Before
-    public void setUp() throws IOException {
+    @BeforeClass
+    public static void setUp() throws IOException {
         Dataset dataset = new Dataset("gdb10", 10, 256, 1, readResource("gdb10.dat"));
         carpCase = new CARPCase(null, dataset, null);
         carpCase.setStatus(CARPCase.FINISHED);
@@ -43,9 +44,13 @@ public class CARPUtilsTests {
         CARPUtils.checkResult(carpCase);
         Assert.assertTrue(carpCase.isValid());
         Assert.assertEquals(298, carpCase.getCost());
+    }
+
+    @Test
+    public void testCheckResult2() {
         CARPUtils.checkResult(carpCase2);
         Assert.assertTrue(carpCase2.isValid());
-        Assert.assertEquals(301, carpCase.getCost());
+        Assert.assertEquals(301, carpCase2.getCost());
     }
 
 }
