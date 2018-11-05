@@ -61,6 +61,9 @@ public class JudgeRunner implements Runnable {
                     for (CARPCase inQueue : queue) {
                         deadCasesMap.remove(inQueue.getId());
                     }
+                    if (deadCasesMap.size() <= 0) {
+                        continue;
+                    }
                     for (CARPCase deadCase : deadCasesMap.values()) {
                         deadCase.setStatus(CARPCase.WAITING);
                         CARPCase saved = Database.getInstance().getCarpCases().save(deadCase);
