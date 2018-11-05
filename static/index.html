@@ -1,0 +1,296 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>CARP Online Judge Platform</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="CARP Online Judge" />
+	<meta name="keywords" content="CARP" />
+	<meta name="author" content="623059008@qq.com" />
+
+	<!-- <link href="https://fonts.googleapis.com/css?family=Work+Sans:300,400,500,700,800" rel="stylesheet">	 -->
+	<!-- <link href="https://fonts.lug.ustc.edu.cn/css?family=Inconsolata:400,700" rel="stylesheet"> -->
+	<link rel="icon" href="animated_favicon.gif" type="image/gif" />
+	<!-- Animate.css -->
+	<link rel="stylesheet" href="css/animate.css">
+	<!-- Icomoon Icon Fonts-->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="css/flexslider.css">
+
+	<!-- Theme style  -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- Modernizr JS -->
+	<script src="js/modernizr-2.6.2.min.js"></script>
+	<!-- FOR IE9 below -->
+	<!--[if lt IE 9]>
+	<script src="js/respond.min.js"></script>
+	<![endif]-->
+
+</head>
+
+<body>
+
+	<div class="fh5co-loader"></div>
+
+	<div id="page">
+		<nav class="fh5co-nav" role="navigation">
+			<div class="top-menu">
+				<div class="container">
+					<div class="row">
+						<div class="col-xs-2">
+							<div id="fh5co-logo"><a href="index.html">CARP<span>.</span></a></div>
+						</div>
+						<div class="col-xs-10 text-right menu-1">
+							<ul>
+								<li class="active"><a href="index.html">Home</a></li>
+								<li class=""><a href="index.html#fh5co-rank" onclick="$('body').animate({scrollTop:$('#fh5co-rank').offset().top}, 800);">LeaderBoard</a></li>
+								<li class="">&nbsp;&nbsp;</li>
+								<li class="">&nbsp;&nbsp;</li>
+								<li class="">&nbsp;&nbsp;</li>
+								<li class="">&nbsp;&nbsp;</li>
+								<li class="btn-cta user_place"><a href="#"><span id="login">&nbsp;&nbsp;Login&nbsp;&nbsp;</span></a></li>
+								<li class="user_span" style="display:none;"><a href="#"><span id="logout">&nbsp;&nbsp;User&nbsp;&nbsp;</span></a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</nav>
+
+		<header id="fh5co-header" class="fh5co-cover js-fullheight" role="banner">
+			<div class="overlay"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center">
+						<div class="display-t">
+							<div class="display-tc animate-box" data-animate-effect="fadeIn">
+								<h1>Capacitated Arc Routing Problem</h1>
+								<h2>This is CARP Judge System</a></h2>
+								<br/>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12 text-center" id="submit_pannel">
+						<div class="row" style="vertical-align:middle;">
+							<div class="col-md-8">
+								<div class="form-group" id="dataset_option1">
+									<select class="form-control" name="graph_choose" id="graph_choose1">
+										<option value="egl-e1-A">egl-e1-A</option>
+										<option value="new_gdb1">new_gdb1</option>
+										<option value="new_gdb2">new_gdb2</option>
+										<option value="new_gdb3">new_gdb3</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-md-3" style="vertical-align:middle;padding-top:5px;">
+								<button id="submit_file" onclick="$('#code_submit').trigger('click');" class="btn btn-carp">Submit Code</button>
+							</div>
+							<div class="col-md-1" style="vertical-align:middle;padding-top:13px;">
+								<span id="remain_number">*/*</span>
+							</div>
+						</div>
+						<div class="row">
+
+							<table class="table" id="result_table">
+								<thead>
+									<tr>
+										<th>Id</th>
+										<th>Status</th>
+										<th>SubmitTime</th>
+										<th>Error</th>
+										<th>RunTime</th>
+										<th>Cost</th>
+										<th>Dataset</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="7" class="no_data_td">No Data</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan=7><button class="btn btn-link" id="page_left"><i class="glyphicon glyphicon-chevron-left"></i></button><button class="btn btn-link" id="page_right"><i class="glyphicon glyphicon-chevron-right"></i></button></td>
+									</tr>
+								</tfoot>
+							</table>
+
+						</div>
+						<div id="hiden_area" style="display:none;">
+							<input type="file" id="code_submit" name="code_submit" style="visibility:hidden" onchange="filepath.value=this.value;$('#code_submit2').trigger('click');">
+							<input type="textfield" style="visibility:hidden;" id="filepath">
+							<button type="button" name="code_submit2" id="code_submit2" style="visibility:hidden;">Code Submit</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</header>
+		<div id="fh5co-rank" class="js-fullheight">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2 text-center fh5co-heading">
+						<h2>LeaderBoard</h2>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="myRank panel panel-default">
+						<table class="table" id="myRank_table">
+							<thead>
+								<tr>
+									<td colspan="4">Your Rank</td>
+								</tr>
+								<tr>
+									<td>Rank</td>
+									<td>submitTime</td>
+									<td>time</td>
+									<td>cost</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>#1</td>
+									<td>11-12 23:00:01</td>
+									<td>12.009</td>
+									<td>0</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="DatasetTab">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<ul class="nav nav-pills nav-stacked" id="rank_tab_list">
+									<li role="presentation" class="active"><a href="#">Db1</a></li>
+									<li role="presentation" class=""><a href="#">Db2</a></li>
+									<li role="presentation" class=""><a href="#">Db3</a></li>
+									<li role="presentation" class=""><a href="#">Db4</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="panel panel-default">
+							<table class="table  table-hover" id="rank_table">
+								<thead>
+									<tr>
+										<td>Rank</td>
+										<td>User</td>
+										<td>submitTime</td>
+										<td>time</td>
+										<td>cost</td>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>#1</td>
+										<td>Root</td>
+										<td>11 - 12 23:00:01</td>
+										<td>12.009</td>
+										<td>0</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" tabindex="-1" role="dialog" id="info_box">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Information</h4>
+					</div>
+					<div class="modal-body" id="info_box_msg">
+						<p>Submit Successfully</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" style="background-color:#dd356e;color:white;">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<div class="modal fade" tabindex="-1" role="dialog" id="login_box">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">Login</h4>
+					</div>
+					<div class="modal-body" id="login_content">
+
+						<div class="form-group">
+							<label for="username">Username</label>
+							<input type="text" class="form-control" id="username" placeholder="UserName">
+						</div>
+						<div class="form-group">
+							<label for="password">Password</label>
+							<input type="password" class="form-control" id="password" placeholder="Password">
+						</div>
+						<!-- <div><button class="btn btn-link" id="forget_password">Forgot password?</button></div> -->
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="login_submit" class="btn btn-carp">Login</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" style="">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<footer id="fh5co-footer" role="contentinfo">
+			<div class="container">
+				<div class="row row-pb-md">
+					<div class="col-md-4 fh5co-widget">
+						<h4>CARP Judge System</h4>
+						<p>Powered by Yi Xie</p>
+					</div>
+					<div class="col-md-2 col-md-push-1 fh5co-widget">
+						<h4>Links</h4>
+						<ul class="fh5co-footer-links">
+							<li><a href="index.html">Home</a></li>
+							<li><a href="index.html#fh5co-rank">LeanderBoard</a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+		</footer>
+	</div>
+
+	<div class="gototop js-top">
+		<a href="#" class="js-gotop"><i class="icon-arrow-up22"></i></a>
+	</div>
+
+	<!-- jQuery -->
+	<script src="js/jquery.min.js"></script>
+	<!-- jQuery Cookie -->
+	<script src="js/jquery.cookie.js"></script>
+	<!-- jQuery Easing -->
+	<script src="js/jquery.easing.1.3.js"></script>
+	<!-- Bootstrap -->
+	<script src="js/bootstrap.min.js"></script>
+	<!-- Waypoints -->
+	<script src="js/jquery.waypoints.min.js"></script>
+	<!-- Flexslider -->
+	<script src="js/jquery.flexslider-min.js"></script>
+	<!-- UnderScore.js -->
+	<script src="js/underscore.js"></script>
+	<!-- Main -->
+	<script src="js/main.js"></script>
+
+</body>
+
+</html>
