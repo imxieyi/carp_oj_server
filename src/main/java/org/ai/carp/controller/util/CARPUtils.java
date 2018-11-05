@@ -1,6 +1,6 @@
 package org.ai.carp.controller.util;
 
-import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.controller.util.SolutionChecker.Checker;
 import org.ai.carp.model.judge.CARPCase;
 import org.springframework.util.StringUtils;
 
@@ -18,12 +18,8 @@ public class CARPUtils {
             carpCase.setReason("No output");
             return;
         }
-        Dataset dataset = carpCase.getDataset();
-        String inputData = dataset.getData();
-        String outputData = carpCase.getStdout();
-        // TODO: Check result
-        carpCase.setValid(true);
-        carpCase.setCost(0);
+        Checker checker = new Checker(carpCase);
+        checker.checkSolution();
     }
 
 }
