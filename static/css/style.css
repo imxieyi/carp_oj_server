@@ -1692,6 +1692,10 @@ input[type="text"] {
   color: #22e630;
 }
 
+.waiting_color {
+  color: #f09114;
+}
+
 .user_span {
   background: #FFF;
   border-radius: 30px;
@@ -1730,12 +1734,12 @@ input[type="text"] {
 
 .myRank {
   position: absolute;
-  right: 20px;
+  right: 5%;
 }
 
 .DatasetTab {
   position: absolute;
-  left: 130px;
+  left: 5%;
 }
 
 /*# sourceMappingURL=style.css.map */

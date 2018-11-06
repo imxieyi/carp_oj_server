@@ -392,7 +392,7 @@
 	    ResultHtml += "		SubmitTime\n";
 	    ResultHtml += "	<\/th>\n";
 	    ResultHtml += "	<th>\n";
-	    ResultHtml += "		Error\n";
+	    ResultHtml += "		Info\n";
 	    ResultHtml += "	<\/th>\n";
 	    ResultHtml += "	<th>\n";
 	    ResultHtml += "		ExitCode\n";
@@ -418,9 +418,20 @@
 	        let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
 	        let ErrorInfo = "";
 	        let errorcolor = false;
-	        if (!(o["reason"] == null || o['reason'] == "null")) {
-	          errorcolor = true;
-	          ErrorInfo = o["reason"];
+	        let waitingcolor = false;
+	        //未运行完成的程序是没有reason的
+	        if (parseInt(o["status"]) < 3) {
+	          waitingcolor = true;
+	          ErrorInfo = "Waiting for result.";
+	        } else {
+	          if (o["valid"] == false || o["valid"] == "false") {
+	            errorcolor = true;
+	            ErrorInfo = o["reason"];
+	          } else {
+	            errorcolor = false;
+	            waitingcolor = false;
+	            ErrorInfo = o["reason"];
+	          }
 	        }
 	        if (ErrorInfo == "") {
 	          ErrorInfo = "No Error";
@@ -440,7 +451,11 @@
 	        ResultHtml += "<td>\n";
 	        ResultHtml += "	#" + rId + "\n";
 	        ResultHtml += "<\/td>\n";
-	        ResultHtml += "<td>\n";
+	        if (waitingcolor == true) {
+	          ResultHtml += "<td class='waiting_color'>\n";
+	        } else {
+	          ResultHtml += "<td>\n";
+	        }
 	        ResultHtml += StatusCode[parseInt(o["status"], 10)];
 	        ResultHtml += "<\/td>\n";
 	        ResultHtml += "<td>\n";
@@ -448,6 +463,8 @@
 	        ResultHtml += "<\/td>\n";
 	        if (errorcolor == true) {
 	          ResultHtml += "<td class='error_color'>";
+	        } else if (waitingcolor == true) {
+	          ResultHtml += "<td class='waiting_color'>\n";
 	        } else {
 	          ResultHtml += "<td class='no_error_color'>\n";
 	        }
@@ -673,10 +690,7 @@
 	      MyRankHtml += "# -";
 	      MyRankHtml += "	<\/td>\n";
 	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += $.cookie("username");
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += "--------------";
+	      MyRankHtml += "--------- ";
 	      MyRankHtml += "	<\/td>\n";
 	      MyRankHtml += "	<td>\n";
 	      MyRankHtml += "-";
