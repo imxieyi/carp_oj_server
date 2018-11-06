@@ -592,6 +592,13 @@
 	    }
 	  }
 	  var RenderRankList = function(datasetid) {
+	    //根据屏幕大小变化
+	    if (parseInt($(window).width()) > 1400) {
+	      $("#window_pannel").removeClass("col-md-8");
+	      $("#window_pannel").removeClass("col-md-offset-2");
+	      $("#window_pannel").addClass("col-md-offset-2");
+	      $("#window_pannel").addClass("col-md-8");
+	    }
 	    let render_data = RankData[datasetid].slice(0, 150);
 	    let RankListHtml = "";
 	    RankListHtml += "<thead>\n";
