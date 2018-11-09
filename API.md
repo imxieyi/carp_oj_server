@@ -123,6 +123,20 @@ A typical response looks like:
 }
 ```
 
+#### Judge
+
+##### Rejudge
+
+`GET /api/admin/judge/rejudge?cid={CASE_ID}`
+
+*Allowed user types:* ROOT, ADMIN
+
+*Response:*
+
+```
+ok
+```
+
 #### User
 
 ##### Add user
