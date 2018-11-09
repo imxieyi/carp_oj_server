@@ -7,7 +7,7 @@
     |-- submoduleA.py
     |-- submoduleB.py
 ```
-3. Your program will be executed with command: `python3 CARP_solver.py $data -t $time`
+3. Your program will be executed with command: `python3 CARP_solver.py $data -t $time -s $seed`
 4. Do not use non-standard library except for **numpy**.
 5. Your program is run in Docker container with no network interface.
 6. You are allowed to use up to **800% CPU** (8 cores) and **2GB RAM**. Pay attention that **threading** in Python does not give you real parallelism.
