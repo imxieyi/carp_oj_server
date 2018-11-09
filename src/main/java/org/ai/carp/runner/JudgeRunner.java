@@ -41,6 +41,9 @@ public class JudgeRunner implements Runnable {
                     } catch (IOException e) {
                         logger.error("Case {} is broken", c.getId());
                         // TODO: Handle invalid cases
+                        c.setStatus(CARPCase.ERROR);
+                        c.setReason("Case is broken.");
+                        Database.getInstance().getCarpCases().save(c);
                     }
                 } else {
                     // Check for dead jobs
