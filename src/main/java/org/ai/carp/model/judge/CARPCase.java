@@ -3,6 +3,7 @@ package org.ai.carp.model.judge;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ai.carp.controller.websocket.WebsocketHandler;
 import org.ai.carp.model.dataset.Dataset;
@@ -16,8 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -30,8 +30,12 @@ public class CARPCase {
     public static final int QUEUED = 1;
     public static final int RUNNING = 2;
     public static final int FINISHED = 3;
+    public static final int ERROR = 4;
 
     public static final int DAILY_LIMIT = 10;
+    public static final int RUN_COUNT = 5;
+
+    private static Random random = new Random();
 
     @Id
     private String id;
@@ -231,10 +235,14 @@ public class CARPCase {
         ObjectNode node = mapper.createObjectNode();
         node.put("entry", "CARP_solver.py");
         node.put("data", "data.dat");
-        node.put("parameters", "$data -t $time");
+        node.put("parameters", "$data -t $time -s $seed");
         node.put("time", dataset.getTime());
         node.put("memory", dataset.getMemory());
         node.put("cpu", dataset.getCpu());
+        ArrayNode seeds = node.putArray("seeds");
+        for (int i=0; i<RUN_COUNT; i++) {
+            seeds.add(random.nextInt());
+        }
         return mapper.writeValueAsString(node);
     }
 
