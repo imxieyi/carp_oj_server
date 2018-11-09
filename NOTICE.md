@@ -1,12 +1,12 @@
 1. You are only allowed to submit **10 times every 24 hours** (on a rolling basis). Only successful uploads will count.
 2. You should submit archived program in **zip** format. Max allowed size is **64KB**. The main executable should be named **CARP_solver.py** (case sensitive) and put in **root directory**. Multiple files and subdirectories are allowed. Your directory structure may look like the following structure.
-```
-|-- CARP_solver.py
-|-- config.py
-`-- submodule
-    |-- submoduleA.py
-    |-- submoduleB.py
-```
+    ```
+    |-- CARP_solver.py
+    |-- config.py
+    `-- submodule
+        |-- submoduleA.py
+        |-- submoduleB.py
+    ```
 3. Your program will be executed with command: `python3 CARP_solver.py $data -t $time -s $seed`
 4. Do not use non-standard library except for **numpy**.
 5. Your program is run in Docker container with no network interface.
