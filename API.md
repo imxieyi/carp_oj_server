@@ -319,6 +319,28 @@ done
 
 **Each user appears only once, order by cost asc, time asc, submitTime asc.**
 
+##### Query self best for dataset
+
+`GET /api/judge/best?dataset={DATASET_ID}`
+
+*Allowed user types:* ROOT, ADMIN, USER
+
+*Response:*
+
+```json
+{
+    "carpCases": [
+        {
+            "userName": "root",
+            "datasetId": "5bd602c4044caa5464b356e0",
+            "submitTime": "2018-10-28T18:41:08.775+0000",
+            "time": 9.969951629638672,
+            "cost": 0
+        }
+    ]
+}
+```
+
 ##### Get remaining submit time
 
 `GET /api/judge/remain`

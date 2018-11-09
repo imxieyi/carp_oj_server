@@ -15,6 +15,9 @@ public class QueryTopResult {
             if (!uids.contains(c.getUser().getId())) {
                 carpCases.add(new CARPCaseLite(c));
                 uids.add(c.getUser().getId());
+                if (carpCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
+                    break;
+                }
             }
         }
     }

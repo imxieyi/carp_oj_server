@@ -15,6 +15,7 @@ public interface CARPCaseRepository extends MongoRepository<CARPCase, String> {
     List<CARPCase> findCARPCasesByDatasetOrderBySubmitTimeDesc(Dataset dataset);
     List<CARPCase> findCARPCasesByStatusIsNot(int status);
     List<CARPCase> findCARPCasesByDatasetAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(Dataset dataset, int status, boolean valid);
+    List<CARPCase> findCARPCasesByDatasetAndUserAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(Dataset dataset, User user, int status, boolean valid, Pageable pageable);
     int countCARPCasesByUserAndSubmitTimeAfter(User user, Date startTime);
 
 }
