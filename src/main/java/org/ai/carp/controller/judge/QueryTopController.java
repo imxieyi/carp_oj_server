@@ -18,6 +18,8 @@ import java.util.Optional;
 @RequestMapping("/api/judge/top")
 public class QueryTopController {
 
+    public static final int COUNT_LEADERBOARD = 20;
+
     @GetMapping
     public QueryTopResult get(@RequestParam("dataset") String did, HttpSession session) {
         if (StringUtils.isEmpty(did)) {
