@@ -125,6 +125,22 @@ A typical response looks like:
 
 #### Judge
 
+##### Get Output
+
+`GET /api/admin/judge/output?cid={CASE_ID}`
+
+*Allowed user types:* ROOT, ADMIN
+
+*Response:*
+
+```json
+{
+  "exitcode": 0,
+  "stdout": "...",
+  "stderr": "..."
+}
+```
+
 ##### Rejudge
 
 `GET /api/admin/judge/rejudge?cid={CASE_ID}`
