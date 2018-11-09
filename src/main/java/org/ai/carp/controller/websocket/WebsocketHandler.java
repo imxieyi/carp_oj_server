@@ -125,6 +125,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
                     session.getAttributes().get("uid"));
         // Request worker info
         session.sendMessage(new TextMessage(String.format("{\"type\":%d}", WORKER_INFO)));
+        session.setTextMessageSizeLimit(1000000);
         super.afterConnectionEstablished(session);
     }
 
