@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 public class User {
 
     // Types
+    public static final int NONE = -100;
     public static final int ROOT = 0;
     public static final int ADMIN = 100;
     public static final int USER = 200;

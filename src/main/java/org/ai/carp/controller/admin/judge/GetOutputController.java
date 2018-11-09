@@ -5,7 +5,6 @@ import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
-import org.ai.carp.runner.JudgeRunner;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,7 @@ public class GetOutputController {
 
     @GetMapping
     public OutputResponse get(@RequestParam("cid") String cid, HttpSession session) {
-        UserUtils.getUser(session, User.ADMIN);
+        UserUtils.getUser(session, User.NONE);
         if (StringUtils.isEmpty(cid)) {
             throw new InvalidRequestException("No cid!");
         }
