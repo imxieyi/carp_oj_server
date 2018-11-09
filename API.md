@@ -356,6 +356,20 @@ done
 }
 ```
 
+##### Get queue length
+
+`Get /api/judge/queue`
+
+*Allowed user types:* ROOT, ADMIN, USER
+
+*Response:*
+
+```json
+{
+    "length": 2
+}
+```
+
 ##### Submit data for judging
 
 `POST /api/judge/submit`
