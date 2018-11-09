@@ -10,6 +10,10 @@ public class CARPUtils {
         if (carpCase.getStatus() != CARPCase.FINISHED) {
             return;
         }
+        if (carpCase.isTimedout()) {
+            carpCase.setReason("Timed out");
+            return;
+        }
         if (carpCase.getExitcode() != 0) {
             carpCase.setReason("Exit code is not zero");
             return;
