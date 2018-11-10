@@ -89,7 +89,7 @@ A typical response looks like:
 
 ##### Add test data
 
-`GET /api/admin/system/addtestdata`
+`POST /api/admin/system/addtestdata`
 
 *Allowed user types:* ROOT
 
