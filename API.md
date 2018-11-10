@@ -143,7 +143,15 @@ A typical response looks like:
 
 ##### Rejudge
 
-`GET /api/admin/judge/rejudge?cid={CASE_ID}`
+`POST /api/admin/judge/rejudge`
+
+*Request body:*
+
+```json
+{
+  "cid" : "xxx"
+}
+```
 
 *Allowed user types:* ROOT, ADMIN
 
@@ -422,7 +430,7 @@ done
 
 ##### Logout
 
-`GET /api/logout`
+`POST /api/logout`
 
 *Response:*
 
