@@ -430,8 +430,8 @@ h1, h2, h3, h4, h5, h6, figure {
 
 #fh5co-rank {
   margin-top: 100px;
-  border-top: 3px solid #dd356e;
-  border-bottom: 3px solid #dd356e;
+  /* border-top: 3px solid #dd356e;
+  border-bottom: 3px solid #dd356e; */
   min-height: 1000px;
   padding-top: 80px;
 }
@@ -535,7 +535,8 @@ h1, h2, h3, h4, h5, h6, figure {
 }
 
 #fh5co-wireframe {
-  border: none !important;
+  border-top: 3px solid #dd356e;
+  border-bottom: 3px solid #dd356e;
 }
 
 #fh5co-wireframe blockquote {
@@ -1740,6 +1741,11 @@ input[type="text"] {
 .DatasetTab {
   position: absolute;
   left: 5%;
+}
+
+.seperate_space {
+  min-height: 100px;
+  width: 100%;
 }
 
 /*# sourceMappingURL=style.css.map */
