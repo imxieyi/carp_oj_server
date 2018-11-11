@@ -12,7 +12,9 @@
 	  items: [],
 	  now_page: 0, //Where are you.
 	  page_html: "",
-	};;
+	};
+	var RenderRankList;
+	var getSubmitResult;
 	//Global function for Dom Click events
 	var logout_user = function() {
 	  console.log("logout");
@@ -79,8 +81,21 @@
 	  $("#page_box").empty();
 	  $('#page_box').append(user_rank_page_html);
 	}
-
-	;
+	var addzero = function(s, n) {
+	  //在首部补0
+	  s = String(s);
+	  if (n == undefined) n = 2;
+	  n = parseInt(n, 10);
+	  if (isNaN(n)) n = 0;
+	  if (s.length < n) {
+	    s = "0" + s;
+	    return addzero(s, n)
+	  }
+	  if (s.length >= n) {
+	    return s;
+	  }
+	  return s;
+	};
 	(function() {
 	  var isMobile = {
 	    Android: function() {
@@ -369,7 +384,8 @@
 	    $("#dataset_option1").empty();
 	    $("#dataset_option1").append(SelectHtml);
 	  }
-	  var getSubmitResult = function(page) {
+	  getSubmitResult = function(page) {
+	    page = parseInt(page);
 	    let size = 5; //default
 	    $.ajax({
 	      url: RootUrl + '/api/judge/get?page=' + String(page) + '&size=' + String(size),
@@ -383,6 +399,10 @@
 	        if (data["carpCases"].length > 0) {
 	          $.cookie("page", page);
 	          RenderSubmitResult(data["carpCases"], data["total"]);
+	          let isRefresh = RefreshSubmitResult(data["carpCases"]);
+	          if (isRefresh) {
+	            setTimeout("getSubmitResult($.cookie('page'));", 3000);
+	          }
 	        } else if (parseInt(page) == 0) {
 	          $.cookie("page", page);
 	          RenderSubmitResult(data["carpCases"], 0);
@@ -427,7 +447,7 @@
 	    } else {
 	      for (var o of carpCases) {
 	        let dtime = new Date(o["submitTime"]);
-	        let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
+	        let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
 	        let ErrorInfo = "";
 	        let errorcolor = false;
 	        let waitingcolor = false;
@@ -540,6 +560,16 @@
 	      });
 	    })();
 	  }
+	  var RefreshSubmitResult = function(carpCases) {
+	    if (carpCases.length == 0) return false;
+	    let isRefresh = false;
+	    for (var i in carpCases) {
+	      if (carpCases[i]["status"] < 3) {
+	        isRefresh = true;
+	      }
+	    }
+	    return isRefresh;
+	  }
 	  var getSubmitRemain = function() {
 	    $.getJSON(RootUrl + "/api/judge/remain").success(function(data) {
 	      if (typeof data == "string") {
@@ -603,13 +633,11 @@
 	      }
 	    }
 	  }
-	  var RenderRankList = function(datasetid) {
+	  RenderRankList = function(datasetid) {
 	    //根据屏幕大小变化
 	    if (parseInt($(window).width()) > 1400) {
 	      $("#window_pannel").removeClass("col-md-8");
-	      $("#window_pannel").removeClass("col-md-offset-2");
-	      $("#window_pannel").addClass("col-md-offset-2");
-	      $("#window_pannel").addClass("col-md-8");
+	      $("#window_pannel").addClass("col-md-10");
 	    }
 	    let render_data = RankData[datasetid].slice(0, 150);
 	    let RankListHtml = "";
