@@ -33,6 +33,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WebsocketHandler.class);
 
+    private Thread watchdogThread;
     private Thread judgeRunnerThread;
 
     @Override
@@ -140,8 +141,22 @@ public class WebsocketHandler extends TextWebSocketHandler {
 
     @PostConstruct
     private void startJudgeRunner() {
-        logger.info("Starting judge runner");
-        judgeRunnerThread = new Thread(new JudgeRunner());
-        judgeRunnerThread.start();
+        watchdogThread = new Thread(() -> {
+            logger.info("Started judge runner watchdog");
+            while (true) {
+                if (judgeRunnerThread == null || !judgeRunnerThread.isAlive()) {
+                    logger.info("Starting judge runner");
+                    judgeRunnerThread = new Thread(new JudgeRunner());
+                    judgeRunnerThread.start();
+                }
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException ignored) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        });
+        watchdogThread.start();
     }
 }
