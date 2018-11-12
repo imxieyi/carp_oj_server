@@ -48,35 +48,39 @@ public class JudgeRunner implements Runnable {
                     }
                 } else {
                     // Check for dead jobs
-                    List<Integer> finishedStatus = new ArrayList<>();
-                    finishedStatus.add(CARPCase.FINISHED);
-                    finishedStatus.add(CARPCase.ERROR);
-                    List<CARPCase> deadCases = Database.getInstance().getCarpCases()
-                            .findCARPCasesByStatusNotIn(finishedStatus);
-                    if (deadCases.isEmpty()) {
-                        continue;
-                    }
-                    Map<String, CARPCase> deadCasesMap = new HashMap<>();
-                    for (CARPCase carpCase : deadCases) {
-                        deadCasesMap.put(carpCase.getId(), carpCase);
-                    }
-                    for (JudgeWorker worker : JudgePool.getInstance().getWorkers()) {
-                        for (CARPCase carpCase : worker.jobs) {
-                            deadCasesMap.remove(carpCase.getId());
+                    try {
+                        List<Integer> finishedStatus = new ArrayList<>();
+                        finishedStatus.add(CARPCase.FINISHED);
+                        finishedStatus.add(CARPCase.ERROR);
+                        List<CARPCase> deadCases = Database.getInstance().getCarpCases()
+                                .findCARPCasesByStatusNotIn(finishedStatus);
+                        if (deadCases.isEmpty()) {
+                            continue;
                         }
+                        Map<String, CARPCase> deadCasesMap = new HashMap<>();
+                        for (CARPCase carpCase : deadCases) {
+                            deadCasesMap.put(carpCase.getId(), carpCase);
+                        }
+                        for (JudgeWorker worker : JudgePool.getInstance().getWorkers()) {
+                            for (CARPCase carpCase : worker.jobs) {
+                                deadCasesMap.remove(carpCase.getId());
+                            }
+                        }
+                        for (CARPCase inQueue : queue) {
+                            deadCasesMap.remove(inQueue.getId());
+                        }
+                        if (deadCasesMap.size() <= 0) {
+                            continue;
+                        }
+                        for (CARPCase deadCase : deadCasesMap.values()) {
+                            deadCase.setStatus(CARPCase.WAITING);
+                            CARPCase saved = Database.getInstance().getCarpCases().save(deadCase);
+                            queue.add(saved);
+                        }
+                        logger.info("Restart {} dead cases.", deadCasesMap.size());
+                    } catch (Exception e) {
+                        logger.error("Failed to check for dead cases", e);
                     }
-                    for (CARPCase inQueue : queue) {
-                        deadCasesMap.remove(inQueue.getId());
-                    }
-                    if (deadCasesMap.size() <= 0) {
-                        continue;
-                    }
-                    for (CARPCase deadCase : deadCasesMap.values()) {
-                        deadCase.setStatus(CARPCase.WAITING);
-                        CARPCase saved = Database.getInstance().getCarpCases().save(deadCase);
-                        queue.add(saved);
-                    }
-                    logger.info("Restart {} dead cases.", deadCasesMap.size());
                 }
             }
         } catch (InterruptedException e) {
