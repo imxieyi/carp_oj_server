@@ -603,33 +603,35 @@
 	      //clear RankData
 	      RankData = {};
 	      for (var d in DataSetList) {
-	        $.getJSON(RootUrl + "/api/judge/top?dataset=" + DataSetList[d]["id"]).success(function(data) {
-	          if (typeof data == "string") {
-	            data = JSON.parse(data);
-	          }
-	          let one_tab_rank = {};
-	          one_tab_rank[DataSetList[d]["id"]] = data["carpCases"];
-	          RankData[DataSetList[d]["id"]] = data["carpCases"];
-	          if (d == 0) {
-	            //默认渲染第一个DataSet的排名
-	            RenderRankList(DataSetList[d]["id"]);
-	          }
-	        }).fail(function(jqXHR) {
-	          if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
-	            //session 过期
-	            console.log("session out of date.");
-	            $.cookie("username", null);
-	            $.cookie("userid", null);
+	        (function(d) {
+	          $.getJSON(RootUrl + "/api/judge/top?dataset=" + DataSetList[d]["id"]).success(function(data) {
+	            if (typeof data == "string") {
+	              data = JSON.parse(data);
+	            }
+	            let one_tab_rank = {};
+	            one_tab_rank[DataSetList[d]["id"]] = data["carpCases"];
+	            RankData[DataSetList[d]["id"]] = data["carpCases"];
+	            if (d == 0) {
+	              //默认渲染第一个DataSet的排名
+	              RenderRankList(DataSetList[d]["id"]);
+	            }
+	          }).fail(function(jqXHR) {
+	            if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	              //session 过期
+	              console.log("session out of date.");
+	              $.cookie("username", null);
+	              $.cookie("userid", null);
+	              setTimeout(function() {
+	                window.location.href = "index.html";
+	              }, 500);
+	            }
+	            $("#info_box_msg").html("<p>It occurs a error when get Rank List data, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
+	            $("#info_box").modal("show");
 	            setTimeout(function() {
-	              window.location.href = "index.html";
-	            }, 500);
-	          }
-	          $("#info_box_msg").html("<p>It occurs a error when get Rank List data, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
-	          $("#info_box").modal("show");
-	          setTimeout(function() {
-	            $("#info_box").modal("hide");
-	          }, 5000);
-	        });
+	              $("#info_box").modal("hide");
+	            }, 5000);
+	          });
+	        })(d)
 	      }
 	    }
 	  }
@@ -639,7 +641,12 @@
 	      $("#window_pannel").removeClass("col-md-8");
 	      $("#window_pannel").addClass("col-md-10");
 	    }
-	    let render_data = RankData[datasetid].slice(0, 150);
+	    let render_data;
+	    if (RankData[datasetid] == undefined) {
+	      render_data = [];
+	    } else {
+	      render_data = RankData[datasetid].slice(0, 150);
+	    }
 	    let RankListHtml = "";
 	    RankListHtml += "<thead>\n";
 	    RankListHtml += "<tr>\n";
@@ -811,6 +818,7 @@
 	    checkCookie();
 	    getDatasetList();
 	    getRankData();
+	    console.log(RankData);
 	    $("#result_submit").click(function(event) {
 	      var submit_data = {
 	        "id": "",
