@@ -2,7 +2,7 @@
 
 	// var RootUrl = "http://10.20.34.203:8080";
 	var RootUrl = "";
-	var StatusCode = ["WAITING", "QUEUED", "RUNNING", "FINISHED"];
+	var StatusCode = ["WAITING", "QUEUED", "RUNNING", "FINISHED", "ERROR"];
 	var DataSetList = [];
 	var RankData = [];
 	var Page = {
@@ -12,25 +12,36 @@
 	  items: [],
 	  now_page: 0, //Where are you.
 	  page_html: "",
-	};;
+	};
+	var RenderRankList;
+	var getSubmitResult;
 	//Global function for Dom Click events
 	var logout_user = function() {
 	  console.log("logout");
-	  $.getJSON(RootUrl + "/api/logout").success((data) => {
-	    if (typeof data == "string") {
-	      data = JSON.parse(data);
+	  $.ajax({
+	    url: RootUrl + "/api/logout",
+	    type: 'POST',
+	    headers: {
+	      "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")
+	    },
+	    contentType: 'application/json',
+	    async: false,
+	    success: function(data) {
+	      if (typeof data == "string") {
+	        data = JSON.parse(data);
+	      }
+	      if (data["uid"]) {
+	        $("#info_box_msg").html("<p>Logout!</p>")
+	        $("#info_box").modal("show");
+	        $.cookie("username", null);
+	        $.cookie("userid", null);
+	        setTimeout(function() {
+	          $("#info_box").modal("hide");
+	          window.location.href = "index.html";
+	        }, 2000);
+	      }
 	    }
-	    if (data["uid"]) {
-	      $("#info_box_msg").html("<p>Logout!</p>")
-	      $("#info_box").modal("show");
-	      $.cookie("username", null);
-	      $.cookie("userid", null);
-	      setTimeout(function() {
-	        $("#info_box").modal("hide");
-	        window.location.href = "index.html";
-	      }, 2000);
-	    }
-	  })
+	  });
 	}
 	var changeRankTab = function(e) {
 	  let aimid = $(e).attr("id");
@@ -70,8 +81,21 @@
 	  $("#page_box").empty();
 	  $('#page_box').append(user_rank_page_html);
 	}
-
-	;
+	var addzero = function(s, n) {
+	  //在首部补0
+	  s = String(s);
+	  if (n == undefined) n = 2;
+	  n = parseInt(n, 10);
+	  if (isNaN(n)) n = 0;
+	  if (s.length < n) {
+	    s = "0" + s;
+	    return addzero(s, n)
+	  }
+	  if (s.length >= n) {
+	    return s;
+	  }
+	  return s;
+	};
 	(function() {
 	  var isMobile = {
 	    Android: function() {
@@ -320,6 +344,9 @@
 	        $(e).append("<a href='#' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + $.cookie('username') + "&nbsp;&nbsp;</span></a>");
 	        $(e).css("display", "inline-block");
 	      });
+	      $(".change_pwd").each(function(i, e) {
+	        $(e).css("display", "inline-block");
+	      });
 	      //登录之后拉取提交记录
 	      getSubmitResult(0);
 	      //登录之后拉取提交剩余次数
@@ -357,7 +384,8 @@
 	    $("#dataset_option1").empty();
 	    $("#dataset_option1").append(SelectHtml);
 	  }
-	  var getSubmitResult = function(page) {
+	  getSubmitResult = function(page) {
+	    page = parseInt(page);
 	    let size = 5; //default
 	    $.ajax({
 	      url: RootUrl + '/api/judge/get?page=' + String(page) + '&size=' + String(size),
@@ -371,6 +399,10 @@
 	        if (data["carpCases"].length > 0) {
 	          $.cookie("page", page);
 	          RenderSubmitResult(data["carpCases"], data["total"]);
+	          let isRefresh = RefreshSubmitResult(data["carpCases"]);
+	          if (isRefresh) {
+	            setTimeout("getSubmitResult($.cookie('page'));", 3000);
+	          }
 	        } else if (parseInt(page) == 0) {
 	          $.cookie("page", page);
 	          RenderSubmitResult(data["carpCases"], 0);
@@ -398,7 +430,7 @@
 	    ResultHtml += "		ExitCode\n";
 	    ResultHtml += "	<\/th>\n";
 	    ResultHtml += "	<th>\n";
-	    ResultHtml += "		RunTime\n";
+	    ResultHtml += "		RunTime(s)\n";
 	    ResultHtml += "	<\/th>\n";
 	    ResultHtml += "	<th>\n";
 	    ResultHtml += "		Cost\n";
@@ -415,7 +447,7 @@
 	    } else {
 	      for (var o of carpCases) {
 	        let dtime = new Date(o["submitTime"]);
-	        let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
+	        let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
 	        let ErrorInfo = "";
 	        let errorcolor = false;
 	        let waitingcolor = false;
@@ -528,6 +560,16 @@
 	      });
 	    })();
 	  }
+	  var RefreshSubmitResult = function(carpCases) {
+	    if (carpCases.length == 0) return false;
+	    let isRefresh = false;
+	    for (var i in carpCases) {
+	      if (carpCases[i]["status"] < 3) {
+	        isRefresh = true;
+	      }
+	    }
+	    return isRefresh;
+	  }
 	  var getSubmitRemain = function() {
 	    $.getJSON(RootUrl + "/api/judge/remain").success(function(data) {
 	      if (typeof data == "string") {
@@ -591,13 +633,11 @@
 	      }
 	    }
 	  }
-	  var RenderRankList = function(datasetid) {
+	  RenderRankList = function(datasetid) {
 	    //根据屏幕大小变化
 	    if (parseInt($(window).width()) > 1400) {
 	      $("#window_pannel").removeClass("col-md-8");
-	      $("#window_pannel").removeClass("col-md-offset-2");
-	      $("#window_pannel").addClass("col-md-offset-2");
-	      $("#window_pannel").addClass("col-md-8");
+	      $("#window_pannel").addClass("col-md-10");
 	    }
 	    let render_data = RankData[datasetid].slice(0, 150);
 	    let RankListHtml = "";
@@ -782,6 +822,12 @@
 	      $.ajax({
 	        url: RootUrl + '/api/judge/submit',
 	        type: 'POST',
+	        headers: {
+	          "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")
+	        },
+	        xhrFields: {
+	          withCredentials: true
+	        },
 	        contentType: 'application/json',
 	        async: true,
 	        data: JSON.stringify(submit_data),
@@ -819,6 +865,12 @@
 	        type: 'POST',
 	        contentType: 'application/json',
 	        async: false,
+	        headers: {
+	          "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")
+	        },
+	        xhrFields: {
+	          withCredentials: true
+	        },
 	        data: JSON.stringify(submit_data),
 	        success: function(data) {
 	          console.log('login successly!');
@@ -837,10 +889,51 @@
 	            $(e).append("<a href='#' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
 	            $(e).css("display", "inline-block");
 	          });
+	          $(".change_pwd").each(function(i, e) {
+	            $(e).css("display", "inline-block");
+	          });
 	          //登录之后拉取提交记录
 	          getSubmitResult(0);
 	          //登录之后拉取提交剩余次数
 	          getSubmitRemain();
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	          if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	            //session 过期
+	            $.cookie("username", null);
+	            $.cookie("userid", null);
+	          } else if (parseInt(jqXHR["responseJSON"]["status"]) == 400 && jqXHR["responseJSON"]["message"] == "Already logged in!") {
+	            $.getJSON(RootUrl + "/api/user/info").success(function(data) {
+	              if (typeof data == "string") {
+	                data = JSON.parse(data);
+	              }
+	              $.cookie("userid", data["uid"]);
+	              $.cookie("username", data["username"]);
+	              $("#login_box").modal("hide");
+	              $(".user_place").each(function(i, e) {
+	                $(e).css("display", "none");
+	              });
+	              $(".user_span").each(function(i, e) {
+	                $(e).empty();
+	                $(e).append("<a href='#' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
+	                $(e).css("display", "inline-block");
+	              });
+	              $(".change_pwd").each(function(i, e) {
+	                $(e).css("display", "inline-block");
+	              });
+	              //登录之后拉取提交记录
+	              getSubmitResult(0);
+	              //登录之后拉取提交剩余次数
+	              getSubmitRemain();
+	            });
+	            return;
+	          }
+	          $("#login_box").modal("hide");
+	          $("#info_box_msg").html("<p>It occurs a error when submit data, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
+	          $("#info_box").modal("show");
+	          setTimeout(function() {
+	            $("#info_box").modal("hide");
+	          }, 5000);
 	        }
 	      });
 	    });
@@ -871,6 +964,12 @@
 	        $.ajax({
 	          url: RootUrl + '/api/judge/submit',
 	          type: 'POST',
+	          headers: {
+	            "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")
+	          },
+	          xhrFields: {
+	            withCredentials: true
+	          },
 	          contentType: 'application/json',
 	          data: JSON.stringify(submit_data),
 	          success: function(data) {
@@ -929,6 +1028,66 @@
 	        nowpage = -1;
 	      }
 	      getSubmitResult(nowpage + 1);
+	    });
+	    $("#change_pwd_submit").click(function(event) {
+	      /* Act on the event */
+	      $("#change_pwd_submit").attr("disabled", "disabled");
+	      let pwd = $("#change_password").val();
+	      let newpwd = $("#change_new_password").val();
+	      let send_data = {
+	        "old": pwd,
+	        "new": newpwd
+	      };
+	      $.ajax({
+	        url: RootUrl + '/api/user/change/password',
+	        type: 'POST',
+	        headers: {
+	          "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")
+	        },
+	        xhrFields: {
+	          withCredentials: true
+	        },
+	        contentType: 'application/json',
+	        data: JSON.stringify(send_data),
+	        success: function(data) {
+	          if (typeof(data) == "string") {
+	            data = JSON.parse(data);
+	          }
+	          $("#change_pwd_content").html("<p>Change Successfully!<br/>Refresh page after 3 seconds.</p>")
+	          $.cookie("username", null);
+	          $.cookie("userid", null);
+	          setTimeout(function() {
+	            $("#change_pwd_box").modal("hide");
+	            window.location.href = "index.html";
+	          }, 3000);
+	        },
+	        error: function(jqXHR, textStatus, errorThrown) {
+	          if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	            //session 过期
+	            console.log("session out of date.");
+	            $.cookie("username", null);
+	            $.cookie("userid", null);
+	            logout_user();
+	            setTimeout(function() {
+	              window.location.href = "index.html";
+	            }, 5000);
+	          }
+	          $("#change_pwd_content").html("<p>It occurs a error when submit data, Error:" + jqXHR["responseJSON"]["message"] + "</p>");
+	          setTimeout(function() {
+	            let change_pwdHtml = "<div class=\"form-group\">\n";
+	            change_pwdHtml += "	<label for=\"password\">Password<\/label>\n";
+	            change_pwdHtml += "	<input type=\"password\" class=\"form-control\" name=\"password\" id=\"change_password\" placeholder=\"Password\">\n";
+	            change_pwdHtml += "<\/div>\n";
+	            change_pwdHtml += "<div class=\"form-group\">\n";
+	            change_pwdHtml += "	<label for=\"newpassword\">New Password<\/label>\n";
+	            change_pwdHtml += "	<input type=\"password\" class=\"form-control\" name=\"newpassword\" id=\"change_new_password\" placeholder=\"New Password\">\n";
+	            change_pwdHtml += "<\/div>\n";
+	            $("#change_pwd_box").modal("hide");
+	            $("#change_pwd_content").html(change_pwdHtml);
+	            $("#change_pwd_submit").removeAttr("disabled");
+	          }, 3000);
+	        }
+	      });
 	    });
 	  });
 	})()
