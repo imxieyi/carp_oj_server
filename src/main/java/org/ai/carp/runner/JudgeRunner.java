@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,11 @@ public class JudgeRunner implements Runnable {
                     }
                 } else {
                     // Check for dead jobs
+                    List<Integer> finishedStatus = new ArrayList<>();
+                    finishedStatus.add(CARPCase.FINISHED);
+                    finishedStatus.add(CARPCase.ERROR);
                     List<CARPCase> deadCases = Database.getInstance().getCarpCases()
-                            .findCARPCasesByStatusIsNot(CARPCase.FINISHED);
+                            .findCARPCasesByStatusNotIn(finishedStatus);
                     if (deadCases.isEmpty()) {
                         continue;
                     }

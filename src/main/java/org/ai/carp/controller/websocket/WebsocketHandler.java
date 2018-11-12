@@ -95,6 +95,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
             if (StringUtils.isEmpty(cid)) {
                 return;
             }
+            logger.info("Result returned for {}", cid);
             double timestamp = rootNode.get("timestamp").asDouble();
             for (CARPCase carpCase : worker.jobs) {
                 if (carpCase.getId().equals(cid)) {
