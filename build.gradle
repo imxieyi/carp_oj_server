@@ -19,10 +19,18 @@ group = 'org.ai'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
+springBoot {
+    mainClassName = 'org.ai.carp.CarpServerApplication'
+}
+
 repositories {
     mavenCentral()
 }
 
+task addData(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.CARPSetup"
+}
 
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')

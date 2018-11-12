@@ -2,14 +2,11 @@ package org.ai.carp.model;
 
 import org.ai.carp.model.dataset.DatasetRepository;
 import org.ai.carp.model.judge.CARPCaseRepository;
-import org.ai.carp.model.user.User;
 import org.ai.carp.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 public class Database {
@@ -55,12 +52,5 @@ public class Database {
 
     private Database() {
         ourInstance = this;
-    }
-
-    @PostConstruct
-    public void initDB() {
-        if (users.count() == 0) {
-            users.insert(new User("root", "123", User.ROOT));
-        }
     }
 }

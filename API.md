@@ -87,14 +87,6 @@ A typical response looks like:
 
 #### System
 
-##### Add test data
-
-`POST /api/admin/system/addtestdata`
-
-*Allowed user types:* ROOT
-
-*Response:* `done` if finished successfully.
-
 #### Dataset
 
 ##### Add dataset
