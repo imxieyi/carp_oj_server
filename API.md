@@ -147,6 +147,18 @@ A typical response looks like:
 ]
 ```
 
+##### Download Archive
+
+`GET /api/admin/judge/archive?cid={CASE_ID}`
+
+*Allowed user types:* ROOT, ADMIN
+
+*Response:*
+
+```
+zip archive
+```
+
 ##### Get Output
 
 `GET /api/admin/judge/output?cid={CASE_ID}`
