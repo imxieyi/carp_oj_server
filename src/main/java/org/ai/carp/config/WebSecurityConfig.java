@@ -15,7 +15,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .anyRequest().anonymous();
-        http.csrf().ignoringAntMatchers("/api/admin/**", "/api/login", "/api/logout");
         http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
     }
 
