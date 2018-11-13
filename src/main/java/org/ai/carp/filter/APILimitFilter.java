@@ -15,7 +15,7 @@ import java.util.Set;
 public class APILimitFilter implements Filter {
 
     Set<RequestLimitRule> rules = Collections.singleton(
-            RequestLimitRule.of(Duration.of(1, ChronoUnit.MINUTES), 100));
+            RequestLimitRule.of(Duration.of(1, ChronoUnit.MINUTES), 300));
     RequestRateLimiter requestRateLimiter = new InMemorySlidingWindowRequestRateLimiter(rules);
 
     @Override
