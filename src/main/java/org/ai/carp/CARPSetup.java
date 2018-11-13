@@ -67,7 +67,7 @@ public class CARPSetup {
                         logger.error("Invalid user info for {}", splitted[0]);
                         continue;
                 }
-                User user = new User(splitted[0], splitted[1], role);
+                User user = new User(splitted[0], splitted[2], role);
                 user = Database.getInstance().getUsers().insert(user);
                 logger.info(user.toString());
             }
