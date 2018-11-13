@@ -117,6 +117,36 @@ A typical response looks like:
 
 #### Judge
 
+##### Query by User and Dataset
+
+`GET /api/admin/judge/query?user={USER_NAME}&dataset={DATASET_NAME}`
+
+*Allowed user types:* ROOT, ADMIN
+
+*Response:*
+
+```json
+[
+    {
+        "id": "5bea74b2e47f881914f10123",
+        "status": 0,
+        "submitTime": "2018-11-13T06:52:34.028+0000",
+        "judgeTime": null,
+        "timedout": false,
+        "outOverflow": false,
+        "errOverflow": false,
+        "time": 0,
+        "exitcode": 0,
+        "valid": false,
+        "cost": 0,
+        "reason": null,
+        "userId": "5be908eea6d72a185426a6ca",
+        "datasetId": "5be908ffa6d72a185426a781",
+        "workerName": null
+    }
+]
+```
+
 ##### Get Output
 
 `GET /api/admin/judge/output?cid={CASE_ID}`

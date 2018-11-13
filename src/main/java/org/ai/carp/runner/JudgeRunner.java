@@ -5,6 +5,7 @@ import org.ai.carp.model.judge.CARPCaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@AutoConfigureAfter(CARPCaseRepository.class)
 public class JudgeRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(JudgeRunner.class);
@@ -37,7 +39,7 @@ public class JudgeRunner {
         logger.info("Judge runner started");
         try {
             while (true) {
-                CARPCase c = queue.poll(10, TimeUnit.SECONDS);
+                CARPCase c = queue.poll(5, TimeUnit.SECONDS);
                 if (c != null) {
                     // Dispatch job
                     try {
@@ -46,7 +48,7 @@ public class JudgeRunner {
                         synchronized (JudgePool.getInstance()) {
                             while (worker == null) {
                                 logger.info("No worker available for judging, {} remains", queue.size() + 1);
-                                JudgePool.getInstance().wait(10000);
+                                JudgePool.getInstance().wait(5000);
                                 worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
                             }
                         }

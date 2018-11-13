@@ -54,6 +54,7 @@ public class Dataset {
     }
 
     public Dataset(String name, int time, int memory, int cpu, String data) {
+        name = name.replaceAll(" ", "");
         this.name = name;
         this.time = time;
         this.memory = memory;

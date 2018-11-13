@@ -20,7 +20,7 @@ public class GetOutputController {
 
     @GetMapping
     public OutputResponse get(@RequestParam("cid") String cid, HttpSession session) {
-        UserUtils.getUser(session, User.NONE);
+        UserUtils.getUser(session, User.ADMIN);
         if (StringUtils.isEmpty(cid)) {
             throw new InvalidRequestException("No cid!");
         }
