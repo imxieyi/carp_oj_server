@@ -593,7 +593,7 @@
 	      let remainString = data["remain"] + '/' + data["total"] + ' remain';
 	      RenderSubmitRemain(remainString);
 	    }).fail(function(jqXHR, textStatus, errorThrown) {
-	      if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	      if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
 	        //session 过期
 	        console.log("session out of date.");
 	        $.cookie("username", null);
@@ -617,7 +617,7 @@
 	      let queueLengthString = data["length"];
 	      RenderSubmitQueue(queueLengthString);
 	    }).fail(function(jqXHR, textStatus, errorThrown) {
-	      if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	      if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
 	        //session 过期
 	        console.log("session out of date.");
 	        $.cookie("username", null);
@@ -658,7 +658,7 @@
 	              RenderRankList(DataSetList[d]["id"]);
 	            }
 	          }).fail(function(jqXHR) {
-	            if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	            if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
 	              //session 过期
 	              console.log("session out of date.");
 	              $.cookie("username", null);
@@ -966,7 +966,7 @@
 	          getSubmitQueue();
 	        },
 	        error: function(jqXHR, textStatus, errorThrown) {
-	          if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	          if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
 	            //session 过期
 	            $.cookie("username", null);
 	            $.cookie("userid", null);
@@ -1075,7 +1075,7 @@
 	            getSubmitQueue();
 	          },
 	          error: function(jqXHR, textStatus, errorThrown) {
-	            if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	            if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
 	              //session 过期
 	              console.log("session out of date.");
 	              $.cookie("username", null);
@@ -1150,7 +1150,7 @@
 	          }, 3000);
 	        },
 	        error: function(jqXHR, textStatus, errorThrown) {
-	          if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	          if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
 	            //session 过期
 	            console.log("session out of date.");
 	            $.cookie("username", null);
