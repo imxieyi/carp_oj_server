@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.Optional;
 
 @RestController
@@ -27,6 +28,9 @@ public class SubmitController {
     @PostMapping
     public SubmitResponse post(@RequestBody PostCase postCase, HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
+        if (new Date().getTime() >= 1542556800000L) {
+            throw new InvalidRequestException("Deadline has passed!");
+        }
         if (StringUtils.isEmpty(postCase.dataset)) {
             throw new InvalidRequestException("No dataset!");
         }
