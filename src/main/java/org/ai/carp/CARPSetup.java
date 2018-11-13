@@ -46,6 +46,7 @@ public class CARPSetup {
         Scanner scanner = new Scanner(is);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
+            line = line.replaceAll("\r", "");
             String[] splitted = line.split(",");
             if (StringUtils.isEmpty(splitted[0])) {
                 continue;
@@ -85,6 +86,7 @@ public class CARPSetup {
         Map<String, Dataset> map = new HashMap<>();
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
+            line = line.replaceAll("\r", "");
             String[] splitted = line.split(",");
             if (StringUtils.isEmpty(splitted[0])) {
                 continue;
