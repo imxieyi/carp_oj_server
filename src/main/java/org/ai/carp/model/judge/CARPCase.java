@@ -3,7 +3,6 @@ package org.ai.carp.model.judge;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ai.carp.controller.websocket.WebsocketHandler;
 import org.ai.carp.model.dataset.Dataset;
@@ -17,7 +16,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -32,7 +33,7 @@ public class CARPCase {
     public static final int FINISHED = 3;
     public static final int ERROR = 4;
 
-    public static final int DAILY_LIMIT = 10;
+    public static final int DAILY_LIMIT = 30;
     public static final int RUN_COUNT = 5;
 
     private static Random random = new Random();
