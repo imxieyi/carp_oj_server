@@ -576,7 +576,7 @@
 	      if (typeof data == "string") {
 	        data = JSON.parse(data);
 	      }
-	      let remainString = data["remain"] + '/' + data["total"];
+	      let remainString = data["remain"] + '/' + data["total"] + ' remain';
 	      RenderSubmitRemain(remainString);
 	    }).fail(function(jqXHR, textStatus, errorThrown) {
 	      if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
@@ -600,8 +600,8 @@
                 if (typeof data == "string") {
                     data = JSON.parse(data);
                 }
-                let remainString = data["length"];
-                RenderSubmitQueue(remainString);
+                let queueLengthString = data["length"];
+                RenderSubmitQueue(queueLengthString);
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
                     //session 过期
