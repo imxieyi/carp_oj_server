@@ -733,7 +733,7 @@
 	        }
 	        let page_dom = "";
 	        let dtime = new Date(value["submitTime"]);
-	        let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
+	        let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
 	        let rank = parseInt(index) + 1;
 	        page_dom += "<tr>\n";
 	        page_dom += "	<td>\n";
