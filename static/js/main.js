@@ -351,6 +351,7 @@
 	      getSubmitResult(0);
 	      //登录之后拉取提交剩余次数
 	      getSubmitRemain();
+	      getSubmitQueue();
 	    }
 	  }
 	  var getDatasetList = function() {
@@ -594,9 +595,36 @@
 	      }, 5000);
 	    });
 	  }
+        var getSubmitQueue = function() {
+            $.getJSON(RootUrl + "/api/judge/queue").success(function(data) {
+                if (typeof data == "string") {
+                    data = JSON.parse(data);
+                }
+                let remainString = data["length"];
+                RenderSubmitQueue(remainString);
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+                    //session 过期
+                    console.log("session out of date.");
+                    $.cookie("username", null);
+                    $.cookie("userid", null);
+                    setTimeout(function() {
+                        window.location.href = "index.html";
+                    }, 500);
+                }
+                $("#info_box_msg").html("<p>It occurs a error when get remained amount, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
+                $("#info_box").modal("show");
+                setTimeout(function() {
+                    $("#info_box").modal("hide");
+                }, 5000);
+            });
+        }
 	  var RenderSubmitRemain = function(str) {
 	    $("#remain_number").html(str);
 	  }
+        var RenderSubmitQueue = function(str) {
+            $("#queue_length").html(str + " in queue");
+        }
 	  var getRankData = function() {
 	    RenderTabList();
 	    if (DataSetList.length) {
@@ -904,6 +932,7 @@
 	          getSubmitResult(0);
 	          //登录之后拉取提交剩余次数
 	          getSubmitRemain();
+	          getSubmitQueue();
 	        },
 	        error: function(jqXHR, textStatus, errorThrown) {
 	          if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
@@ -933,6 +962,7 @@
 	              getSubmitResult(0);
 	              //登录之后拉取提交剩余次数
 	              getSubmitRemain();
+	              getSubmitQueue();
 	            });
 	            return;
 	          }
@@ -993,6 +1023,7 @@
 	            getSubmitResult(0);
 	            //登录之后拉取提交剩余次数
 	            getSubmitRemain();
+	            getSubmitQueue();
 	          },
 	          error: function(jqXHR, textStatus, errorThrown) {
 	            if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
