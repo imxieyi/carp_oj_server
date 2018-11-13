@@ -340,9 +340,23 @@
 	        $(e).css("display", "none");
 	      });
 	      $(".user_span").each(function(i, e) {
+	        let user = $.cookie("username");
 	        $(e).empty();
-	        $(e).append("<a href='#' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + $.cookie('username') + "&nbsp;&nbsp;</span></a>");
+	        $(e).append("<a href='#'  class='pop_logout' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
 	        $(e).css("display", "inline-block");
+
+	        $(".pop_logout").mouseover(function(event) {
+	          let remain = $(this).html();
+	          $(this).html("<span class='logout_span'>&nbsp;&nbsp; Logout &nbsp;&nbsp;</span>");
+	          let self = this;
+	        });
+	        $(".pop_logout").mouseleave(function(event) {
+	          $(this).html("<span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span>");
+	        });
+	        $("#logout_span").click(function() {
+	          console.log("...");
+	          logout_user()
+	        });
 	      });
 	      $(".change_pwd").each(function(i, e) {
 	        $(e).css("display", "inline-block");
@@ -595,36 +609,36 @@
 	      }, 5000);
 	    });
 	  }
-        var getSubmitQueue = function() {
-            $.getJSON(RootUrl + "/api/judge/queue").success(function(data) {
-                if (typeof data == "string") {
-                    data = JSON.parse(data);
-                }
-                let queueLengthString = data["length"];
-                RenderSubmitQueue(queueLengthString);
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
-                    //session 过期
-                    console.log("session out of date.");
-                    $.cookie("username", null);
-                    $.cookie("userid", null);
-                    setTimeout(function() {
-                        window.location.href = "index.html";
-                    }, 500);
-                }
-                $("#info_box_msg").html("<p>It occurs a error when get remained amount, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
-                $("#info_box").modal("show");
-                setTimeout(function() {
-                    $("#info_box").modal("hide");
-                }, 5000);
-            });
-        }
+	  var getSubmitQueue = function() {
+	    $.getJSON(RootUrl + "/api/judge/queue").success(function(data) {
+	      if (typeof data == "string") {
+	        data = JSON.parse(data);
+	      }
+	      let queueLengthString = data["length"];
+	      RenderSubmitQueue(queueLengthString);
+	    }).fail(function(jqXHR, textStatus, errorThrown) {
+	      if (parseInt(jqXHR["responseJSON"]["status"]) == 403) {
+	        //session 过期
+	        console.log("session out of date.");
+	        $.cookie("username", null);
+	        $.cookie("userid", null);
+	        setTimeout(function() {
+	          window.location.href = "index.html";
+	        }, 500);
+	      }
+	      $("#info_box_msg").html("<p>It occurs a error when get remained amount, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
+	      $("#info_box").modal("show");
+	      setTimeout(function() {
+	        $("#info_box").modal("hide");
+	      }, 5000);
+	    });
+	  }
 	  var RenderSubmitRemain = function(str) {
 	    $("#remain_number").html(str);
 	  }
-        var RenderSubmitQueue = function(str) {
-            $("#queue_length").html(str + " in queue");
-        }
+	  var RenderSubmitQueue = function(str) {
+	    $("#queue_length").html(str + " in queue");
+	  }
 	  var getRankData = function() {
 	    RenderTabList();
 	    if (DataSetList.length) {
@@ -846,7 +860,6 @@
 	    checkCookie();
 	    getDatasetList();
 	    getRankData();
-	    console.log(RankData);
 	    $("#result_submit").click(function(event) {
 	      var submit_data = {
 	        "id": "",
@@ -915,8 +928,12 @@
 	          }
 	          var expDate = new Date();
 	          expDate.setTime(expDate.getTime() + (7 * 24 * 3600 * 1000));
-	          $.cookie("userid", data["uid"], {expires: expDate});
-	          $.cookie("username", user, {expires: expDate});
+	          $.cookie("userid", data["uid"], {
+	            expires: expDate
+	          });
+	          $.cookie("username", user, {
+	            expires: expDate
+	          });
 
 	          $("#login_box").modal("hide");
 	          $(".user_place").each(function(i, e) {
@@ -924,8 +941,20 @@
 	          });
 	          $(".user_span").each(function(i, e) {
 	            $(e).empty();
-	            $(e).append("<a href='#' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
+	            $(e).append("<a href='#'  class='pop_logout' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
 	            $(e).css("display", "inline-block");
+	            $(".pop_logout").mouseover(function(event) {
+	              let remain = $(this).html();
+	              $(this).html("<span class='logout_span'>&nbsp;&nbsp; Logout &nbsp;&nbsp;</span>");
+	              let self = this;
+	            });
+	            $(".pop_logout").mouseleave(function(event) {
+	              $(this).html("<span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span>");
+	            });
+	            $(".logout_span").click(function() {
+	              console.log("...");
+	              logout_user();
+	            });
 	          });
 	          $(".change_pwd").each(function(i, e) {
 	            $(e).css("display", "inline-block");
@@ -946,18 +975,34 @@
 	              if (typeof data == "string") {
 	                data = JSON.parse(data);
 	              }
-                    var expDate = new Date();
-                    expDate.setTime(expDate.getTime() + (7 * 24 * 3600 * 1000));
-                    $.cookie("userid", data["uid"], {expires: expDate});
-                    $.cookie("username", user, {expires: expDate});
+	              var expDate = new Date();
+	              expDate.setTime(expDate.getTime() + (7 * 24 * 3600 * 1000));
+	              $.cookie("userid", data["uid"], {
+	                expires: expDate
+	              });
+	              $.cookie("username", user, {
+	                expires: expDate
+	              });
 	              $("#login_box").modal("hide");
 	              $(".user_place").each(function(i, e) {
 	                $(e).css("display", "none");
 	              });
 	              $(".user_span").each(function(i, e) {
 	                $(e).empty();
-	                $(e).append("<a href='#' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
+	                $(e).append("<a href='#' class='pop_logout' onclick='logout_user()'><span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span></a>");
 	                $(e).css("display", "inline-block");
+	                $(".pop_logout").mouseover(function(event) {
+	                  let remain = $(this).html();
+	                  $(this).html("<span class='logout_span'>&nbsp;&nbsp; Logout &nbsp;&nbsp;</span>");
+	                  let self = this;
+	                });
+	                $(".pop_logout").mouseleave(function(event) {
+	                  $(this).html("<span id='logout'>&nbsp;&nbsp;Hello," + user + "&nbsp;&nbsp;</span>");
+	                });
+	                $("#logout_span").click(function() {
+	                  console.log("...");
+	                  logout_user()
+	                });
 	              });
 	              $(".change_pwd").each(function(i, e) {
 	                $(e).css("display", "inline-block");
