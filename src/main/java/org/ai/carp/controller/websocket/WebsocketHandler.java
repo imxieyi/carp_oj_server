@@ -6,10 +6,11 @@ import org.ai.carp.controller.util.CARPUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.runner.JudgePool;
-import org.ai.carp.runner.JudgeRunner;
+import org.ai.carp.runner.JudgeRunnerWatchdog;
 import org.ai.carp.runner.JudgeWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.socket.CloseStatus;
@@ -33,8 +34,12 @@ public class WebsocketHandler extends TextWebSocketHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(WebsocketHandler.class);
 
-    private Thread watchdogThread;
-    private Thread judgeRunnerThread;
+    private JudgeRunnerWatchdog judgeRunnerWatchdog;
+
+    @Autowired
+    private void setJudgeRunnerWatchdog(JudgeRunnerWatchdog judgeRunnerWatchdog) {
+        this.judgeRunnerWatchdog = judgeRunnerWatchdog;
+    }
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -140,23 +145,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
     }
 
     @PostConstruct
-    private void startJudgeRunner() {
-        watchdogThread = new Thread(() -> {
-            logger.info("Started judge runner watchdog");
-            while (true) {
-                if (judgeRunnerThread == null || !judgeRunnerThread.isAlive()) {
-                    logger.info("Starting judge runner");
-                    judgeRunnerThread = new Thread(new JudgeRunner());
-                    judgeRunnerThread.start();
-                }
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException ignored) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
-            }
-        });
-        watchdogThread.start();
+    private void startJudgeRunner() throws InterruptedException {
+        judgeRunnerWatchdog.start();
     }
 }

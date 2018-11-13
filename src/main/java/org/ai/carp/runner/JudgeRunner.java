@@ -1,9 +1,12 @@
 package org.ai.carp.runner;
 
-import org.ai.carp.model.Database;
 import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.CARPCaseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,19 +14,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class JudgeRunner implements Runnable {
+@Component
+public class JudgeRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(JudgeRunner.class);
 
     public static BlockingQueue<CARPCase> queue = new LinkedBlockingQueue<>();
 
-    @Override
-    public void run() {
+    private CARPCaseRepository carpCases;
+
+    @Autowired
+    private void setCarpCases(CARPCaseRepository carpCases) {
+        this.carpCases = carpCases;
+    }
+
+    @Async
+    public Future start() throws InterruptedException {
+        logger.info("Judge runner started");
         try {
-            logger.info("Judge runner started");
             while (true) {
                 CARPCase c = queue.poll(10, TimeUnit.SECONDS);
                 if (c != null) {
@@ -44,15 +56,14 @@ public class JudgeRunner implements Runnable {
                         // TODO: Handle invalid cases
                         c.setStatus(CARPCase.ERROR);
                         c.setReason("Case is broken.");
-                        Database.getInstance().getCarpCases().save(c);
+                        carpCases.save(c);
                     }
                 } else {
                     // Check for dead jobs
                     List<Integer> finishedStatus = new ArrayList<>();
                     finishedStatus.add(CARPCase.FINISHED);
                     finishedStatus.add(CARPCase.ERROR);
-                    List<CARPCase> deadCases = Database.getInstance().getCarpCases()
-                            .findCARPCasesByStatusNotIn(finishedStatus);
+                    List<CARPCase> deadCases = carpCases.findCARPCasesByStatusNotIn(finishedStatus);
                     if (deadCases.isEmpty()) {
                         continue;
                     }
@@ -73,15 +84,15 @@ public class JudgeRunner implements Runnable {
                     }
                     for (CARPCase deadCase : deadCasesMap.values()) {
                         deadCase.setStatus(CARPCase.WAITING);
-                        CARPCase saved = Database.getInstance().getCarpCases().save(deadCase);
+                        CARPCase saved = carpCases.save(deadCase);
                         queue.add(saved);
                     }
                     logger.info("Restart {} dead cases.", deadCasesMap.size());
                 }
             }
-        } catch (InterruptedException e) {
-            logger.error(e.getLocalizedMessage(), e);
-            Thread.currentThread().interrupt();
+        } catch (RuntimeException e) {
+            logger.error("Exception thrown", e);
+            throw e;
         }
     }
 }
