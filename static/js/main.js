@@ -946,8 +946,10 @@
 	              if (typeof data == "string") {
 	                data = JSON.parse(data);
 	              }
-	              $.cookie("userid", data["uid"]);
-	              $.cookie("username", data["username"]);
+                    var expDate = new Date();
+                    expDate.setTime(expDate.getTime() + (7 * 24 * 3600 * 1000));
+                    $.cookie("userid", data["uid"], {expires: expDate});
+                    $.cookie("username", user, {expires: expDate});
 	              $("#login_box").modal("hide");
 	              $(".user_place").each(function(i, e) {
 	                $(e).css("display", "none");
