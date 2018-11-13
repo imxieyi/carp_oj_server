@@ -93,7 +93,7 @@
 										<li>Do not use non-standard library except for <b>numpy</b>.</li>
 										<li>Your program is run in Docker container with no network interface.</li>
 										<li>You are allowed to use up to <b>800% CPU</b> (8 cores) and <b>2GB RAM</b>. Pay attention that <b>threading</b> in Python does not give you real parallelism.</li>
-										<li>Be sure to exit before time running out. You should leave 1 second for starting container.</li>
+										<li>Be sure to exit before time running out. You should leave about <b>1 second</b> for starting container and other overhead.</li>
 										<li>Exit code must be 0, otherwise it will be considered invalid.</li>
 										<li>Maximum allowed processes in container is <b>64</b>.</li>
 										<li>If you need to write temp file, write to <b>/tmp</b>. The whole RootFS is <b>read-only</b>.</li>
