@@ -48,7 +48,7 @@ public class JudgeRunner {
                         synchronized (JudgePool.getInstance()) {
                             while (worker == null) {
                                 logger.info("No worker available for judging, {} remains", queue.size() + 1);
-                                JudgePool.getInstance().wait(5000);
+                                JudgePool.getInstance().wait(10000);
                                 worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
                             }
                         }
