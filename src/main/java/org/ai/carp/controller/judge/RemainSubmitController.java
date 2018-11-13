@@ -2,6 +2,7 @@ package org.ai.carp.controller.judge;
 
 import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
+import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +14,11 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api/judge/remain")
 public class RemainSubmitController {
 
-    private static final int DAILY_LIMIT = 10;
-
     @GetMapping
     public RemainSubmitResponse get(HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
         int count = CaseUtils.countPreviousDay(user);
-        return new RemainSubmitResponse(DAILY_LIMIT - count, DAILY_LIMIT);
+        return new RemainSubmitResponse(CARPCase.DAILY_LIMIT - count, CARPCase.DAILY_LIMIT);
     }
 
 }
