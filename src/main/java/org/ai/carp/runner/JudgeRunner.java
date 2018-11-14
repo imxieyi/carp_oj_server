@@ -52,7 +52,7 @@ public class JudgeRunner {
                                 worker = JudgePool.getInstance().dispatchJob(c.getId(), encodedCase);
                             }
                         }
-                        logger.info("Case {} dispatched to worker {}", c.getId(), worker);
+                        logger.info("Case {} dispatched to worker {}: {} - {}", c.getId(), worker, c.getUser().getUsername(), c.getDataset().getName());
                     } catch (IOException e) {
                         logger.error("Case {} is broken", c.getId());
                         // TODO: Handle invalid cases
