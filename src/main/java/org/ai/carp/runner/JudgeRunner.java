@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +52,7 @@ public class JudgeRunner {
                             }
                         }
                         logger.info("Case {} dispatched to worker {}: {} - {}", c.getId(), worker, c.getUser().getUsername(), c.getDataset().getName());
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         logger.error("Case {} is broken", c.getId());
                         // TODO: Handle invalid cases
                         c.setStatus(CARPCase.ERROR);
