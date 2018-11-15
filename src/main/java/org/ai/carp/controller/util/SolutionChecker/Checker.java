@@ -126,6 +126,11 @@ public class Checker {
                     this.carpCase.setReason("Invalid tasks in some trip.");
                     return false;
                 }
+                if (graph.getNode(nodeId[0]) == null || graph.getNode(nodeId[1]) == null) {
+                    this.carpCase.setValid(false);
+                    this.carpCase.setReason("No such node in graph");
+                    return false;
+                }
                 Node nodePair[] = {graph.getNode(nodeId[0]), graph.getNode(nodeId[1])};
                 Edge taskEdge = new Edge(nodePair[0], nodePair[1]);
                 // System.out.println(taskEdge.getDemand());

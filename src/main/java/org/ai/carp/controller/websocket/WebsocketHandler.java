@@ -114,7 +114,14 @@ public class WebsocketHandler extends TextWebSocketHandler {
                     carpCase.setStderr(rootNode.get("stderr").asText());
                     carpCase.setErrOverflow(rootNode.get("stderr_overflow").asBoolean());
                     carpCase.setExitcode(rootNode.get("exitcode").asInt());
-                    CARPUtils.checkResult(carpCase);
+                    try {
+                        CARPUtils.checkResult(carpCase);
+                    } catch (Exception e) {
+                        logger.error("Error evaluating solution!", e);
+                        carpCase.setStatus(CARPCase.ERROR);
+                        carpCase.setReason("Error evaluating solution!");
+                        carpCase.setCost(0);
+                    }
                     Database.getInstance().getCarpCases().save(carpCase);
                     JudgePool.getInstance().removeTask(uid, carpCase);
                     return;
