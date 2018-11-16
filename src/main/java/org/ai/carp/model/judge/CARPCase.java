@@ -240,7 +240,7 @@ public class CARPCase {
         node.put("time", dataset.getTime());
         node.put("memory", dataset.getMemory());
         node.put("cpu", dataset.getCpu());
-        node.put("seed", random.nextInt());
+        node.put("seed", Math.abs(random.nextInt()));
         return mapper.writeValueAsString(node);
     }
 
