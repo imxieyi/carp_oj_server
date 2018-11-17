@@ -9,7 +9,7 @@ public class QueryTopResult {
 
     private List<CARPCaseLite> carpCases;
 
-    public QueryTopResult(List<CARPCase> cases) {
+    public QueryTopResult(List<CARPCase> cases, boolean admin) {
         carpCases = new ArrayList<>();
         Set<String> uids = new HashSet<>();
         for (CARPCase c : cases) {
@@ -19,7 +19,7 @@ public class QueryTopResult {
             if (!uids.contains(c.getUser().getId())) {
                 carpCases.add(new CARPCaseLite(c));
                 uids.add(c.getUser().getId());
-                if (carpCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
+                if (!admin && carpCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
                     break;
                 }
             }

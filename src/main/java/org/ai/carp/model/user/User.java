@@ -17,9 +17,12 @@ public class User {
     public static final int ADMIN = 100;
     public static final int USER = 200;
     public static final int WORKER = 300;
+    public static final int GUEST = 500;
     public static final int MAX = 1000; // Never use
 
     private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public static final User GUEST_USER = new User("guest", "", GUEST);
 
     @Id
     private String id;

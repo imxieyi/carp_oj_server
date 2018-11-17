@@ -12,8 +12,11 @@ public class UserUtils {
 
     public static User getUser(HttpSession session, int maxType) {
         String uid = (String) session.getAttribute("uid");
-        if (uid == null) {
+        if (maxType < User.GUEST && uid == null) {
             throw new NotLoggedInException("Not logged in!");
+        }
+        if (maxType >= User.GUEST && uid == null) {
+            return User.GUEST_USER;
         }
         Optional<User> optionalUser = Database.getInstance().getUsers().findById(uid);
         if (!optionalUser.isPresent()) {
