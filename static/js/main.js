@@ -1031,7 +1031,10 @@
 	    });
 
 	    //提交zip文件並上傳，附帶所使用的dataset，用於判別程序運行結果
-	    $("#code_submit2").click(function(event) {
+		$("#code_submit2").click(function(event) {
+			$("#warning_box").modal("show");
+		});
+	    $("#btn-warn-yes").click(function(event) {
 	      /* Act on the event */
 	      //submit file as base64.
 	      let zipcode = document.getElementById("code_submit").files[0];
