@@ -3,7 +3,7 @@ package org.ai.carp.controller.admin.dataset;
 import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
-import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +24,7 @@ public class DatasetAddController {
             throw new InvalidRequestException("No name specified!");
         }
         if (Database.getInstance().getDatasets().findDatasetByName(dataset.name) != null) {
-            throw new InvalidRequestException("Dataset name already exists!");
+            throw new InvalidRequestException("CARPDataset name already exists!");
         }
         if (StringUtils.isEmpty(dataset.data)) {
             throw new InvalidRequestException("No data!");
@@ -38,8 +38,8 @@ public class DatasetAddController {
         if (dataset.time <= 0) {
             throw new InvalidRequestException("No time!");
         }
-        Dataset inserted = Database.getInstance().getDatasets().insert(
-                new Dataset(dataset.name, dataset.time, dataset.memory, dataset.cpu, dataset.data)
+        CARPDataset inserted = Database.getInstance().getDatasets().insert(
+                new CARPDataset(dataset.name, dataset.time, dataset.memory, dataset.cpu, dataset.data)
         );
         return new DatasetAddResponse(inserted.getId());
     }

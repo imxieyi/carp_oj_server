@@ -3,7 +3,7 @@ package org.ai.carp.controller.judge;
 import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
-import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
@@ -28,7 +28,7 @@ public class QueryTopController {
         if (StringUtils.isEmpty(did)) {
             throw new InvalidRequestException("No dataset id!");
         }
-        Optional<Dataset> dataset = Database.getInstance().getDatasets().findById(did);
+        Optional<CARPDataset> dataset = Database.getInstance().getDatasets().findById(did);
         if (!dataset.isPresent()) {
             throw new InvalidRequestException("Invalid dataset!");
         }

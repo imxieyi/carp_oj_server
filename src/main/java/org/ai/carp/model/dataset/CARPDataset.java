@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
 @Document(collection = "datasets")
-public class Dataset {
+public class CARPDataset {
 
     @Id
     private String id;
@@ -50,10 +50,10 @@ public class Dataset {
         }
     }
 
-    private Dataset() {
+    private CARPDataset() {
     }
 
-    public Dataset(String name, int time, int memory, int cpu, String data) {
+    public CARPDataset(String name, int time, int memory, int cpu, String data) {
         name = name.replaceAll(" ", "");
         this.name = name;
         this.time = time;
@@ -64,7 +64,7 @@ public class Dataset {
 
     @Override
     public String toString() {
-        return String.format("Dataset[id=%s, name=%s]",
+        return String.format("CARPDataset[id=%s, name=%s]",
                 id, name);
     }
 

@@ -1,7 +1,7 @@
 package org.ai.carp.controller.dataset;
 
 import org.ai.carp.model.Database;
-import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.dataset.CARPDataset;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,20 +15,20 @@ public class DatasetAllController {
 
     @GetMapping
     public DatasetAllResponse get(HttpSession session) {
-        List<Dataset> datasets = Database.getInstance().getDatasets().findAll();
+        List<CARPDataset> datasets = Database.getInstance().getDatasets().findAll();
         return new DatasetAllResponse(datasets);
     }
 
 }
 
 class DatasetAllResponse {
-    private List<Dataset> datasets;
+    private List<CARPDataset> datasets;
 
-    public DatasetAllResponse(List<Dataset> datasets) {
+    public DatasetAllResponse(List<CARPDataset> datasets) {
         this.datasets = datasets;
     }
 
-    public List<Dataset> getDatasets() {
+    public List<CARPDataset> getDatasets() {
         return datasets;
     }
 }

@@ -1,6 +1,6 @@
 package org.ai.carp.controller.util;
 
-import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.judge.CARPCase;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -25,7 +25,7 @@ public class CARPUtilsTests {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        Dataset dataset = new Dataset("gdb10", 10, 256, 1, readResource("gdb10.dat"));
+        CARPDataset dataset = new CARPDataset("gdb10", 10, 256, 1, readResource("gdb10.dat"));
         carpCase = new CARPCase(null, dataset, null);
         carpCase.setStatus(CARPCase.FINISHED);
         carpCase.setExitcode(0);

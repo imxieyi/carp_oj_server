@@ -6,7 +6,7 @@ import org.ai.carp.controller.util.ArchiveUtils;
 import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
-import org.ai.carp.model.dataset.Dataset;
+import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
 import org.ai.carp.runner.JudgeRunner;
@@ -37,7 +37,7 @@ public class SubmitController {
         if (StringUtils.isEmpty(postCase.data)) {
             throw new InvalidRequestException("No data!");
         }
-        Optional<Dataset> dataset = Database.getInstance().getDatasets().findById(postCase.dataset);
+        Optional<CARPDataset> dataset = Database.getInstance().getDatasets().findById(postCase.dataset);
         if (!dataset.isPresent()) {
             throw new InvalidRequestException("Invalid dataset!");
         }

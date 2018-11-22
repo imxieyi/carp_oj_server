@@ -2,7 +2,6 @@ package org.ai.carp;
 
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.CARPDataset;
-import org.ai.carp.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -21,65 +20,22 @@ import java.util.Scanner;
 
 @ComponentScan(basePackages = {"org.ai.carp.model"})
 @SpringBootApplication
-public class CARPSetup {
+public class IMPSetup {
 
-    private static final Logger logger = LoggerFactory.getLogger(CARPSetup.class);
+    private static final Logger logger = LoggerFactory.getLogger(IMPSetup.class);
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(CARPSetup.class);
+        SpringApplication app = new SpringApplication(IMPSetup.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
-        addUsers();
         addDatasets();
-    }
-
-    private static void addUsers() {
-        if (Database.getInstance().getUsers().findByUsername("root") == null) {
-            Database.getInstance().getUsers().insert(new User("root", "123", User.ROOT));
-        }
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream("users.csv");
-        if (is == null) {
-            logger.error("users.csv not found!");
-            return;
-        }
-        Scanner scanner = new Scanner(is);
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            line = line.replaceAll("\r", "");
-            String[] splitted = line.split(",");
-            if (StringUtils.isEmpty(splitted[0])) {
-                continue;
-            }
-            if (Database.getInstance().getUsers().findByUsername(splitted[0]) == null) {
-                int role;
-                switch (splitted[1]) {
-                    case "ADMIN":
-                        role = User.ADMIN;
-                        break;
-                    case "USER":
-                        role = User.USER;
-                        break;
-                    case "WORKER":
-                        role = User.WORKER;
-                        break;
-                    default:
-                        logger.error("Invalid user info for {}", splitted[0]);
-                        continue;
-                }
-                User user = new User(splitted[0], splitted[2], role);
-                user = Database.getInstance().getUsers().insert(user);
-                logger.info(user.toString());
-            }
-        }
-        scanner.close();
     }
 
     private static void addDatasets() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream("datasets_carp.csv");
+        InputStream is = classLoader.getResourceAsStream("datasets_imp.csv");
         if (is == null) {
-            logger.error("datasets_carp.csv not found");
+            logger.error("datasets_imp.csv not found");
             return;
         }
         Scanner scanner = new Scanner(is);
@@ -95,7 +51,7 @@ public class CARPSetup {
                     , Integer.valueOf(splitted[2]), Integer.valueOf(splitted[3]), ""));
         }
         try {
-            File datasets = new File(classLoader.getResource("datasets_carp").toURI());
+            File datasets = new File(classLoader.getResource("datasets_imp").toURI());
             File[] list = datasets.listFiles((dir, name) -> name.endsWith(".dat"));
             for (File f : list) {
                 try {

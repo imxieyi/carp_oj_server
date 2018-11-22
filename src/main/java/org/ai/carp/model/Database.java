@@ -1,6 +1,6 @@
 package org.ai.carp.model;
 
-import org.ai.carp.model.dataset.DatasetRepository;
+import org.ai.carp.model.dataset.CARPDatasetRepository;
 import org.ai.carp.model.judge.CARPCaseRepository;
 import org.ai.carp.model.user.UserRepository;
 import org.slf4j.Logger;
@@ -20,15 +20,15 @@ public class Database {
     }
 
     private UserRepository users;
-    private DatasetRepository datasets;
+    private CARPDatasetRepository datasets;
     private CARPCaseRepository carpCases;
 
-    public DatasetRepository getDatasets() {
+    public CARPDatasetRepository getDatasets() {
         return datasets;
     }
 
     @Autowired
-    private void setDatasets(DatasetRepository datasets) {
+    private void setDatasets(CARPDatasetRepository datasets) {
         this.datasets = datasets;
     }
 
