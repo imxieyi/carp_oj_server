@@ -23,7 +23,7 @@ public class DatasetAddController {
         if (StringUtils.isEmpty(dataset.name)) {
             throw new InvalidRequestException("No name specified!");
         }
-        if (Database.getInstance().getDatasets().findDatasetByName(dataset.name) != null) {
+        if (Database.getInstance().getCarpDatasets().findDatasetByName(dataset.name) != null) {
             throw new InvalidRequestException("CARPDataset name already exists!");
         }
         if (StringUtils.isEmpty(dataset.data)) {
@@ -38,7 +38,7 @@ public class DatasetAddController {
         if (dataset.time <= 0) {
             throw new InvalidRequestException("No time!");
         }
-        CARPDataset inserted = Database.getInstance().getDatasets().insert(
+        CARPDataset inserted = Database.getInstance().getCarpDatasets().insert(
                 new CARPDataset(dataset.name, dataset.time, dataset.memory, dataset.cpu, dataset.data)
         );
         return new DatasetAddResponse(inserted.getId());

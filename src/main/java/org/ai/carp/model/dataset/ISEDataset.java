@@ -44,7 +44,7 @@ public class ISEDataset extends BaseDataset {
 
     @Override
     public String toString() {
-        return String.format("IMPDataset[id=%s, name=%s]",
+        return String.format("ISEDataset[id=%s, name=%s]",
                 id, name);
     }
 

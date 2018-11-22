@@ -37,7 +37,7 @@ public class SubmitController {
         if (StringUtils.isEmpty(postCase.data)) {
             throw new InvalidRequestException("No data!");
         }
-        Optional<CARPDataset> dataset = Database.getInstance().getDatasets().findById(postCase.dataset);
+        Optional<CARPDataset> dataset = Database.getInstance().getCarpDatasets().findById(postCase.dataset);
         if (!dataset.isPresent()) {
             throw new InvalidRequestException("Invalid dataset!");
         }

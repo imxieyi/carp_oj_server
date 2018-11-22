@@ -1,7 +1,8 @@
 package org.ai.carp;
 
 import org.ai.carp.model.Database;
-import org.ai.carp.model.dataset.CARPDataset;
+import org.ai.carp.model.dataset.IMPDataset;
+import org.ai.carp.model.dataset.ISEDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +12,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -24,22 +24,28 @@ public class IMPSetup {
 
     private static final Logger logger = LoggerFactory.getLogger(IMPSetup.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws URISyntaxException {
         SpringApplication app = new SpringApplication(IMPSetup.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
-        addDatasets();
+        addISEDatasets();
+        addIMPDatasets();
     }
 
-    private static void addDatasets() {
+    private static void addISEDatasets() throws URISyntaxException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream("datasets_imp.csv");
+        InputStream is = classLoader.getResourceAsStream("datasets_ise.csv");
         if (is == null) {
-            logger.error("datasets_imp.csv not found");
+            logger.error("datasets_ise.csv not found");
             return;
         }
         Scanner scanner = new Scanner(is);
-        Map<String, CARPDataset> map = new HashMap<>();
+        File datasets = new File(classLoader.getResource("datasets_imp").toURI());
+        File[] list = datasets.listFiles((dir, name) -> name.endsWith(".txt"));
+        Map<String, File> fileMap = new HashMap<>();
+        for (File f : list) {
+            fileMap.put(f.getName().replace(".txt", ""), f);
+        }
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             line = line.replaceAll("\r", "");
@@ -47,33 +53,60 @@ public class IMPSetup {
             if (StringUtils.isEmpty(splitted[0])) {
                 continue;
             }
-            map.put(splitted[0], new CARPDataset(splitted[0], Integer.valueOf(splitted[1])
-                    , Integer.valueOf(splitted[2]), Integer.valueOf(splitted[3]), ""));
-        }
-        try {
-            File datasets = new File(classLoader.getResource("datasets_imp").toURI());
-            File[] list = datasets.listFiles((dir, name) -> name.endsWith(".dat"));
-            for (File f : list) {
-                try {
-                    String name = f.getName().replaceAll(".dat", "");
-                    if (Database.getInstance().getDatasets().findDatasetByName(name) != null) {
-                        continue;
-                    }
-                    String content = new Scanner(f).useDelimiter("\\Z").next();
-                    CARPDataset dataset = map.get(name);
-                    if (dataset == null) {
-                        logger.error("Definition not found for {}", name);
-                        continue;
-                    }
-                    dataset.setData(content);
-                    dataset = Database.getInstance().getDatasets().insert(dataset);
-                    logger.info(dataset.toString());
-                } catch (FileNotFoundException e) {
-                    logger.error("Failed to read dataset {}", f.getName(), e);
-                }
+            String name = splitted[0] + "-" + splitted[1];
+            if (Database.getInstance().getIseDatasets().findDatasetByName(name) != null) {
+                continue;
             }
-        } catch (URISyntaxException e) {
-            logger.error("Failed to get dataset path!", e);
+            try {
+                File networkFile = fileMap.get(splitted[0]);
+                String network = new Scanner(networkFile).useDelimiter("\\Z").next().replace("\r", "");
+                File seedsFile = fileMap.get(splitted[1]);
+                String seeds = new Scanner(seedsFile).useDelimiter("\\Z").next().replace("\r", "");
+                ISEDataset dataset = new ISEDataset(name, Integer.valueOf(splitted[2])
+                        , Integer.valueOf(splitted[3]), Integer.valueOf(splitted[4]), network, seeds);
+                dataset = Database.getInstance().getIseDatasets().insert(dataset);
+                logger.info(dataset.toString());
+            } catch (Exception e) {
+                logger.error("Error adding dataset", e);
+            }
+        }
+    }
+
+    private static void addIMPDatasets() throws URISyntaxException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classLoader.getResourceAsStream("datasets_imp.csv");
+        if (is == null) {
+            logger.error("datasets_imp.csv not found");
+            return;
+        }
+        Scanner scanner = new Scanner(is);
+        File datasets = new File(classLoader.getResource("datasets_imp").toURI());
+        File[] list = datasets.listFiles((dir, name) -> name.endsWith(".txt"));
+        Map<String, File> fileMap = new HashMap<>();
+        for (File f : list) {
+            fileMap.put(f.getName().replace(".txt", ""), f);
+        }
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            line = line.replaceAll("\r", "");
+            String[] splitted = line.split(",");
+            if (StringUtils.isEmpty(splitted[0])) {
+                continue;
+            }
+            String name = splitted[0];
+            if (Database.getInstance().getImpDatasets().findDatasetByName(name) != null) {
+                continue;
+            }
+            try {
+                File networkFile = fileMap.get(splitted[0]);
+                String network = new Scanner(networkFile).useDelimiter("\\Z").next().replace("\r", "");
+                IMPDataset dataset = new IMPDataset(name, Integer.valueOf(splitted[1])
+                        , Integer.valueOf(splitted[2]), Integer.valueOf(splitted[3]), network);
+                dataset = Database.getInstance().getImpDatasets().insert(dataset);
+                logger.info(dataset.toString());
+            } catch (Exception e) {
+                logger.error("Error adding dataset", e);
+            }
         }
     }
 

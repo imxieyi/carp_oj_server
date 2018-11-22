@@ -28,7 +28,7 @@ public class QueryTopController {
         if (StringUtils.isEmpty(did)) {
             throw new InvalidRequestException("No dataset id!");
         }
-        Optional<CARPDataset> dataset = Database.getInstance().getDatasets().findById(did);
+        Optional<CARPDataset> dataset = Database.getInstance().getCarpDatasets().findById(did);
         if (!dataset.isPresent()) {
             throw new InvalidRequestException("Invalid dataset!");
         }

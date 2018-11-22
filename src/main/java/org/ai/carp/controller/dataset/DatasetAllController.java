@@ -15,7 +15,7 @@ public class DatasetAllController {
 
     @GetMapping
     public DatasetAllResponse get(HttpSession session) {
-        List<CARPDataset> datasets = Database.getInstance().getDatasets().findAll();
+        List<CARPDataset> datasets = Database.getInstance().getCarpDatasets().findAll();
         return new DatasetAllResponse(datasets);
     }
 

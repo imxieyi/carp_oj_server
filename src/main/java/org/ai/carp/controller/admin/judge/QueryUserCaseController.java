@@ -25,7 +25,7 @@ public class QueryUserCaseController {
         if (user == null) {
             throw new InvalidRequestException("User does not exist!");
         }
-        CARPDataset dataset = Database.getInstance().getDatasets().findDatasetByName(datasetname);
+        CARPDataset dataset = Database.getInstance().getCarpDatasets().findDatasetByName(datasetname);
         if (dataset == null) {
             throw new InvalidRequestException("CARPDataset does not exist!");
         }

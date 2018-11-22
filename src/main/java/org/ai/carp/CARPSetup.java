@@ -100,17 +100,17 @@ public class CARPSetup {
             for (File f : list) {
                 try {
                     String name = f.getName().replaceAll(".dat", "");
-                    if (Database.getInstance().getDatasets().findDatasetByName(name) != null) {
+                    if (Database.getInstance().getCarpDatasets().findDatasetByName(name) != null) {
                         continue;
                     }
-                    String content = new Scanner(f).useDelimiter("\\Z").next();
+                    String content = new Scanner(f).useDelimiter("\\Z").next().replace("\r", "");
                     CARPDataset dataset = map.get(name);
                     if (dataset == null) {
                         logger.error("Definition not found for {}", name);
                         continue;
                     }
                     dataset.setData(content);
-                    dataset = Database.getInstance().getDatasets().insert(dataset);
+                    dataset = Database.getInstance().getCarpDatasets().insert(dataset);
                     logger.info(dataset.toString());
                 } catch (FileNotFoundException e) {
                     logger.error("Failed to read dataset {}", f.getName(), e);
