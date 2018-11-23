@@ -11,9 +11,7 @@ import java.util.zip.ZipInputStream;
 
 public class ArchiveUtils {
 
-    private static final String ENTRY_NAME = "CARP_solver.py";
-
-    public static Binary convertSubmission(String encoded) {
+    public static Binary convertSubmission(String encoded, String entryName) {
         if (encoded.length() > 87500) {
             throw new InvalidRequestException("Archive size exceeds 64KB!");
         }
@@ -23,11 +21,11 @@ public class ArchiveUtils {
             zis = new ZipInputStream(new ByteArrayInputStream(bytes));
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
-                if (entry.getName().equals(ENTRY_NAME)) {
+                if (entry.getName().equals(entryName)) {
                     return new Binary(bytes);
                 }
             }
-            throw new InvalidRequestException("No " + ENTRY_NAME + " found!");
+            throw new InvalidRequestException("No " + entryName + " found!");
         } catch (IllegalArgumentException e) {
             throw new InvalidRequestException("Invalid base64 data!");
         } catch (IOException e) {

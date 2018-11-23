@@ -63,6 +63,11 @@ public class ISEDataset extends BaseDataset {
     }
 
     @Override
+    public String getEntry() {
+        return "ISE.py";
+    }
+
+    @Override
     public String toString() {
         return String.format("ISEDataset[id=%s, name=%s, model=%s]",
                 id, name, model);

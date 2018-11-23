@@ -1,9 +1,14 @@
 package org.ai.carp.controller.judge;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
+import org.ai.carp.controller.util.DatasetUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
+import org.ai.carp.model.dataset.BaseDataset;
 import org.ai.carp.model.dataset.CARPDataset;
+import org.ai.carp.model.dataset.IMPDataset;
+import org.ai.carp.model.dataset.ISEDataset;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
@@ -13,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/judge/top")
@@ -28,13 +34,28 @@ public class QueryTopController {
         if (StringUtils.isEmpty(did)) {
             throw new InvalidRequestException("No dataset id!");
         }
-        Optional<CARPDataset> dataset = Database.getInstance().getCarpDatasets().findById(did);
-        if (!dataset.isPresent()) {
+        BaseDataset dataset = DatasetUtils.findById(did);
+        if (dataset == null) {
             throw new InvalidRequestException("Invalid dataset!");
         }
-        List<CARPCase> allCarpCases = Database.getInstance().getCarpCases()
-                .findCARPCasesByDatasetAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(dataset.get(), CARPCase.FINISHED, true);
-        return new QueryTopResult(allCarpCases, user.getType() <= User.ADMIN);
+        List<BaseCase> allBaseCases = new ArrayList<>();
+        if (dataset.getType() == BaseDataset.CARP) {
+            allBaseCases = Database.getInstance().getCarpCases()
+                    .findCARPCasesByDatasetAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(
+                            (CARPDataset)dataset, CARPCase.FINISHED, true)
+                    .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+        } else if (dataset.getType() == BaseDataset.ISE) {
+            allBaseCases = Database.getInstance().getIseCases()
+                    .findISECasesByDatasetAndStatusAndValidOrderByTimeAscSubmitTimeAsc(
+                            (ISEDataset)dataset, BaseCase.FINISHED, true)
+                    .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+        } else if (dataset.getType() == BaseDataset.IMP) {
+            allBaseCases = Database.getInstance().getImpCases()
+                    .findIMPCasesByDatasetAndStatusAndValidOrderByInfluenceDescTimeAscSubmitTimeAsc(
+                            (IMPDataset)dataset, BaseCase.FINISHED, true)
+                    .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+        }
+        return new QueryTopResult(allBaseCases, user.getType() <= User.ADMIN);
     }
 
 }

@@ -1,50 +1,49 @@
 package org.ai.carp.controller.judge;
 
-import org.ai.carp.model.judge.CARPCase;
-import org.ai.carp.model.user.User;
+import org.ai.carp.model.judge.BaseCase;
 
 import java.util.*;
 
 public class QueryTopResult {
 
-    private List<CARPCaseLite> carpCases;
+    private List<BaseCaseLite> baseCases;
 
-    public QueryTopResult(List<CARPCase> cases, boolean admin) {
-        carpCases = new ArrayList<>();
+    public QueryTopResult(List<BaseCase> cases, boolean admin) {
+        baseCases = new ArrayList<>();
         Set<String> uids = new HashSet<>();
-        for (CARPCase c : cases) {
-            if (c.getUser().getType() != User.USER) {
-                continue;
-            }
+        for (BaseCase c : cases) {
+//            if (c.getUser().getType() != User.USER) {
+//                continue;
+//            }
             if (!uids.contains(c.getUser().getId())) {
-                carpCases.add(new CARPCaseLite(c));
+                baseCases.add(new BaseCaseLite(c));
                 uids.add(c.getUser().getId());
-                if (!admin && carpCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
+                if (!admin && baseCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
                     break;
                 }
             }
         }
     }
 
-    public List<CARPCaseLite> getCarpCases() {
-        return carpCases;
+    public List<BaseCaseLite> getBaseCases() {
+        return baseCases;
     }
 }
 
-class CARPCaseLite {
+class BaseCaseLite {
 
     private String userName;
     private String datasetId;
     private Date submitTime;
     private double time;
-    private int cost;
+    private double result;
 
-    public CARPCaseLite(CARPCase carpCase) {
-        this.userName = carpCase.getUser().getUsername();
-        this.datasetId = carpCase.getId();
-        this.cost = carpCase.getCost();
-        this.submitTime = carpCase.getSubmitTime();
-        this.time = carpCase.getTime();
+    public BaseCaseLite(BaseCase baseCase) {
+        this.userName = baseCase.getUser().getUsername();
+        this.datasetId = baseCase.getId();
+        this.result = baseCase.getResult();
+        this.submitTime = baseCase.getSubmitTime();
+        this.time = baseCase.getTime();
     }
 
     public String getUserName() {
@@ -55,8 +54,8 @@ class CARPCaseLite {
         return datasetId;
     }
 
-    public int getCost() {
-        return cost;
+    public double getResult() {
+        return result;
     }
 
     public Date getSubmitTime() {

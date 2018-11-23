@@ -7,16 +7,16 @@ import java.util.List;
 
 public class QuerySelfBestResult {
 
-    private List<CARPCaseLite> carpCases;
+    private List<BaseCaseLite> carpCases;
 
     public QuerySelfBestResult(List<CARPCase> cases) {
         carpCases = new ArrayList<>();
         for (CARPCase c : cases) {
-            carpCases.add(new CARPCaseLite(c));
+            carpCases.add(new BaseCaseLite(c));
         }
     }
 
-    public List<CARPCaseLite> getCarpCases() {
+    public List<BaseCaseLite> getCarpCases() {
         return carpCases;
     }
 }

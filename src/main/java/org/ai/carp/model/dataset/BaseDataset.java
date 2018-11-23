@@ -1,5 +1,6 @@
 package org.ai.carp.model.dataset;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -23,6 +24,9 @@ public abstract class BaseDataset {
     }
 
     public abstract int getType();
+
+    @JsonIgnore
+    public abstract String getEntry();
 
     public String getName() {
         return name;

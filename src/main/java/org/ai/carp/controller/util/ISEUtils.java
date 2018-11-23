@@ -11,7 +11,9 @@ public class ISEUtils {
         // TODO: check result
         double stdInfluence = iseCase.getDataset().getInfluence();
         String stdout = iseCase.getStdout();
-        iseCase.setInfluence(0d);
+        iseCase.setInfluence(Double.valueOf(stdout));
+        iseCase.setValid(true);
+        iseCase.setReason("Solution accepted");
     }
     
 }

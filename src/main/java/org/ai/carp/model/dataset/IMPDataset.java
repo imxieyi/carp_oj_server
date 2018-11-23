@@ -49,6 +49,11 @@ public class IMPDataset extends BaseDataset {
     }
 
     @Override
+    public String getEntry() {
+        return "IMP.py";
+    }
+
+    @Override
     public String toString() {
         return String.format("IMPDataset[id=%s, name=%s, model=%s]",
                 id, name, model);

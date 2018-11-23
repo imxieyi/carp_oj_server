@@ -44,7 +44,7 @@ public class SubmitController {
                 CaseUtils.countPreviousDay(user) >= CARPCase.DAILY_LIMIT) {
             throw new PermissionDeniedException("You have reached daily limits on submission!");
         }
-        Binary archive = ArchiveUtils.convertSubmission(postCase.data);
+        Binary archive = ArchiveUtils.convertSubmission(postCase.data, dataset.getEntry());
         BaseCase baseCase;
         switch (dataset.getType()) {
             case BaseDataset.CARP:
