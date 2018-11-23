@@ -53,7 +53,13 @@ public class ISECase extends BaseCase {
         return dataset.getId();
     }
 
+    @JsonIgnore
     public double getInfluence() {
+        return influence;
+    }
+
+    @Override
+    public double getResult() {
         return influence;
     }
 

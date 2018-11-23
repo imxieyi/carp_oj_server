@@ -386,7 +386,16 @@
 	  var RenderOptions = function(dataset_list) {
 	    var SelectHtml = '<select class="form-control" id="graph_choose" name="group_select">';
 	    for (var i in dataset_list) {
-	      SelectHtml += "<option value='" + dataset_list[i]["id"] + "'>" + dataset_list[i]["name"] + "</option>";
+		  var typeCode = dataset_list[i]["type"];
+		  var typeName = "INVALID";
+		  if (typeCode === 0) {
+		  	typeName = "CARP";
+		  } else if (typeCode === 1) {
+		  	typeName = "ISE";
+		  } else if (typeCode === 2) {
+		  	typeName = "IMP";
+		  }
+	      SelectHtml += "<option value='" + dataset_list[i]["id"] + "'>" + typeName + ": " + dataset_list[i]["name"] + "</option>";
 	    }
 	    SelectHtml += "</select>";
 	    $("#dataset_option").empty();
@@ -394,7 +403,16 @@
 
 	    var SelectHtml = '<select class="form-control" id="graph_choose1" name="group_select">';
 	    for (var i in dataset_list) {
-	      SelectHtml += "<option value='" + dataset_list[i]["id"] + "'>" + dataset_list[i]["name"] + "</option>";
+            var typeCode = dataset_list[i]["type"];
+            var typeName = "INVALID";
+            if (typeCode === 0) {
+                typeName = "CARP";
+            } else if (typeCode === 1) {
+                typeName = "ISE";
+            } else if (typeCode === 2) {
+                typeName = "IMP";
+            }
+	      SelectHtml += "<option value='" + dataset_list[i]["id"] + "'>" + typeName + ": " + dataset_list[i]["name"] + "</option>";
 	    }
 	    $("#dataset_option1").empty();
 	    $("#dataset_option1").append(SelectHtml);
@@ -448,7 +466,7 @@
 	    ResultHtml += "		RunTime(s)\n";
 	    ResultHtml += "	<\/th>\n";
 	    ResultHtml += "	<th>\n";
-	    ResultHtml += "		Cost\n";
+	    ResultHtml += "		Result\n";
 	    ResultHtml += "	<\/th>\n";
 	    ResultHtml += "	<th>\n";
 	    ResultHtml += "		Dataset\n";
@@ -524,7 +542,7 @@
 	        ResultHtml += o["time"].toFixed(2);
 	        ResultHtml += "<\/td>\n";
 	        ResultHtml += "<td>\n";
-	        ResultHtml += o["cost"];
+	        ResultHtml += o["result"];
 	        ResultHtml += "<\/td>\n";
 	        ResultHtml += "<td>\n";
 	        ResultHtml += nowdataset;
@@ -705,7 +723,7 @@
 	    RankListHtml += "		time\n";
 	    RankListHtml += "	<\/td>\n";
 	    RankListHtml += "	<td>\n";
-	    RankListHtml += "		cost\n";
+	    RankListHtml += "		result\n";
 	    RankListHtml += "	<\/td>\n";
 	    RankListHtml += "<\/tr>\n";
 	    RankListHtml += "<\/thead>\n";
@@ -749,7 +767,7 @@
 	        page_dom += value["time"].toFixed(3);
 	        page_dom += "	<\/td>\n";
 	        page_dom += "	<td>\n";
-	        page_dom += value["cost"];
+	        page_dom += value["result"];
 	        page_dom += "	<\/td>\n";
 	        page_dom += "<\/tr>\n";
 	        Page.items.push(page_dom);
@@ -817,7 +835,7 @@
 	      MyRankHtml += ownrank[i]["time"].toFixed(3);
 	      MyRankHtml += "	<\/td>\n";
 	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += ownrank[i]["cost"];
+	      MyRankHtml += ownrank[i]["result"];
 	      MyRankHtml += "	<\/td>\n";
 	      MyRankHtml += "<\/tr>\n";
 	    }

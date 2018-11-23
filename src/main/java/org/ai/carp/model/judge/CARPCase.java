@@ -63,7 +63,13 @@ public class CARPCase extends BaseCase {
         return path;
     }
 
+    @JsonIgnore
     public int getCost() {
+        return cost;
+    }
+
+    @Override
+    public double getResult() {
         return cost;
     }
 

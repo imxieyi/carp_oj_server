@@ -206,6 +206,8 @@ public abstract class BaseCase {
         return valid;
     }
 
+    public abstract double getResult();
+
     public String getReason() {
         return reason;
     }

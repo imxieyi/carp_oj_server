@@ -4,10 +4,17 @@ import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.exceptions.PermissionDeniedException;
 import org.ai.carp.controller.util.ArchiveUtils;
 import org.ai.carp.controller.util.CaseUtils;
+import org.ai.carp.controller.util.DatasetUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
+import org.ai.carp.model.dataset.BaseDataset;
 import org.ai.carp.model.dataset.CARPDataset;
+import org.ai.carp.model.dataset.IMPDataset;
+import org.ai.carp.model.dataset.ISEDataset;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.IMPCase;
+import org.ai.carp.model.judge.ISECase;
 import org.ai.carp.model.user.User;
 import org.ai.carp.runner.JudgeRunner;
 import org.bson.types.Binary;
@@ -18,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/judge/submit")
@@ -28,17 +33,14 @@ public class SubmitController {
     @PostMapping
     public SubmitResponse post(@RequestBody PostCase postCase, HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
-        if (new Date().getTime() >= 1542816000000L) {
-            throw new InvalidRequestException("Deadline has passed!");
-        }
         if (StringUtils.isEmpty(postCase.dataset)) {
             throw new InvalidRequestException("No dataset!");
         }
         if (StringUtils.isEmpty(postCase.data)) {
             throw new InvalidRequestException("No data!");
         }
-        Optional<CARPDataset> dataset = Database.getInstance().getCarpDatasets().findById(postCase.dataset);
-        if (!dataset.isPresent()) {
+        BaseDataset dataset = DatasetUtils.findById(postCase.dataset);
+        if (dataset == null) {
             throw new InvalidRequestException("Invalid dataset!");
         }
         if (user.getType() == User.USER &&
@@ -46,10 +48,23 @@ public class SubmitController {
             throw new PermissionDeniedException("You have reached daily limits on submission!");
         }
         Binary archive = ArchiveUtils.convertSubmission(postCase.data);
-        CARPCase carpCase = Database.getInstance().getCarpCases().insert(new CARPCase(user, dataset.get(), archive));
-        JudgeRunner.queue.add(carpCase);
+        BaseCase baseCase;
+        switch (dataset.getType()) {
+            case BaseDataset.CARP:
+                baseCase = Database.getInstance().getCarpCases().insert(new CARPCase(user, (CARPDataset)dataset, archive));
+                break;
+            case BaseDataset.ISE:
+                baseCase = Database.getInstance().getIseCases().insert(new ISECase(user, (ISEDataset)dataset, archive));
+                break;
+            case BaseDataset.IMP:
+                baseCase = Database.getInstance().getImpCases().insert(new IMPCase(user, (IMPDataset)dataset, archive));
+                break;
+            default:
+                throw new InvalidRequestException("Invalid dataset type!");
+        }
+        JudgeRunner.queue.add(baseCase);
         int remain = CARPCase.DAILY_LIMIT - CaseUtils.countPreviousDay(user);
-        return new SubmitResponse(carpCase.getId(), remain);
+        return new SubmitResponse(baseCase.getId(), remain);
     }
 
 }
