@@ -9,7 +9,6 @@ import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.dataset.IMPDataset;
 import org.ai.carp.model.dataset.ISEDataset;
 import org.ai.carp.model.judge.BaseCase;
-import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.user.User;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +41,7 @@ public class QueryTopController {
         if (dataset.getType() == BaseDataset.CARP) {
             allBaseCases = Database.getInstance().getCarpCases()
                     .findCARPCasesByDatasetAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(
-                            (CARPDataset)dataset, CARPCase.FINISHED, true)
+                            (CARPDataset)dataset, BaseCase.FINISHED, true)
                     .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
         } else if (dataset.getType() == BaseDataset.ISE) {
             allBaseCases = Database.getInstance().getIseCases()
