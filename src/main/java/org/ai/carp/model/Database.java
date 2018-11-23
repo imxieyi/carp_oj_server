@@ -4,6 +4,8 @@ import org.ai.carp.model.dataset.CARPDatasetRepository;
 import org.ai.carp.model.dataset.IMPDatasetRepository;
 import org.ai.carp.model.dataset.ISEDatasetRepository;
 import org.ai.carp.model.judge.CARPCaseRepository;
+import org.ai.carp.model.judge.IMPCaseRepository;
+import org.ai.carp.model.judge.ISECaseRepository;
 import org.ai.carp.model.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,8 @@ public class Database {
     private ISEDatasetRepository iseDatasets;
     private IMPDatasetRepository impDatasets;
     private CARPCaseRepository carpCases;
+    private ISECaseRepository iseCases;
+    private IMPCaseRepository impCases;
 
     public CARPDatasetRepository getCarpDatasets() {
         return carpDatasets;
@@ -61,6 +65,24 @@ public class Database {
     @Autowired
     private void setCarpCases(CARPCaseRepository carpCases) {
         this.carpCases = carpCases;
+    }
+
+    public ISECaseRepository getIseCases() {
+        return iseCases;
+    }
+
+    @Autowired
+    public void setIseCases(ISECaseRepository iseCases) {
+        this.iseCases = iseCases;
+    }
+
+    public IMPCaseRepository getImpCases() {
+        return impCases;
+    }
+
+    @Autowired
+    public void setImpCases(IMPCaseRepository impCases) {
+        this.impCases = impCases;
     }
 
     public UserRepository getUsers() {

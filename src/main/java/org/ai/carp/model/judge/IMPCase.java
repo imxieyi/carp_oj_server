@@ -17,7 +17,7 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@Document(collection = "cases_ise")
+@Document(collection = "cases_imp")
 public class IMPCase extends BaseCase {
 
     private static Random random = new Random();
