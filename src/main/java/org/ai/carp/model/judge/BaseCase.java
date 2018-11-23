@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ai.carp.controller.websocket.WebsocketHandler;
+import org.ai.carp.model.dataset.BaseDataset;
 import org.ai.carp.model.user.User;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
@@ -65,6 +66,8 @@ public abstract class BaseCase {
         this.status = WAITING;
     }
 
+    public abstract int getType();
+
     public void setStatus(int status) {
         this.status = status;
     }
@@ -124,6 +127,20 @@ public abstract class BaseCase {
 
     public String getUserId() {
         return user.getId();
+    }
+
+    @JsonIgnore
+    public BaseDataset getBaseDataset() {
+        if (this instanceof CARPCase) {
+            return ((CARPCase) this).getDataset();
+        }
+        if (this instanceof ISECase) {
+            return ((ISECase) this).getDataset();
+        }
+        if (this instanceof IMPCase) {
+            return ((IMPCase) this).getDataset();
+        }
+        return null;
     }
 
     @JsonIgnore

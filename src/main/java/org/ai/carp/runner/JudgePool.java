@@ -1,6 +1,7 @@
 package org.ai.carp.runner;
 
-import org.ai.carp.model.Database;
+import org.ai.carp.controller.util.CaseUtils;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.judge.CARPCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class JudgePool {
 
@@ -45,17 +45,17 @@ public class JudgePool {
         if (worker == null) {
             return;
         }
-        for (CARPCase carpCase : worker.jobs) {
-            carpCase.setStatus(CARPCase.WAITING);
-            Database.getInstance().getCarpCases().save(carpCase);
-            JudgeRunner.queue.add(carpCase);
+        for (BaseCase baseCase : worker.jobs) {
+            baseCase.setStatus(BaseCase.WAITING);
+            CaseUtils.saveCase(baseCase);
+            JudgeRunner.queue.add(baseCase);
         }
         workers.remove(id);
     }
 
-    public synchronized void removeTask(String wid, CARPCase carpCase) {
+    public synchronized void removeTask(String wid, BaseCase baseCase) {
         JudgeWorker worker = workers.get(wid);
-        worker.jobs.remove(carpCase);
+        worker.jobs.remove(baseCase);
         notifyAll();
     }
 
@@ -63,16 +63,15 @@ public class JudgePool {
         for (Map.Entry<String, JudgeWorker> worker : workers.entrySet()) {
             if (worker.getValue().jobs.size() < worker.getValue().maxJobs) {
                 worker.getValue().session.sendMessage(new TextMessage(data));
-                Optional<CARPCase> optionalCARPCase = Database.getInstance().getCarpCases().findById(cid);
-                if (!optionalCARPCase.isPresent()) {
+                BaseCase baseCase = CaseUtils.findById(cid);
+                if (baseCase == null) {
                     logger.error("WTF! Case {} does not exist!", cid);
                     throw new IOException("Case does not exist!");
                 }
-                CARPCase carpCase = optionalCARPCase.get();
-                carpCase.setStatus(CARPCase.QUEUED);
-                carpCase.setJudgeWorker(worker.getValue().user);
-                carpCase = Database.getInstance().getCarpCases().save(carpCase);
-                worker.getValue().jobs.add(carpCase);
+                baseCase.setStatus(CARPCase.QUEUED);
+                baseCase.setJudgeWorker(worker.getValue().user);
+                baseCase = CaseUtils.saveCase(baseCase);
+                worker.getValue().jobs.add(baseCase);
                 return worker.getKey();
             }
         }

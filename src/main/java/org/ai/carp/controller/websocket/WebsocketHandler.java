@@ -3,8 +3,15 @@ package org.ai.carp.controller.websocket;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ai.carp.controller.util.CARPUtils;
+import org.ai.carp.controller.util.CaseUtils;
+import org.ai.carp.controller.util.IMPUtils;
+import org.ai.carp.controller.util.ISEUtils;
 import org.ai.carp.model.Database;
+import org.ai.carp.model.dataset.BaseDataset;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.IMPCase;
+import org.ai.carp.model.judge.ISECase;
 import org.ai.carp.runner.JudgePool;
 import org.ai.carp.runner.JudgeRunnerWatchdog;
 import org.ai.carp.runner.JudgeWorker;
@@ -86,12 +93,12 @@ public class WebsocketHandler extends TextWebSocketHandler {
             }
             double timestamp = rootNode.get("timestamp").asDouble();
             Date date = new Date((long)(timestamp * 1000d));
-            for (CARPCase carpCase : worker.jobs) {
-                if (carpCase.getId().equals(cid)) {
-                    carpCase.setStatus(CARPCase.RUNNING);
-                    carpCase.setJudgeTime(date);
-                    CARPCase newCase = Database.getInstance().getCarpCases().save(carpCase);
-                    worker.jobs.remove(carpCase);
+            for (BaseCase baseCase : worker.jobs) {
+                if (baseCase.getId().equals(cid)) {
+                    baseCase.setStatus(CARPCase.RUNNING);
+                    baseCase.setJudgeTime(date);
+                    BaseCase newCase = CaseUtils.saveCase(baseCase);
+                    worker.jobs.remove(baseCase);
                     worker.jobs.add(newCase);
                     return;
                 }
@@ -103,27 +110,38 @@ public class WebsocketHandler extends TextWebSocketHandler {
             }
             logger.info("Result returned for {}", cid);
             double timestamp = rootNode.get("timestamp").asDouble();
-            for (CARPCase carpCase : worker.jobs) {
-                if (carpCase.getId().equals(cid)) {
-                    carpCase.setStatus(CARPCase.FINISHED);
-                    double judgeTime = (double) carpCase.getJudgeTime().getTime() / 1000d;
-                    carpCase.setTime(timestamp - judgeTime);
-                    carpCase.setTimedout(rootNode.get("timedout").asBoolean());
-                    carpCase.setStdout(rootNode.get("stdout").asText());
-                    carpCase.setOutOverflow(rootNode.get("stdout_overflow").asBoolean());
-                    carpCase.setStderr(rootNode.get("stderr").asText());
-                    carpCase.setErrOverflow(rootNode.get("stderr_overflow").asBoolean());
-                    carpCase.setExitcode(rootNode.get("exitcode").asInt());
+            for (BaseCase baseCase : worker.jobs) {
+                if (baseCase.getId().equals(cid)) {
+                    baseCase.setStatus(CARPCase.FINISHED);
+                    double judgeTime = (double) baseCase.getJudgeTime().getTime() / 1000d;
+                    baseCase.setTime(timestamp - judgeTime);
+                    baseCase.setTimedout(rootNode.get("timedout").asBoolean());
+                    baseCase.setStdout(rootNode.get("stdout").asText());
+                    baseCase.setOutOverflow(rootNode.get("stdout_overflow").asBoolean());
+                    baseCase.setStderr(rootNode.get("stderr").asText());
+                    baseCase.setErrOverflow(rootNode.get("stderr_overflow").asBoolean());
+                    baseCase.setExitcode(rootNode.get("exitcode").asInt());
                     try {
-                        CARPUtils.checkResult(carpCase);
+                        switch (baseCase.getType()) {
+                            case BaseDataset.CARP:
+                                CARPUtils.checkResult((CARPCase)baseCase);
+                                break;
+                            case BaseDataset.ISE:
+                                ISEUtils.checkResult((ISECase)baseCase);
+                                break;
+                            case BaseDataset.IMP:
+                                IMPUtils.checkResult((IMPCase)baseCase);
+                                break;
+                            default:
+                                logger.error("Invalid case type: {}", baseCase.getType());
+                        }
                     } catch (Exception e) {
                         logger.error("Error evaluating solution!", e);
-                        carpCase.setStatus(CARPCase.ERROR);
-                        carpCase.setReason("Error evaluating solution!");
-                        carpCase.setCost(0);
+                        baseCase.setStatus(BaseCase.ERROR);
+                        baseCase.setReason("Error evaluating solution!");
                     }
-                    Database.getInstance().getCarpCases().save(carpCase);
-                    JudgePool.getInstance().removeTask(uid, carpCase);
+                    CaseUtils.saveCase(baseCase);
+                    JudgePool.getInstance().removeTask(uid, baseCase);
                     return;
                 }
             }
