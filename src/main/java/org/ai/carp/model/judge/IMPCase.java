@@ -73,6 +73,11 @@ public class IMPCase extends BaseCase {
     }
 
     @Override
+    protected void buildDataset(ObjectNode node) {
+        node.put("network", dataset.getNetwork());
+    }
+
+    @Override
     protected void writeData(ZipOutputStream zos) throws IOException {
         ZipEntry data = new ZipEntry("data/network.dat");
         zos.putNextEntry(data);

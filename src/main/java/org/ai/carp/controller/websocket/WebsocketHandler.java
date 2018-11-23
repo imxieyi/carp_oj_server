@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.ai.carp.controller.util.CARPUtils;
 import org.ai.carp.controller.util.CaseUtils;
-import org.ai.carp.controller.util.IMPUtils;
 import org.ai.carp.controller.util.ISEUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.BaseDataset;
@@ -38,6 +37,7 @@ public class WebsocketHandler extends TextWebSocketHandler {
     public static final int CASE_DATA = 2;
     public static final int CASE_START = 3;
     public static final int CASE_RESULT = 4;
+    public static final int CASE_ERROR = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(WebsocketHandler.class);
 
@@ -130,7 +130,9 @@ public class WebsocketHandler extends TextWebSocketHandler {
                                 ISEUtils.checkResult((ISECase)baseCase);
                                 break;
                             case BaseDataset.IMP:
-                                IMPUtils.checkResult((IMPCase)baseCase);
+                                baseCase.setValid(rootNode.get("valid").asBoolean());
+                                baseCase.setReason(rootNode.get("reason").asText());
+                                ((IMPCase)baseCase).setInfluence(rootNode.get("influence").asDouble());
                                 break;
                             default:
                                 logger.error("Invalid case type: {}", baseCase.getType());
@@ -140,6 +142,21 @@ public class WebsocketHandler extends TextWebSocketHandler {
                         baseCase.setStatus(BaseCase.ERROR);
                         baseCase.setReason("Error evaluating solution!");
                     }
+                    CaseUtils.saveCase(baseCase);
+                    JudgePool.getInstance().removeTask(uid, baseCase);
+                    return;
+                }
+            }
+        } else if (type == CASE_ERROR) {
+            String cid = rootNode.get("cid").asText();
+            if (StringUtils.isEmpty(cid)) {
+                return;
+            }
+            logger.info("Result returned for {}", cid);
+            for (BaseCase baseCase : worker.jobs) {
+                if (baseCase.getId().equals(cid)) {
+                    baseCase.setStatus(CARPCase.ERROR);
+                    baseCase.setReason(rootNode.get("message").asText());
                     CaseUtils.saveCase(baseCase);
                     JudgePool.getInstance().removeTask(uid, baseCase);
                     return;

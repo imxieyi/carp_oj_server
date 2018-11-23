@@ -73,6 +73,10 @@ public class ISECase extends BaseCase {
     }
 
     @Override
+    protected void buildDataset(ObjectNode node) {
+    }
+
+    @Override
     protected void writeData(ZipOutputStream zos) throws IOException {
         ZipEntry data = new ZipEntry("data/network.dat");
         zos.putNextEntry(data);

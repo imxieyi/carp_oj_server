@@ -1,7 +1,6 @@
 package org.ai.carp.model.dataset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.ai.carp.controller.util.ISEUtils;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.util.StringUtils;
 
@@ -50,12 +49,12 @@ public class ISEDataset extends BaseDataset {
         super();
     }
 
-    public ISEDataset(String name, int time, int memory, int cpu, String model, String network, String seeds) {
+    public ISEDataset(String name, int time, int memory, int cpu, String model, String network, String seeds, double influence) {
         super(name, time, memory, cpu);
         this.model = model;
         this.network = network;
         this.seeds = seeds;
-        this.influence = ISEUtils.getInfluence(network, seeds, model);
+        this.influence = influence;
     }
 
     @Override

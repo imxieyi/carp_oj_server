@@ -212,6 +212,8 @@ public abstract class BaseCase {
 
     protected abstract String buildConfig() throws JsonProcessingException;
 
+    protected abstract void buildDataset(ObjectNode node);
+
     protected abstract void writeData(ZipOutputStream zos) throws IOException;
 
     @JsonIgnore
@@ -246,7 +248,11 @@ public abstract class BaseCase {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode dataNode = mapper.createObjectNode();
         dataNode.put("cid", id);
+        dataNode.put("type", getType());
         dataNode.put("data", encodedArchive);
+        ObjectNode datasetNode = mapper.createObjectNode();
+        buildDataset(datasetNode);
+        dataNode.put("dataset", datasetNode);
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.put("type", WebsocketHandler.CASE_DATA);
         rootNode.put("payload", dataNode);

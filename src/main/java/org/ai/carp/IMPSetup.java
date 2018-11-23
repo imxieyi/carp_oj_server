@@ -63,7 +63,8 @@ public class IMPSetup {
                 File seedsFile = fileMap.get(splitted[1]);
                 String seeds = new Scanner(seedsFile).useDelimiter("\\Z").next().replace("\r", "");
                 ISEDataset dataset = new ISEDataset(name, Integer.valueOf(splitted[3])
-                        , Integer.valueOf(splitted[4]), Integer.valueOf(splitted[5]), splitted[2], network, seeds);
+                        , Integer.valueOf(splitted[4]), Integer.valueOf(splitted[5])
+                        , splitted[2], network, seeds, Double.valueOf(splitted[6]));
                 dataset = Database.getInstance().getIseDatasets().insert(dataset);
                 logger.info(dataset.toString());
             } catch (Exception e) {

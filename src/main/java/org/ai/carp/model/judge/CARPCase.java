@@ -86,6 +86,10 @@ public class CARPCase extends BaseCase {
     }
 
     @Override
+    protected void buildDataset(ObjectNode node) {
+    }
+
+    @Override
     protected void writeData(ZipOutputStream zos) throws IOException {
         ZipEntry data = new ZipEntry("data/data.dat");
         zos.putNextEntry(data);
