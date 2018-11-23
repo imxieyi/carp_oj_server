@@ -22,5 +22,21 @@ public class DatasetUtils {
         Optional<IMPDataset> optionalIMPDataset = Database.getInstance().getImpDatasets().findById(cid);
         return optionalIMPDataset.orElse(null);
     }
+
+    public static BaseDataset findByName(String name) {
+        CARPDataset carpDataset = Database.getInstance().getCarpDatasets().findDatasetByName(name);
+        if (carpDataset != null) {
+            return carpDataset;
+        }
+        ISEDataset iseDataset = Database.getInstance().getIseDatasets().findDatasetByName(name);
+        if (iseDataset != null) {
+            return iseDataset;
+        }
+        IMPDataset impDataset = Database.getInstance().getImpDatasets().findDatasetByName(name);
+        if (impDataset != null) {
+            return impDataset;
+        }
+        return null;
+    }
     
 }

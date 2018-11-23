@@ -1,9 +1,9 @@
 package org.ai.carp.controller.admin.judge;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
+import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
-import org.ai.carp.model.Database;
-import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.user.User;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/admin/judge/archive", produces = "application/zip")
@@ -28,16 +27,15 @@ public class GetArchiveController {
         if (StringUtils.isEmpty(cid)) {
             throw new InvalidRequestException("No cid!");
         }
-        Optional<CARPCase> optCarpCase = Database.getInstance().getCarpCases().findById(cid);
-        if (!optCarpCase.isPresent()) {
+        BaseCase baseCase = CaseUtils.findById(cid);
+        if (baseCase == null) {
             throw new InvalidRequestException("Case does not exist!");
         }
-        CARPCase carpCase = optCarpCase.get();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "zip"));
         headers.setContentDispositionFormData("attachment", cid + ".zip");
-        headers.setContentLength(carpCase.getArchive().length());
-        return new ResponseEntity<>(carpCase.getArchive().getData(), headers, HttpStatus.OK);
+        headers.setContentLength(baseCase.getArchive().length());
+        return new ResponseEntity<>(baseCase.getArchive().getData(), headers, HttpStatus.OK);
     }
 
 }
