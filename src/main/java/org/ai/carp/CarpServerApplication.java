@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
-@EnableMongoRepositories("org.ai.carp")
+@EnableMongoRepositories("org.ai.carp.model")
 public class CarpServerApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(CarpServerApplication.class);

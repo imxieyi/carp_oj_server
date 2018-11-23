@@ -19,6 +19,8 @@ public abstract class BaseDataset {
     protected int memory;
     protected int cpu;
 
+    protected boolean enabled;
+
     public String getId() {
         return id;
     }
@@ -42,6 +44,14 @@ public abstract class BaseDataset {
 
     public int getCpu() {
         return cpu;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     BaseDataset() {

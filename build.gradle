@@ -27,9 +27,19 @@ repositories {
     mavenCentral()
 }
 
-task addData(type: JavaExec) {
+task carpSetup(type: JavaExec) {
     classpath sourceSets.main.runtimeClasspath
     main = "org.ai.carp.CARPSetup"
+}
+
+task impSetup(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.IMPSetup"
+}
+
+task migrateData(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.MigrateData"
 }
 
 dependencies {

@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import java.util.Scanner;
 
 @ComponentScan(basePackages = {"org.ai.carp.model"})
 @SpringBootApplication
+@EnableMongoRepositories("org.ai.carp.model")
 public class CARPSetup {
 
     private static final Logger logger = LoggerFactory.getLogger(CARPSetup.class);

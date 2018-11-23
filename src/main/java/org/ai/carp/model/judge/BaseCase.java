@@ -11,6 +11,7 @@ import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -70,6 +71,12 @@ public abstract class BaseCase {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    void setSubmitTime(Date submitTime) {
+        if (StringUtils.isEmpty(id)) {
+            this.submitTime = submitTime;
+        }
     }
 
     public void setJudgeTime(Date judge_time) {
