@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.ai.carp.model.dataset.BaseDataset;
-import org.ai.carp.model.dataset.CARPDataset;
+import org.ai.carp.model.dataset.ISEDataset;
 import org.ai.carp.model.user.User;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -17,84 +17,75 @@ import java.util.Random;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@Document(collection = "cases_carp")
-public class CARPCase extends BaseCase {
+@Document(collection = "cases_ise")
+public class ISECase extends BaseCase {
 
     private static Random random = new Random();
 
     // Submission
     @DBRef
     @Indexed
-    private CARPDataset dataset;
+    private ISEDataset dataset;
 
     // Result
-    private String path;
-    private int cost;
+    private double influence;
 
-    public CARPCase(User user, CARPDataset dataset, Binary archive) {
+    public ISECase(User user, ISEDataset dataset, Binary archive) {
         super(user, archive);
         this.dataset = dataset;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
+    public void setInfluence(double influence) {
+        this.influence = influence;
     }
 
     @JsonIgnore
-    public CARPDataset getDataset() {
+    public ISEDataset getDataset() {
         return dataset;
     }
 
     public int getType() {
-        return BaseDataset.CARP;
+        return BaseDataset.ISE;
     }
 
     public String getDatasetId() {
         return dataset.getId();
     }
 
-    @JsonIgnore
-    public String getPath() {
-        return path;
-    }
-
-    public int getCost() {
-        return cost;
+    public double getInfluence() {
+        return influence;
     }
 
     @Override
     protected String buildConfig() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();
-        node.put("entry", "CARP_solver.py");
-        node.put("data", "data.dat");
-        node.put("parameters", "$data -t $time -s $seed");
+        node.put("entry", "ISE.py");
+        node.put("network", "network.dat");
+        node.put("seeds", "seeds.dat");
+        node.put("parameters", "-i $network -s $seeds -m $model -t $time");
         node.put("time", dataset.getTime());
         node.put("memory", dataset.getMemory());
         node.put("cpu", dataset.getCpu());
-        int seed = random.nextInt();
-        if (seed == Integer.MIN_VALUE) {
-            seed++;
-        }
-        node.put("seed", Math.abs(seed));
+        node.put("model", dataset.getModel());
         return mapper.writeValueAsString(node);
     }
 
     @Override
     protected void writeData(ZipOutputStream zos) throws IOException {
-        ZipEntry data = new ZipEntry("data/data.dat");
+        ZipEntry data = new ZipEntry("data/network.dat");
         zos.putNextEntry(data);
-        zos.write(dataset.getData().getBytes());
+        zos.write(dataset.getNetwork().getBytes());
+        zos.closeEntry();
+        data = new ZipEntry("data/seeds.dat");
+        zos.putNextEntry(data);
+        zos.write(dataset.getSeeds().getBytes());
         zos.closeEntry();
     }
 
     @Override
     public String toString() {
-        return String.format("CARPCase[id=%s, user=%s, dataset=%s, status=%d, cost=%d]",
-                id, user.getUsername(), dataset.getName(), status, cost);
+        return String.format("ISECase[id=%s, user=%s, dataset=%s, status=%d, influence=%f]",
+                id, user.getUsername(), dataset.getName(), status, influence);
     }
 }

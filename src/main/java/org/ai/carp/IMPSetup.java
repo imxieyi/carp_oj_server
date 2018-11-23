@@ -53,7 +53,7 @@ public class IMPSetup {
             if (StringUtils.isEmpty(splitted[0])) {
                 continue;
             }
-            String name = splitted[0] + "-" + splitted[1];
+            String name = splitted[0] + "-" + splitted[1] + "-" + splitted[2];
             if (Database.getInstance().getIseDatasets().findDatasetByName(name) != null) {
                 continue;
             }
@@ -62,8 +62,8 @@ public class IMPSetup {
                 String network = new Scanner(networkFile).useDelimiter("\\Z").next().replace("\r", "");
                 File seedsFile = fileMap.get(splitted[1]);
                 String seeds = new Scanner(seedsFile).useDelimiter("\\Z").next().replace("\r", "");
-                ISEDataset dataset = new ISEDataset(name, Integer.valueOf(splitted[2])
-                        , Integer.valueOf(splitted[3]), Integer.valueOf(splitted[4]), network, seeds);
+                ISEDataset dataset = new ISEDataset(name, Integer.valueOf(splitted[3])
+                        , Integer.valueOf(splitted[4]), Integer.valueOf(splitted[5]), splitted[2], network, seeds);
                 dataset = Database.getInstance().getIseDatasets().insert(dataset);
                 logger.info(dataset.toString());
             } catch (Exception e) {
@@ -93,15 +93,16 @@ public class IMPSetup {
             if (StringUtils.isEmpty(splitted[0])) {
                 continue;
             }
-            String name = splitted[0];
+            String name = splitted[0] + "-" + splitted[1] + "-" + splitted[2];
             if (Database.getInstance().getImpDatasets().findDatasetByName(name) != null) {
                 continue;
             }
             try {
                 File networkFile = fileMap.get(splitted[0]);
                 String network = new Scanner(networkFile).useDelimiter("\\Z").next().replace("\r", "");
-                IMPDataset dataset = new IMPDataset(name, Integer.valueOf(splitted[1])
-                        , Integer.valueOf(splitted[2]), Integer.valueOf(splitted[3]), network);
+                IMPDataset dataset = new IMPDataset(name, Integer.valueOf(splitted[3])
+                        , Integer.valueOf(splitted[4]), Integer.valueOf(splitted[5])
+                        , Integer.valueOf(splitted[1]), splitted[2], network);
                 dataset = Database.getInstance().getImpDatasets().insert(dataset);
                 logger.info(dataset.toString());
             } catch (Exception e) {

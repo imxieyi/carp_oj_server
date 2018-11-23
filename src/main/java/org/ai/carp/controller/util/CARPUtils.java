@@ -2,24 +2,11 @@ package org.ai.carp.controller.util;
 
 import org.ai.carp.controller.util.SolutionChecker.Checker;
 import org.ai.carp.model.judge.CARPCase;
-import org.springframework.util.StringUtils;
 
 public class CARPUtils {
 
     public static void checkResult(CARPCase carpCase) {
-        if (carpCase.getStatus() != CARPCase.FINISHED) {
-            return;
-        }
-        if (carpCase.isTimedout()) {
-            carpCase.setReason("Timed out");
-            return;
-        }
-        if (carpCase.getExitcode() != 0) {
-            carpCase.setReason("Exit code is not zero");
-            return;
-        }
-        if (StringUtils.isEmpty(carpCase.getStdout())) {
-            carpCase.setReason("No output");
+        if (!CaseUtils.checkResult(carpCase)) {
             return;
         }
         Checker checker = new Checker(carpCase);

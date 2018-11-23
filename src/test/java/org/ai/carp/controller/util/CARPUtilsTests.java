@@ -7,34 +7,23 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class CARPUtilsTests {
 
     static CARPCase carpCase, carpCase2;
 
-    private static String readResource(String name) throws IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream(name);
-        byte[] bytes = new byte[is.available()];
-        is.read(bytes);
-        is.close();
-        String data = new String(bytes);
-        return data;
-    }
-
     @BeforeClass
     public static void setUp() throws IOException {
-        CARPDataset dataset = new CARPDataset("gdb10", 10, 256, 1, readResource("gdb10.dat"));
+        CARPDataset dataset = new CARPDataset("gdb10", 10, 256, 1, ResourceUtils.readResource("gdb10.dat"));
         carpCase = new CARPCase(null, dataset, null);
         carpCase.setStatus(CARPCase.FINISHED);
         carpCase.setExitcode(0);
-        String data = readResource("gdb10_out.txt");
+        String data = ResourceUtils.readResource("gdb10_out.txt");
         carpCase.setStdout(data);
         carpCase2 = new CARPCase(null, dataset, null);
         carpCase2.setStatus(CARPCase.FINISHED);
         carpCase2.setExitcode(0);
-        data = readResource("gdb10_out2.txt");
+        data = ResourceUtils.readResource("gdb10_out2.txt");
         carpCase2.setStdout(data);
     }
 

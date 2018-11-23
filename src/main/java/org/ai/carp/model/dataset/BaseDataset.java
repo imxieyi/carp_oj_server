@@ -5,6 +5,10 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 public abstract class BaseDataset {
 
+    public static final int CARP = 0;
+    public static final int ISE = 1;
+    public static final int IMP = 2;
+
     @Id
     protected String id;
 
@@ -17,6 +21,8 @@ public abstract class BaseDataset {
     public String getId() {
         return id;
     }
+
+    public abstract int getType();
 
     public String getName() {
         return name;
