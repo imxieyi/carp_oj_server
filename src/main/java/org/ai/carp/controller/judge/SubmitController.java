@@ -30,16 +30,10 @@ public class SubmitController {
     @PostMapping
     public SubmitResponse post(@RequestBody PostCase postCase, HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
-        if (StringUtils.isEmpty(postCase.dataset)) {
-            throw new InvalidRequestException("No dataset!");
-        }
         if (StringUtils.isEmpty(postCase.data)) {
             throw new InvalidRequestException("No data!");
         }
-        BaseDataset dataset = DatasetUtils.findById(postCase.dataset);
-        if (dataset == null) {
-            throw new InvalidRequestException("Invalid dataset!");
-        }
+        BaseDataset dataset = DatasetUtils.apiGetById(postCase.dataset);
         if (user.getType() == User.USER &&
                 CaseUtils.countPreviousDay(user) >= CARPCase.DAILY_LIMIT) {
             throw new PermissionDeniedException("You have reached daily limits on submission!");

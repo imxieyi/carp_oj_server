@@ -1,6 +1,5 @@
 package org.ai.carp.controller.judge;
 
-import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.DatasetUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
@@ -10,7 +9,6 @@ import org.ai.carp.model.dataset.IMPDataset;
 import org.ai.carp.model.dataset.ISEDataset;
 import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.user.User;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,13 +28,7 @@ public class QueryTopController {
     @GetMapping
     public QueryTopResult get(@RequestParam("dataset") String did, HttpSession session) {
         User user = UserUtils.getUser(session, User.MAX);
-        if (StringUtils.isEmpty(did)) {
-            throw new InvalidRequestException("No dataset id!");
-        }
-        BaseDataset dataset = DatasetUtils.findById(did);
-        if (dataset == null) {
-            throw new InvalidRequestException("Invalid dataset!");
-        }
+        BaseDataset dataset = DatasetUtils.apiGetById(did);
         List<BaseCase> allBaseCases = new ArrayList<>();
         if (dataset.getType() == BaseDataset.CARP) {
             allBaseCases = Database.getInstance().getCarpCases()
