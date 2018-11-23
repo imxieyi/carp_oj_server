@@ -11,10 +11,7 @@ import org.ai.carp.model.dataset.BaseDataset;
 import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.dataset.IMPDataset;
 import org.ai.carp.model.dataset.ISEDataset;
-import org.ai.carp.model.judge.BaseCase;
-import org.ai.carp.model.judge.CARPCase;
-import org.ai.carp.model.judge.IMPCase;
-import org.ai.carp.model.judge.ISECase;
+import org.ai.carp.model.judge.*;
 import org.ai.carp.model.user.User;
 import org.ai.carp.runner.JudgeRunner;
 import org.bson.types.Binary;
@@ -62,6 +59,7 @@ public class SubmitController {
             default:
                 throw new InvalidRequestException("Invalid dataset type!");
         }
+        Database.getInstance().getLiteCases().insert(new LiteCase(baseCase));
         JudgeRunner.queue.add(baseCase);
         int remain = CARPCase.DAILY_LIMIT - CaseUtils.countPreviousDay(user);
         return new SubmitResponse(baseCase.getId(), remain);

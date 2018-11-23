@@ -429,21 +429,21 @@
 	        if (typeof(data) == "string") {
 	          data = JSON.parse(data);
 	        }
-	        if (data["carpCases"].length > 0) {
+	        if (data["baseCases"].length > 0) {
 	          $.cookie("page", page);
-	          RenderSubmitResult(data["carpCases"], data["total"]);
-	          let isRefresh = RefreshSubmitResult(data["carpCases"]);
+	          RenderSubmitResult(data["baseCases"], data["total"]);
+	          let isRefresh = RefreshSubmitResult(data["baseCases"]);
 	          if (isRefresh) {
 	            setTimeout("getSubmitResult($.cookie('page'));", 3000);
 	          }
 	        } else if (parseInt(page) == 0) {
 	          $.cookie("page", page);
-	          RenderSubmitResult(data["carpCases"], 0);
+	          RenderSubmitResult(data["baseCases"], 0);
 	        }
 	      }
 	    });
 	  }
-	  var RenderSubmitResult = function(carpCases, total) {
+	  var RenderSubmitResult = function(baseCases, total) {
 	    let ResultHtml = "";
 	    ResultHtml += "<thead>\n";
 	    ResultHtml += "<tr>\n";
@@ -474,11 +474,11 @@
 	    ResultHtml += "<\/tr>\n";
 	    ResultHtml += "<\/thead>\n";
 	    ResultHtml += "<tbody>\n";
-	    let rId = carpCases.length;
-	    if (rId == 0 || carpCases == undefined) {
+	    let rId = baseCases.length;
+	    if (rId == 0 || baseCases == undefined) {
 	      ResultHtml += "<tr><td colspan='8' class='no_data_td'>No Data</td></tr>"
 	    } else {
-	      for (var o of carpCases) {
+	      for (var o of baseCases) {
 	        let dtime = new Date(o["submitTime"]);
 	        let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
 	        let ErrorInfo = "";
@@ -593,11 +593,11 @@
 	      });
 	    })();
 	  }
-	  var RefreshSubmitResult = function(carpCases) {
-	    if (carpCases.length == 0) return false;
+	  var RefreshSubmitResult = function(baseCases) {
+	    if (baseCases.length == 0) return false;
 	    let isRefresh = false;
-	    for (var i in carpCases) {
-	      if (carpCases[i]["status"] < 3) {
+	    for (var i in baseCases) {
+	      if (baseCases[i]["status"] < 3) {
 	        isRefresh = true;
 	      }
 	    }
@@ -669,8 +669,8 @@
 	              data = JSON.parse(data);
 	            }
 	            let one_tab_rank = {};
-	            one_tab_rank[DataSetList[d]["id"]] = data["carpCases"];
-	            RankData[DataSetList[d]["id"]] = data["carpCases"];
+	            one_tab_rank[DataSetList[d]["id"]] = data["baseCases"];
+	            RankData[DataSetList[d]["id"]] = data["baseCases"];
 	            if (d == 0) {
 	              //默认渲染第一个DataSet的排名
 	              RenderRankList(DataSetList[d]["id"]);

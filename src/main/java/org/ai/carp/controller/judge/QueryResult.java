@@ -1,21 +1,21 @@
 package org.ai.carp.controller.judge;
 
-import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.BaseCase;
 
 import java.util.List;
 
 class QueryResult {
 
-    private List<CARPCase> carpCases;
+    private List<BaseCase> baseCases;
     private int total;
 
-    public QueryResult(List<CARPCase> carpCases, int total) {
-        this.carpCases = carpCases;
+    public QueryResult(List<BaseCase> baseCases, int total) {
+        this.baseCases = baseCases;
         this.total = total;
     }
 
-    public List<CARPCase> getCarpCases() {
-        return carpCases;
+    public List<BaseCase> getBaseCases() {
+        return baseCases;
     }
 
     public int getTotal() {

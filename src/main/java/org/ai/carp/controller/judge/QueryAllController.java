@@ -1,8 +1,10 @@
 package org.ai.carp.controller.judge;
 
+import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
-import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.BaseCase;
+import org.ai.carp.model.judge.LiteCase;
 import org.ai.carp.model.user.User;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/judge/get")
@@ -22,10 +25,13 @@ public class QueryAllController {
                            @RequestParam("size") int size,
                            HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
-        List<CARPCase> carpCases = Database.getInstance().getCarpCases()
-                .findCARPCasesByUserOrderBySubmitTimeDesc(user, PageRequest.of(page, size));
-        int total = Database.getInstance().getCarpCases().countCARPCasesByUser(user);
-        return new QueryResult(carpCases, total);
+        List<LiteCase> liteCases = Database.getInstance().getLiteCases()
+                .findLiteCasesByUserOrderBySubmitTimeDesc(user, PageRequest.of(page, size));
+        List<BaseCase> baseCases = liteCases.stream()
+                .map(c -> CaseUtils.findById(c.getFullId()))
+                .collect(Collectors.toList());
+        int total = Database.getInstance().getLiteCases().countLiteCasesByUser(user);
+        return new QueryResult(baseCases, total);
     }
 
 }
