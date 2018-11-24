@@ -35,7 +35,7 @@ public class GetCARPArchives {
         for (User u : users) {
             CARPCase submission = Database.getInstance().getCarpCases()
                     .findFirstByUserAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, endTime);
-            if (submission == null || submission.getArchive() == null) {
+            if (submission == null || submission.getArchive() == null || !submission.isValid()) {
                 continue;
             }
             ZipEntry entry = new ZipEntry(u.getUsername() + ".zip");

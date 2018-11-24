@@ -109,7 +109,7 @@ public class IMPSetup {
                         , Integer.valueOf(splitted[4]), Integer.valueOf(splitted[5])
                         , Integer.valueOf(splitted[1]), splitted[2], network);
                 dataset.setEnabled(true);
-                dataset.setSubmittable(false);
+                dataset.setSubmittable(true);
                 dataset = Database.getInstance().getImpDatasets().insert(dataset);
                 logger.info(dataset.toString());
             } catch (Exception e) {
