@@ -21,6 +21,7 @@ public abstract class BaseDataset {
 
     protected boolean enabled;
     protected boolean submittable;
+    protected boolean finalJudge;
 
     public String getId() {
         return id;
@@ -56,12 +57,21 @@ public abstract class BaseDataset {
         return submittable;
     }
 
+    @JsonIgnore
+    public boolean isFinalJudge() {
+        return finalJudge;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
     public void setSubmittable(boolean submittable) {
         this.submittable = submittable;
+    }
+
+    public void setFinalJudge(boolean finalJudge) {
+        this.finalJudge = finalJudge;
     }
 
     BaseDataset() {

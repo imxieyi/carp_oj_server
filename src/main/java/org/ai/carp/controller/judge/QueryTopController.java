@@ -46,7 +46,7 @@ public class QueryTopController {
                             (IMPDataset)dataset, BaseCase.FINISHED, true)
                     .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
         }
-        return new QueryTopResult(allBaseCases, user.getType() <= User.ADMIN);
+        return new QueryTopResult(dataset, allBaseCases, user.getType() <= User.ADMIN);
     }
 
 }

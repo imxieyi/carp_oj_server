@@ -34,7 +34,7 @@ public class SubmitController {
             throw new InvalidRequestException("No data!");
         }
         BaseDataset dataset = DatasetUtils.apiGetById(postCase.dataset);
-        if (!dataset.isEnabled()) {
+        if (!dataset.isEnabled() || dataset.isFinalJudge()) {
             throw new PermissionDeniedException("Dataset is disabled!");
         }
         if (!dataset.isSubmittable() && user.getType() > User.ADMIN) {

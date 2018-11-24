@@ -1,25 +1,51 @@
 package org.ai.carp.controller.judge;
 
+import org.ai.carp.model.dataset.BaseDataset;
 import org.ai.carp.model.judge.BaseCase;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class QueryTopResult {
 
+    // Query cache
+    private static Map<String, List<BaseCaseLite>> queryCache = new HashMap<>();
+    private static Map<String, Long> queryCacheTime = new HashMap<>();
+
     private List<BaseCaseLite> baseCases;
 
-    public QueryTopResult(List<BaseCase> cases, boolean admin) {
-        baseCases = new ArrayList<>();
-        Set<String> uids = new HashSet<>();
-        for (BaseCase c : cases) {
-//            if (c.getUser().getType() != User.USER) {
-//                continue;
-//            }
-            if (!uids.contains(c.getUser().getId())) {
-                baseCases.add(new BaseCaseLite(c));
-                uids.add(c.getUser().getId());
-                if (!admin && baseCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
-                    break;
+    public QueryTopResult(BaseDataset dataset, List<BaseCase> cases, boolean admin) {
+        if (dataset.isFinalJudge()) {
+            if (queryCache.containsKey(dataset.getId())) {
+                if (new Date().getTime() - queryCacheTime.get(dataset.getId()) < 60000L) {
+                    baseCases = queryCache.get(dataset.getId());
+                    return;
+                }
+            }
+            Map<String, BaseCaseLite> caseMap = new HashMap<>();
+            for (BaseCase c : cases) {
+                if (!caseMap.containsKey(c.getUserId())) {
+                    caseMap.put(c.getUserId(),
+                            new BaseCaseLite(c.getUser().getUsername(), c.getTime(), c.getResult()));
+                } else {
+                    caseMap.get(c.getUserId()).addResult(c);
+                }
+            }
+            baseCases = caseMap.values().stream().filter(c -> c.getCount() >= 3)
+                    .collect(Collectors.toList());
+            baseCases.sort(Comparator.comparing(BaseCaseLite::getResult));
+            queryCache.put(dataset.getId(), baseCases);
+            queryCacheTime.put(dataset.getId(), new Date().getTime());
+        } else {
+            baseCases = new ArrayList<>();
+            Set<String> uids = new HashSet<>();
+            for (BaseCase c : cases) {
+                if (!uids.contains(c.getUser().getId())) {
+                    baseCases.add(new BaseCaseLite(c));
+                    uids.add(c.getUser().getId());
+                    if (!admin && baseCases.size() >= QueryTopController.COUNT_LEADERBOARD) {
+                        break;
+                    }
                 }
             }
         }
@@ -33,29 +59,42 @@ public class QueryTopResult {
 class BaseCaseLite {
 
     private String userName;
-    private String datasetId;
     private Date submitTime;
     private double time;
     private double result;
 
+    // For final judge
+    private int count;
+
     public BaseCaseLite(BaseCase baseCase) {
         this.userName = baseCase.getUser().getUsername();
-        this.datasetId = baseCase.getId();
         this.result = baseCase.getResult();
         this.submitTime = baseCase.getSubmitTime();
         this.time = baseCase.getTime();
+        this.count = 1;
+    }
+
+    // For final judge
+    public BaseCaseLite(String userName, double time, double result) {
+        this.userName = userName;
+        this.submitTime = new Date(0L);
+        this.time = time;
+        this.result = result;
+        this.count = 1;
+    }
+
+    public void addResult(BaseCase baseCase) {
+        this.time += baseCase.getTime();
+        this.result += baseCase.getResult();
+        this.count++;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public String getDatasetId() {
-        return datasetId;
-    }
-
     public double getResult() {
-        return result;
+        return result / (double) count;
     }
 
     public Date getSubmitTime() {
@@ -63,6 +102,10 @@ class BaseCaseLite {
     }
 
     public double getTime() {
-        return time;
+        return time / (double) count;
+    }
+
+    public int getCount() {
+        return count;
     }
 }
