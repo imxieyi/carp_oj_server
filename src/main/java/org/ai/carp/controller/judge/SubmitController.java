@@ -34,6 +34,12 @@ public class SubmitController {
             throw new InvalidRequestException("No data!");
         }
         BaseDataset dataset = DatasetUtils.apiGetById(postCase.dataset);
+        if (!dataset.isEnabled()) {
+            throw new PermissionDeniedException("Dataset is disabled!");
+        }
+        if (!dataset.isSubmittable() && user.getType() > User.ADMIN) {
+            throw new PermissionDeniedException("Dataset is not submittable!");
+        }
         if (user.getType() == User.USER &&
                 CaseUtils.countPreviousDay(user) >= CARPCase.DAILY_LIMIT) {
             throw new PermissionDeniedException("You have reached daily limits on submission!");

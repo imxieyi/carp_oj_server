@@ -49,8 +49,8 @@ public class IMPCase extends BaseCase {
         return BaseDataset.IMP;
     }
 
-    public String getDatasetId() {
-        return dataset.getId();
+    public String getDatasetName() {
+        return dataset.getName();
     }
 
     @JsonIgnore

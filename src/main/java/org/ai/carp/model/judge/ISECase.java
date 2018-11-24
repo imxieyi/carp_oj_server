@@ -49,8 +49,8 @@ public class ISECase extends BaseCase {
         return BaseDataset.ISE;
     }
 
-    public String getDatasetId() {
-        return dataset.getId();
+    public String getDatasetName() {
+        return dataset.getName();
     }
 
     @JsonIgnore

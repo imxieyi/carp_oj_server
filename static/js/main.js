@@ -35,6 +35,7 @@
 	        $("#info_box").modal("show");
 	        $.cookie("username", null);
 	        $.cookie("userid", null);
+              $.cookie("usertype", null);
 	        setTimeout(function() {
 	          $("#info_box").modal("hide");
 	          window.location.href = "index.html";
@@ -386,6 +387,10 @@
 	  var RenderOptions = function(dataset_list) {
 	    var SelectHtml = '<select class="form-control" id="graph_choose" name="group_select">';
 	    for (var i in dataset_list) {
+            if (!dataset_list[i]["submittable"] &&
+				($.cookie("usertype") == null || $.cookie("usertype") > 100)) {
+                continue;
+            }
 		  var typeCode = dataset_list[i]["type"];
 		  var typeName = "INVALID";
 		  if (typeCode === 0) {
@@ -403,6 +408,10 @@
 
 	    var SelectHtml = '<select class="form-control" id="graph_choose1" name="group_select">';
 	    for (var i in dataset_list) {
+            if (!dataset_list[i]["submittable"] &&
+                ($.cookie("usertype") == null || $.cookie("usertype") > 100)) {
+	    		continue;
+			}
             var typeCode = dataset_list[i]["type"];
             var typeName = "INVALID";
             if (typeCode === 0) {
@@ -503,12 +512,7 @@
 	          errorcolor = false;
 	        }
 
-	        let nowdataset = "";
-	        for (var i in DataSetList) {
-	          if (DataSetList[i]["id"] == o["datasetId"]) {
-	            nowdataset = DataSetList[i]["name"];
-	          }
-	        }
+	        let nowdataset = o["datasetName"];
 	        if (nowdataset == "") {
 	          nowdataset = "unknown";
 	        }
@@ -616,6 +620,7 @@
 	        console.log("session out of date.");
 	        $.cookie("username", null);
 	        $.cookie("userid", null);
+              $.cookie("usertype", null);
 	        setTimeout(function() {
 	          window.location.href = "index.html";
 	        }, 500);
@@ -640,6 +645,7 @@
 	        console.log("session out of date.");
 	        $.cookie("username", null);
 	        $.cookie("userid", null);
+              $.cookie("usertype", null);
 	        setTimeout(function() {
 	          window.location.href = "index.html";
 	        }, 500);
@@ -681,6 +687,7 @@
 	              console.log("session out of date.");
 	              $.cookie("username", null);
 	              $.cookie("userid", null);
+                    $.cookie("usertype", null);
 	              setTimeout(function() {
 	                window.location.href = "index.html";
 	              }, 500);
@@ -952,6 +959,9 @@
 	          $.cookie("username", user, {
 	            expires: expDate
 	          });
+                $.cookie("usertype", data["type"], {
+                    expires: expDate
+                });
 
 	          $("#login_box").modal("hide");
 	          $(".user_place").each(function(i, e) {
@@ -988,6 +998,7 @@
 	            //session 过期
 	            $.cookie("username", null);
 	            $.cookie("userid", null);
+                  $.cookie("usertype", null);
 	          } else if (parseInt(jqXHR["responseJSON"]["status"]) == 400 && jqXHR["responseJSON"]["message"] == "Already logged in!") {
 	            $.getJSON(RootUrl + "/api/user/info").success(function(data) {
 	              if (typeof data == "string") {
@@ -1001,6 +1012,9 @@
 	              $.cookie("username", user, {
 	                expires: expDate
 	              });
+                    $.cookie("usertype", data["type"], {
+                        expires: expDate
+                    });
 	              $("#login_box").modal("hide");
 	              $(".user_place").each(function(i, e) {
 	                $(e).css("display", "none");
@@ -1101,6 +1115,7 @@
 	              console.log("session out of date.");
 	              $.cookie("username", null);
 	              $.cookie("userid", null);
+                    $.cookie("usertype", null);
 	              setTimeout(function() {
 	                window.location.href = "index.html";
 	              }, 5000);
@@ -1165,6 +1180,7 @@
 	          $("#change_pwd_content").html("<p>Change Successfully!<br/>Refresh page after 3 seconds.</p>")
 	          $.cookie("username", null);
 	          $.cookie("userid", null);
+                $.cookie("usertype", null);
 	          setTimeout(function() {
 	            $("#change_pwd_box").modal("hide");
 	            window.location.href = "index.html";
@@ -1176,6 +1192,7 @@
 	            console.log("session out of date.");
 	            $.cookie("username", null);
 	            $.cookie("userid", null);
+                  $.cookie("usertype", null);
 	            logout_user();
 	            setTimeout(function() {
 	              window.location.href = "index.html";

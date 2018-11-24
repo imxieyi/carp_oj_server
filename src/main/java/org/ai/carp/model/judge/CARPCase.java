@@ -54,8 +54,8 @@ public class CARPCase extends BaseCase {
         return BaseDataset.CARP;
     }
 
-    public String getDatasetId() {
-        return dataset.getId();
+    public String getDatasetName() {
+        return dataset.getName();
     }
 
     @JsonIgnore

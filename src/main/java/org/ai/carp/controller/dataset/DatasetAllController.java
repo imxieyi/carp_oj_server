@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/dataset/all")
@@ -20,6 +21,7 @@ public class DatasetAllController {
         datasets.addAll(Database.getInstance().getCarpDatasets().findAll());
         datasets.addAll(Database.getInstance().getIseDatasets().findAll());
         datasets.addAll(Database.getInstance().getImpDatasets().findAll());
+        datasets = datasets.stream().filter(BaseDataset::isEnabled).collect(Collectors.toList());
         return new DatasetAllResponse(datasets);
     }
 

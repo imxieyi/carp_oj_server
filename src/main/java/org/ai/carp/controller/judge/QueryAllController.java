@@ -1,6 +1,5 @@
 package org.ai.carp.controller.judge;
 
-import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.judge.BaseCase;
@@ -28,7 +27,7 @@ public class QueryAllController {
         List<LiteCase> liteCases = Database.getInstance().getLiteCases()
                 .findLiteCasesByUserOrderBySubmitTimeDesc(user, PageRequest.of(page, size));
         List<BaseCase> baseCases = liteCases.stream()
-                .map(c -> CaseUtils.findById(c.getFullId()))
+                .map(LiteCase::getFullCase)
                 .collect(Collectors.toList());
         int total = Database.getInstance().getLiteCases().countLiteCasesByUser(user);
         return new QueryResult(baseCases, total);

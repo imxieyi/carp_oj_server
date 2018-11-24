@@ -28,6 +28,7 @@ public class OldDataset {
     public CARPDataset convert() {
         CARPDataset dataset = new CARPDataset(name, time, memory, cpu, data);
         dataset.setEnabled(false);
+        dataset.setSubmittable(false);
         return Database.getInstance().getCarpDatasets().insert(dataset);
     }
 

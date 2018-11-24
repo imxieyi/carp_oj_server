@@ -20,6 +20,7 @@ public abstract class BaseDataset {
     protected int cpu;
 
     protected boolean enabled;
+    protected boolean submittable;
 
     public String getId() {
         return id;
@@ -46,12 +47,21 @@ public abstract class BaseDataset {
         return cpu;
     }
 
+    @JsonIgnore
     public boolean isEnabled() {
         return enabled;
     }
 
+    public boolean isSubmittable() {
+        return submittable;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setSubmittable(boolean submittable) {
+        this.submittable = submittable;
     }
 
     BaseDataset() {
