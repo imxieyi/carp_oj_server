@@ -774,7 +774,7 @@
 	        page_dom += value["time"].toFixed(3);
 	        page_dom += "	<\/td>\n";
 	        page_dom += "	<td>\n";
-	        page_dom += value["result"];
+	        page_dom += value["result"].toFixed(2);
 	        page_dom += "	<\/td>\n";
 	        page_dom += "<\/tr>\n";
 	        Page.items.push(page_dom);
