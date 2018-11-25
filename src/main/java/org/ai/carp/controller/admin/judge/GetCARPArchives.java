@@ -46,6 +46,11 @@ public class GetCARPArchives {
             timestamps.append(u.getUsername());
             timestamps.append(',');
             timestamps.append(submission.getSubmitTime().toString());
+            timestamps.append(',');
+            timestamps.append(submission.getDatasetName());
+            timestamps.append(',');
+            timestamps.append(submission.getReason());
+            timestamps.append(',');
             timestamps.append('\n');
         }
         ZipEntry entry = new ZipEntry("timestamps.csv");
