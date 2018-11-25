@@ -26,15 +26,16 @@ public class GetCARPArchives {
 
     @GetMapping
     public ResponseEntity<byte[]> get(HttpSession session) throws IOException {
-        UserUtils.getUser(session, User.ADMIN);
+        UserUtils.getUser(session, User.ROOT);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ZipOutputStream zos = new ZipOutputStream(baos);
         Date endTime = new Date(1542964624000L);
         // Query users
+        StringBuilder timestamps = new StringBuilder();
         List<User> users = Database.getInstance().getUsers().findAllByType(User.USER);
         for (User u : users) {
             CARPCase submission = Database.getInstance().getCarpCases()
-                    .findFirstByUserAndValidAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, true, endTime);
+                    .findFirstByUserAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, endTime);
             if (submission == null || submission.getArchive() == null || !submission.isValid()) {
                 continue;
             }
@@ -42,7 +43,15 @@ public class GetCARPArchives {
             zos.putNextEntry(entry);
             zos.write(submission.getArchive().getData());
             zos.closeEntry();
+            timestamps.append(u.getUsername());
+            timestamps.append(',');
+            timestamps.append(submission.getSubmitTime().toString());
+            timestamps.append('\n');
         }
+        ZipEntry entry = new ZipEntry("timestamps.csv");
+        zos.putNextEntry(entry);
+        zos.write(timestamps.toString().getBytes());
+        zos.closeEntry();
         zos.close();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "zip"));

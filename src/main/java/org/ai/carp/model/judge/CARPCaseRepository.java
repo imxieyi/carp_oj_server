@@ -12,7 +12,7 @@ public interface CARPCaseRepository extends MongoRepository<CARPCase, String> {
 
     List<CARPCase> findCARPCasesByUserOrderBySubmitTimeDesc(User user, Pageable pageable);
     int countCARPCasesByUser(User user);
-    CARPCase findFirstByUserAndValidAndSubmitTimeBeforeOrderBySubmitTimeDesc(User user, boolean valid, Date endTime);
+    CARPCase findFirstByUserAndSubmitTimeBeforeOrderBySubmitTimeDesc(User user, Date endTime);
     List<CARPCase> findCARPCasesByDatasetOrderBySubmitTimeDesc(CARPDataset dataset);
     List<CARPCase> findCARPCasesByUserAndDatasetOrderBySubmitTimeDesc(User user, CARPDataset dataset);
     List<CARPCase> findCARPCasesByStatusNotIn(List<Integer> status);
