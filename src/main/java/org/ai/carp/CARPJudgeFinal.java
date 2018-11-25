@@ -94,7 +94,7 @@ public class CARPJudgeFinal {
         List<CARPCase> cases = new ArrayList<>();
         for (User u : users) {
             CARPCase submission = Database.getInstance().getCarpCases()
-                    .findFirstByUserAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, endTime);
+                    .findFirstByUserAndValidAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, true, endTime);
             if (submission == null || submission.getArchive() == null || !submission.isValid()) {
                 continue;
             }

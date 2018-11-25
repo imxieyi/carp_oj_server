@@ -34,7 +34,7 @@ public class GetCARPArchives {
         List<User> users = Database.getInstance().getUsers().findAllByType(User.USER);
         for (User u : users) {
             CARPCase submission = Database.getInstance().getCarpCases()
-                    .findFirstByUserAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, endTime);
+                    .findFirstByUserAndValidAndSubmitTimeBeforeOrderBySubmitTimeDesc(u, true, endTime);
             if (submission == null || submission.getArchive() == null || !submission.isValid()) {
                 continue;
             }
