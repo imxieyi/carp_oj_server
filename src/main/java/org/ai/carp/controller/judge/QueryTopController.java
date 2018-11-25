@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,23 +36,33 @@ public class QueryTopController {
             throw new PermissionDeniedException("Permission denied!");
         }
         List<BaseCase> allBaseCases = new ArrayList<>();
+        Set<String> invalidUids = new HashSet<>();
         if (dataset.getType() == BaseDataset.CARP) {
             allBaseCases = Database.getInstance().getCarpCases()
                     .findCARPCasesByDatasetAndStatusAndValidOrderByCostAscTimeAscSubmitTimeAsc(
                             (CARPDataset)dataset, BaseCase.FINISHED, true)
                     .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+            invalidUids = Database.getInstance().getCarpCases()
+                    .findCARPCasesByDatasetAndStatusAndValidAndTimedout((CARPDataset)dataset, BaseCase.FINISHED, false, false)
+                    .stream().map(BaseCase::getUserId).collect(Collectors.toSet());
         } else if (dataset.getType() == BaseDataset.ISE) {
             allBaseCases = Database.getInstance().getIseCases()
                     .findISECasesByDatasetAndStatusAndValidOrderByTimeAscSubmitTimeAsc(
                             (ISEDataset)dataset, BaseCase.FINISHED, true)
                     .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+            invalidUids = Database.getInstance().getIseCases()
+                    .findISECasesByDatasetAndStatusAndValidAndTimedout((ISEDataset)dataset, BaseCase.FINISHED, false, false)
+                    .stream().map(BaseCase::getUserId).collect(Collectors.toSet());
         } else if (dataset.getType() == BaseDataset.IMP) {
             allBaseCases = Database.getInstance().getImpCases()
                     .findIMPCasesByDatasetAndStatusAndValidOrderByInfluenceDescTimeAscSubmitTimeAsc(
                             (IMPDataset)dataset, BaseCase.FINISHED, true)
                     .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+            invalidUids = Database.getInstance().getImpCases()
+                    .findIMPCasesByDatasetAndStatusAndValidAndTimedout((IMPDataset)dataset, BaseCase.FINISHED, false, false)
+                    .stream().map(BaseCase::getUserId).collect(Collectors.toSet());
         }
-        return new QueryTopResult(dataset, allBaseCases, user.getType() <= User.ADMIN);
+        return new QueryTopResult(dataset, allBaseCases, invalidUids, user.getType() <= User.ADMIN);
     }
 
 }

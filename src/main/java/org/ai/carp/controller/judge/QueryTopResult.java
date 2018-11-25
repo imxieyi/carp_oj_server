@@ -25,7 +25,7 @@ public class QueryTopResult {
         return partList;
     }
 
-    public QueryTopResult(BaseDataset dataset, List<BaseCase> cases, boolean admin) {
+    public QueryTopResult(BaseDataset dataset, List<BaseCase> cases, Set<String> invalidUids, boolean admin) {
         if (dataset.isFinalJudge()) {
             if (queryCache.containsKey(dataset.getId())) {
                 if (new Date().getTime() - queryCacheTime.get(dataset.getId()) < 60000L) {
@@ -38,6 +38,9 @@ public class QueryTopResult {
             }
             Map<String, BaseCaseLite> caseMap = new HashMap<>();
             for (BaseCase c : cases) {
+                if (invalidUids.contains(c.getUserId())) {
+                    continue;
+                }
                 if (!caseMap.containsKey(c.getUserId())) {
                     caseMap.put(c.getUserId(),
                             new BaseCaseLite(c.getUser().getUsername(), c.getTime(), c.getResult()));
