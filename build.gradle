@@ -42,6 +42,11 @@ task migrateData(type: JavaExec) {
     main = "org.ai.carp.MigrateData"
 }
 
+task carpFinal(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.CARPJudgeFinal"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
     implementation('org.springframework.boot:spring-boot-starter-security')
