@@ -33,6 +33,9 @@ public class SubmitController {
         if (StringUtils.isEmpty(postCase.data)) {
             throw new InvalidRequestException("No data!");
         }
+        if (user.getType() > User.ADMIN) {
+            throw new PermissionDeniedException("Submission is closed");
+        }
         BaseDataset dataset = DatasetUtils.apiGetById(postCase.dataset);
         if (!dataset.isEnabled() || dataset.isFinalJudge()) {
             throw new PermissionDeniedException("Dataset is disabled!");

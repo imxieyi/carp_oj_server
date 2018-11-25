@@ -1,5 +1,6 @@
 package org.ai.carp.controller.judge;
 
+import org.ai.carp.controller.exceptions.PermissionDeniedException;
 import org.ai.carp.controller.util.DatasetUtils;
 import org.ai.carp.controller.util.UserUtils;
 import org.ai.carp.model.Database;
@@ -29,6 +30,9 @@ public class QueryTopController {
     public QueryTopResult get(@RequestParam("dataset") String did, HttpSession session) {
         User user = UserUtils.getUser(session, User.MAX);
         BaseDataset dataset = DatasetUtils.apiGetById(did);
+        if (dataset.isFinalJudge() && user.getType() > User.ADMIN) {
+            throw new PermissionDeniedException("Permission denied!");
+        }
         List<BaseCase> allBaseCases = new ArrayList<>();
         if (dataset.getType() == BaseDataset.CARP) {
             allBaseCases = Database.getInstance().getCarpCases()

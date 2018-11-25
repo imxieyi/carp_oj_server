@@ -14,11 +14,25 @@ public class QueryTopResult {
 
     private List<BaseCaseLite> baseCases;
 
+    private List<BaseCaseLite> getUserList(List<BaseCaseLite> fullList) {
+        List<BaseCaseLite> partList = new ArrayList<>();
+        for (BaseCaseLite c : fullList) {
+            partList.add(c);
+            if (partList.size() >= 20) {
+                break;
+            }
+        }
+        return partList;
+    }
+
     public QueryTopResult(BaseDataset dataset, List<BaseCase> cases, boolean admin) {
         if (dataset.isFinalJudge()) {
             if (queryCache.containsKey(dataset.getId())) {
                 if (new Date().getTime() - queryCacheTime.get(dataset.getId()) < 60000L) {
                     baseCases = queryCache.get(dataset.getId());
+                    if (!admin) {
+                        baseCases = getUserList(baseCases);
+                    }
                     return;
                 }
             }
@@ -36,6 +50,9 @@ public class QueryTopResult {
             baseCases.sort(Comparator.comparing(BaseCaseLite::getResult));
             queryCache.put(dataset.getId(), baseCases);
             queryCacheTime.put(dataset.getId(), new Date().getTime());
+            if (!admin) {
+                baseCases = getUserList(baseCases);
+            }
         } else {
             baseCases = new ArrayList<>();
             Set<String> uids = new HashSet<>();
