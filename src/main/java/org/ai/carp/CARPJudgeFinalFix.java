@@ -24,7 +24,7 @@ public class CARPJudgeFinalFix {
 
     private static void addLiteCases() {
         Date startTime = new Date(1542964624000L);
-        Database.getInstance().getCarpCases().findCARPCasesBySubmitTimeAfterOrderBySubmitTimeDesc(startTime)
+        Database.getInstance().getCarpCases().findCARPCasesBySubmitTimeAfter(startTime)
                 .forEach(c -> Database.getInstance().getLiteCases().insert(new LiteCase(c)));
     }
 
