@@ -47,6 +47,11 @@ task carpFinal(type: JavaExec) {
     main = "org.ai.carp.CARPJudgeFinal"
 }
 
+task carpFinalFix(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.CARPJudgeFinalFix"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
     implementation('org.springframework.boot:spring-boot-starter-security')

@@ -3,6 +3,7 @@ package org.ai.carp;
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.CARPDataset;
 import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.LiteCase;
 import org.ai.carp.model.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +107,9 @@ public class CARPJudgeFinal {
         }
         Collections.shuffle(cases);
         for (CARPCase c : cases) {
-            logger.info(Database.getInstance().getCarpCases().insert(c).toString());
+            CARPCase newC = Database.getInstance().getCarpCases().insert(c);
+            Database.getInstance().getLiteCases().insert(new LiteCase(c));
+            logger.info(newC.toString());
         }
     }
 
