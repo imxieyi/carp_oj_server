@@ -104,6 +104,7 @@ public class CARPJudgeFinal {
                 }
             }
         }
+        Collections.shuffle(cases);
         for (CARPCase c : cases) {
             logger.info(Database.getInstance().getCarpCases().insert(c).toString());
         }
