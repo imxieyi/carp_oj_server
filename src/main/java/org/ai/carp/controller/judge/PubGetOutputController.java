@@ -37,8 +37,7 @@ public class PubGetOutputController {
         }
         model.addAttribute("exitcode", carpCase.getExitcode());
         model.addAttribute("stdout", carpCase.getStdout());
-//        model.addAttribute("stderr", carpCase.getStderr());
-        model.addAttribute("stderr", "aa\nbb");
+        model.addAttribute("stderr", carpCase.getStderr());
         return "output";
     }
 
