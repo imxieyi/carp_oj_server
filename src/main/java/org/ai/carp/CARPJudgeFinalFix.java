@@ -23,10 +23,21 @@ public class CARPJudgeFinalFix {
         SpringApplication app = new SpringApplication(CARPSetup.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
-        addLiteCases();
+        fixForceQuit();
+        restartTimedout();
     }
 
-    private static void addLiteCases() {
+    private static void fixForceQuit() {
+        Date startTime = new Date(1542964624000L);
+        Database.getInstance().getCarpCases().findCARPCasesBySubmitTimeAfter(startTime)
+                .stream().filter(c -> c.getExitcode() == 137)
+                .forEach(c -> {
+                    c.setStatus(CARPCase.WAITING);
+                    logger.info(Database.getInstance().getCarpCases().save(c).toString());
+                });
+    }
+
+    private static void restartTimedout() {
         Date startTime = new Date(1542964624000L);
         Database.getInstance().getCarpCases().findCARPCasesBySubmitTimeAfter(startTime)
                 .stream().filter(CARPCase::isTimedout)
