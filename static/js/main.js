@@ -530,12 +530,13 @@
 	        ResultHtml += "<td>\n";
 	        ResultHtml += Submtime;
 	        ResultHtml += "<\/td>\n";
+              ResultHtml += "<td>\n";
 	        if (errorcolor == true) {
-	          ResultHtml += "<td class='error_color'>";
+			  ErrorInfo = "<a href=\"" + "/judge/details?cid=" + o["id"] + "\" target=\"_blank\" class='error_color' style='text-decoration:underline'>" + ErrorInfo + "</a>\n";
 	        } else if (waitingcolor == true) {
-	          ResultHtml += "<td class='waiting_color'>\n";
+              ErrorInfo = "<div class='waiting_color'>" + ErrorInfo + "</div>\n";
 	        } else {
-	          ResultHtml += "<td class='no_error_color'>\n";
+              ErrorInfo = "<a href=\"" + "/judge/details?cid=" + o["id"] + "\" target=\"_blank\" class='no_error_color' style='text-decoration:underline'>" + ErrorInfo + "</a>\n";
 	        }
 	        ResultHtml += ErrorInfo;
 	        ResultHtml += "<\/td>\n";

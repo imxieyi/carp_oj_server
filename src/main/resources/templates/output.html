@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Judge Details</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h4>Exit code</h4>
+<p th:text="${exitcode}"></p>
+<h4>Stdout</h4>
+<p th:utext="${#strings.replace(#strings.escapeXml(stdout),'&#10;','&lt;br /&gt;')}"></p>
+<h4>Stderr</h4>
+<p th:utext="${#strings.replace(#strings.escapeXml(stderr),'&#10;','&lt;br /&gt;')}"></p>
+</body>
+</html>
