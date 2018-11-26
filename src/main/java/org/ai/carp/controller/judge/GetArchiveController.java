@@ -1,4 +1,4 @@
-package org.ai.carp.controller.admin.judge;
+package org.ai.carp.controller.judge;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
 import org.ai.carp.controller.util.CaseUtils;
@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping(value = "/api/admin/judge/archive", produces = "application/zip")
+@RequestMapping(value = "/api/judge/archive", produces = "application/zip")
 public class GetArchiveController {
 
     @GetMapping
     public ResponseEntity<byte[]> get(@RequestParam("cid") String cid, HttpSession session) {
-        UserUtils.getUser(session, User.ADMIN);
+        User user = UserUtils.getUser(session, User.USER);
         if (StringUtils.isEmpty(cid)) {
             throw new InvalidRequestException("No cid!");
         }
         BaseCase baseCase = CaseUtils.findById(cid);
-        if (baseCase == null) {
+        if (baseCase == null || (user.getType() > User.ADMIN && !user.getId().equals(baseCase.getUserId()))) {
             throw new InvalidRequestException("Case does not exist!");
         }
         HttpHeaders headers = new HttpHeaders();

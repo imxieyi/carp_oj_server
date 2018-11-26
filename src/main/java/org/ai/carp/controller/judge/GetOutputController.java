@@ -1,10 +1,9 @@
 package org.ai.carp.controller.judge;
 
 import org.ai.carp.controller.exceptions.InvalidRequestException;
-import org.ai.carp.controller.exceptions.PermissionDeniedException;
+import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.controller.util.UserUtils;
-import org.ai.carp.model.Database;
-import org.ai.carp.model.judge.CARPCase;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.user.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
-import java.util.Optional;
 
 @Controller
-public class PubGetOutputController {
+public class GetOutputController {
 
     @GetMapping("/judge/details")
     public String get(@RequestParam("cid") String cid, Model model, HttpSession session) {
@@ -24,20 +22,14 @@ public class PubGetOutputController {
         if (StringUtils.isEmpty(cid)) {
             throw new InvalidRequestException("No cid!");
         }
-        Optional<CARPCase> optCarpCase = Database.getInstance().getCarpCases().findById(cid);
-        if (!optCarpCase.isPresent()) {
+        BaseCase baseCase = CaseUtils.findById(cid);
+        if (baseCase == null || (user.getType() > User.ADMIN && !user.getId().equals(baseCase.getUserId()))) {
             throw new InvalidRequestException("Case does not exist!");
         }
-        CARPCase carpCase = optCarpCase.get();
-        if (!carpCase.getUserId().equals(user.getId())) {
-            throw new PermissionDeniedException("You do not own this case!");
-        }
-        if (carpCase.getStatus() != CARPCase.FINISHED && carpCase.getStatus() != CARPCase.ERROR) {
+        if (baseCase.getStatus() != BaseCase.FINISHED && baseCase.getStatus() != BaseCase.ERROR) {
             throw new InvalidRequestException("Case has not finished!");
         }
-        model.addAttribute("exitcode", carpCase.getExitcode());
-        model.addAttribute("stdout", carpCase.getStdout());
-        model.addAttribute("stderr", carpCase.getStderr());
+        CaseUtils.renderView(baseCase, model);
         return "output";
     }
 

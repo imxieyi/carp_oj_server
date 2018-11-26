@@ -5,11 +5,30 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+<h4>ID</h4>
+<p th:text="${id}"></p>
+<h4>User</h4>
+<p th:text="${user}"></p>
+<h4>Dataset</h4>
+<p th:text="${dataset}"></p>
+<h4>Submit time</h4>
+<p th:text="${submitTime}"></p>
+<h4>Judge time</h4>
+<p th:text="${judgeTime}"></p>
+<h4>Judge worker</h4>
+<p th:text="${judgeWorker}"></p>
+<h4>Running time</h4>
+<p th:text="${time}"></p>
+<h4>Result</h4>
+<p th:text="${result}"></p>
+<h4>Message</h4>
+<p th:text="${message}"></p>
 <h4>Exit code</h4>
 <p th:text="${exitcode}"></p>
 <h4>Stdout</h4>
 <p th:utext="${#strings.replace(#strings.escapeXml(stdout),'&#10;','&lt;br /&gt;')}"></p>
 <h4>Stderr</h4>
 <p th:utext="${#strings.replace(#strings.escapeXml(stderr),'&#10;','&lt;br /&gt;')}"></p>
+<h3><a th:href="@{'/api/judge/archive?cid=' + ${id}}">Download archive</a></h3>
 </body>
 </html>

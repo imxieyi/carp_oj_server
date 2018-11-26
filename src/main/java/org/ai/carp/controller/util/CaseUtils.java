@@ -7,6 +7,7 @@ import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.judge.IMPCase;
 import org.ai.carp.model.judge.ISECase;
 import org.ai.carp.model.user.User;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -62,6 +63,21 @@ public class CaseUtils {
         }
         Optional<IMPCase> optionalIMPCase = Database.getInstance().getImpCases().findById(cid);
         return optionalIMPCase.orElse(null);
+    }
+
+    public static void renderView(BaseCase baseCase, Model model) {
+        model.addAttribute("id", baseCase.getId());
+        model.addAttribute("user", baseCase.getUser().getUsername());
+        model.addAttribute("dataset", baseCase.getBaseDataset().getName());
+        model.addAttribute("submitTime", baseCase.getSubmitTime());
+        model.addAttribute("judgeTime", baseCase.getJudgeTime());
+        model.addAttribute("judgeWorker", baseCase.getWorkerName());
+        model.addAttribute("time", baseCase.getTime());
+        model.addAttribute("result", baseCase.getResult());
+        model.addAttribute("message", baseCase.getReason());
+        model.addAttribute("exitcode", baseCase.getExitcode());
+        model.addAttribute("stdout", baseCase.getStdout());
+        model.addAttribute("stderr", baseCase.getStderr());
     }
 
 }

@@ -5,6 +5,7 @@
 	var StatusCode = ["WAITING", "QUEUED", "RUNNING", "FINISHED", "ERROR"];
 	var DataSetList = [];
 	var RankData = [];
+	var SelfRankData = [];
 	var Page = {
 	  each_num: 13,
 	  items_num: 0,
@@ -14,6 +15,7 @@
 	  page_html: "",
 	};
 	var RenderRankList;
+	var RenderSelfRankList;
 	var getSubmitResult;
 	//Global function for Dom Click events
 	var logout_user = function() {
@@ -55,6 +57,7 @@
 	    }
 	  });
 	  RenderRankList(aimid);
+        RenderSelfRankList(aimid);
 	}
 	var change_page = function(id) {
 	  Page.now_page = id;
@@ -681,6 +684,7 @@
 	            if (d == 0) {
 	              //默认渲染第一个DataSet的排名
 	              RenderRankList(DataSetList[d]["id"]);
+                    RenderSelfRankList(DataSetList[d]["id"]);
 	            }
 	          }).fail(function(jqXHR) {
 	            if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
@@ -700,160 +704,187 @@
 	            }, 5000);
 	          });
 	        })(d)
+			// Self best
+            (function(d) {
+                $.getJSON(RootUrl + "/api/judge/best?dataset=" + DataSetList[d]["id"]).success(function(data) {
+                    if (typeof data == "string") {
+                        data = JSON.parse(data);
+                    }
+                    SelfRankData[DataSetList[d]["id"]] = data["baseCases"];
+                    if (d == 0) {
+                        //默认渲染第一个DataSet的排名
+                        RenderSelfRankList(DataSetList[d]["id"]);
+                    }
+                }).fail(function(jqXHR) {
+                    if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
+                        //session 过期
+                        console.log("session out of date.");
+                        $.cookie("username", null);
+                        $.cookie("userid", null);
+                        $.cookie("usertype", null);
+                        setTimeout(function() {
+                            window.location.href = "index.html";
+                        }, 500);
+                    }
+                    $("#info_box_msg").html("<p>It occurs a error when get Rank List data, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
+                    $("#info_box").modal("show");
+                    setTimeout(function() {
+                        $("#info_box").modal("hide");
+                    }, 5000);
+                });
+            })(d)
 	      }
 	    }
 	  }
-	  RenderRankList = function(datasetid) {
-	    //根据屏幕大小变化
-	    if (parseInt($(window).width()) > 1400) {
-	      $("#window_pannel").removeClass("col-md-8");
-	      $("#window_pannel").addClass("col-md-10");
-	    }
-	    let render_data;
-	    if (RankData[datasetid] == undefined) {
-	      render_data = [];
-	    } else {
-	      render_data = RankData[datasetid].slice(0, 150);
-	    }
-	    let RankListHtml = "";
-	    RankListHtml += "<thead>\n";
-	    RankListHtml += "<tr>\n";
-	    RankListHtml += "	<td>\n";
-	    RankListHtml += "		Rank\n";
-	    RankListHtml += "	<\/td>\n";
-	    RankListHtml += "	<td>\n";
-	    RankListHtml += "		User\n";
-	    RankListHtml += "	<\/td>\n";
-	    RankListHtml += "	<td>\n";
-	    RankListHtml += "		submitTime\n";
-	    RankListHtml += "	<\/td>\n";
-	    RankListHtml += "	<td>\n";
-	    RankListHtml += "		time\n";
-	    RankListHtml += "	<\/td>\n";
-	    RankListHtml += "	<td>\n";
-	    RankListHtml += "		result\n";
-	    RankListHtml += "	<\/td>\n";
-	    RankListHtml += "<\/tr>\n";
-	    RankListHtml += "<\/thead>\n";
-	    RankListHtml += "<tbody id='page_box'>\n";
-	    if (render_data == undefined || render_data.length == 0) {
-	      RankListHtml += "<tr><td colspan='5' class='no_data_td'>No Data</td></tr>"
-	    }
-	    let ownrank = []
-	    //pages分页
-	    Page.items_num = render_data.length;
-	    Page.page_num = Math.ceil(Page.items_num / Page.each_num);
-	    Page.items = [];
-	    Page.now_page = 0; //Where are you,default 0.
-	    Page.page_html = "";
-	    let user_rank_page_html = "";
-	    let value;
+        RenderRankList = function(datasetid) {
+            //根据屏幕大小变化
+            if (parseInt($(window).width()) > 1400) {
+                $("#window_pannel").removeClass("col-md-8");
+                $("#window_pannel").addClass("col-md-10");
+            }
+            let render_data;
+            if (RankData[datasetid] == undefined) {
+                render_data = [];
+            } else {
+                render_data = RankData[datasetid].slice(0, 150);
+            }
+            let RankListHtml = "";
+            RankListHtml += "<thead>\n";
+            RankListHtml += "<tr>\n";
+            RankListHtml += "	<td>\n";
+            RankListHtml += "		Rank\n";
+            RankListHtml += "	<\/td>\n";
+            RankListHtml += "	<td>\n";
+            RankListHtml += "		User\n";
+            RankListHtml += "	<\/td>\n";
+            RankListHtml += "	<td>\n";
+            RankListHtml += "		submitTime\n";
+            RankListHtml += "	<\/td>\n";
+            RankListHtml += "	<td>\n";
+            RankListHtml += "		time\n";
+            RankListHtml += "	<\/td>\n";
+            RankListHtml += "	<td>\n";
+            RankListHtml += "		result\n";
+            RankListHtml += "	<\/td>\n";
+            RankListHtml += "<\/tr>\n";
+            RankListHtml += "<\/thead>\n";
+            RankListHtml += "<tbody id='page_box'>\n";
+            if (render_data == undefined || render_data.length == 0) {
+                RankListHtml += "<tr><td colspan='5' class='no_data_td'>No Data</td></tr>"
+            }
+            //pages分页
+            Page.items_num = render_data.length;
+            Page.page_num = Math.ceil(Page.items_num / Page.each_num);
+            Page.items = [];
+            Page.now_page = 0; //Where are you,default 0.
+            Page.page_html = "";
+            let user_rank_page_html = "";
+            let value;
 
-	    for (var i = 0; i < Page.page_num; i++) {
-	      for (var index = i * Page.each_num; index < (((i + 1) * Page.each_num) > Page.items_num ? Page.items_num : (i + 1) * Page.each_num); index++) {
-	        value = render_data[index];
-	        if ($.cookie("username") == value["userName"]) {
-	          value["rank"] = parseInt(index) + 1;
-	          if (ownrank)
-	            ownrank.push(value);
-	        }
-	        let page_dom = "";
-	        let dtime = new Date(value["submitTime"]);
-	        let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
-	        let rank = parseInt(index) + 1;
-	        page_dom += "<tr>\n";
-	        page_dom += "	<td>\n";
-	        page_dom += "#" + rank;
-	        page_dom += "	<\/td>\n";
-	        page_dom += "	<td>\n";
-	        page_dom += value["userName"];
-	        page_dom += "	<\/td>\n";
-	        page_dom += "	<td>\n";
-	        page_dom += Submtime;
-	        page_dom += "	<\/td>\n";
-	        page_dom += "	<td>\n";
-	        page_dom += value["time"].toFixed(3);
-	        page_dom += "	<\/td>\n";
-	        page_dom += "	<td>\n";
-	        page_dom += value["result"].toFixed(2);
-	        page_dom += "	<\/td>\n";
-	        page_dom += "<\/tr>\n";
-	        Page.items.push(page_dom);
-	      }
-	    }
-	    // 生成页面按钮
-	    let page_active = "";
-	    for (var i = 0; i < Page.page_num; i++) {
-	      if (i == Page.now_page) {
-	        page_active = "page_active";
-	      } else {
-	        page_active = "";
-	      }
-	      Page.page_html += "<button class='btn btn-default btn-sm " + page_active + "' onclick='change_page(" + i + ")'>" + (parseInt(i) + 1) + "</button>";
-	    }
+            for (var i = 0; i < Page.page_num; i++) {
+                for (var index = i * Page.each_num; index < (((i + 1) * Page.each_num) > Page.items_num ? Page.items_num : (i + 1) * Page.each_num); index++) {
+                    value = render_data[index];
+                    let page_dom = "";
+                    let dtime = new Date(value["submitTime"]);
+                    let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
+                    let rank = parseInt(index) + 1;
+                    page_dom += "<tr>\n";
+                    page_dom += "	<td>\n";
+                    page_dom += "#" + rank;
+                    page_dom += "	<\/td>\n";
+                    page_dom += "	<td>\n";
+                    page_dom += value["userName"];
+                    page_dom += "	<\/td>\n";
+                    page_dom += "	<td>\n";
+                    page_dom += Submtime;
+                    page_dom += "	<\/td>\n";
+                    page_dom += "	<td>\n";
+                    page_dom += value["time"].toFixed(3);
+                    page_dom += "	<\/td>\n";
+                    page_dom += "	<td>\n";
+                    page_dom += value["result"].toFixed(2);
+                    page_dom += "	<\/td>\n";
+                    page_dom += "<\/tr>\n";
+                    Page.items.push(page_dom);
+                }
+            }
+            // 生成页面按钮
+            let page_active = "";
+            for (var i = 0; i < Page.page_num; i++) {
+                if (i == Page.now_page) {
+                    page_active = "page_active";
+                } else {
+                    page_active = "";
+                }
+                Page.page_html += "<button class='btn btn-default btn-sm " + page_active + "' onclick='change_page(" + i + ")'>" + (parseInt(i) + 1) + "</button>";
+            }
 
-	    //Default : show page which in you are.log((((i+1)*Page.each_num)>Page.items_num?Page.items_num:(i+1)*Page.each_num))
+            //Default : show page which in you are.log((((i+1)*Page.each_num)>Page.items_num?Page.items_num:(i+1)*Page.each_num))
 
-	    for (var index = Page.now_page * Page.each_num; index < (((Page.now_page + 1) * Page.each_num) > Page.items_num ? Page.items_num : (Page.now_page + 1) * Page.each_num); index++) {
-	      user_rank_page_html += Page.items[index];
-	    }
-	    user_rank_page_html += "<td colspan='5'>" +
-	      // "<button class='btn btn-info btn-sm' id='page-left'><i class='glyphicon glyphicon-arrow-left'></i></button>" +
-	      Page.page_html +
-	      // "<button class='btn btn-info btn-sm' id='page-right'><i class='glyphicon glyphicon-arrow-right'></i></button>" +
-	      "</td>";
-	    RankListHtml += user_rank_page_html;
-	    RankListHtml += "<\/tbody>\n";
-	    let MyRankHtml = "";
-	    // MyRankHtml += "<tr class='warning'><td colspan='1'>Your Rank</td><td colspan='4'></td></tr>";
-	    if (ownrank.length == 0) {
-	      MyRankHtml += "<tr>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += "# -";
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += "--------- ";
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += "-";
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += "-";
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "<\/tr>\n";
-	    }
-	    //只选择最小的前10个
-	    _.sortBy(ownrank, function(each) {
-	      return each["rank"];
-	    });
+            for (var index = Page.now_page * Page.each_num; index < (((Page.now_page + 1) * Page.each_num) > Page.items_num ? Page.items_num : (Page.now_page + 1) * Page.each_num); index++) {
+                user_rank_page_html += Page.items[index];
+            }
+            user_rank_page_html += "<td colspan='5'>" +
+                // "<button class='btn btn-info btn-sm' id='page-left'><i class='glyphicon glyphicon-arrow-left'></i></button>" +
+                Page.page_html +
+                // "<button class='btn btn-info btn-sm' id='page-right'><i class='glyphicon glyphicon-arrow-right'></i></button>" +
+                "</td>";
+            RankListHtml += user_rank_page_html;
+            RankListHtml += "<\/tbody>\n";
+            // RankListHtml += "<tfoot>" + MyRankHtml + "<\/tfoot>";
+            $("#rank_table").empty();
+            $("#rank_table").append(RankListHtml);
 
-	    for (var i in ownrank.slice(0, 10)) {
-	      let dtime = new Date(ownrank[i]["submitTime"]);
-	      let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
-	      let rank = ownrank[i]["rank"]
-	      MyRankHtml += "<tr>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += "#" + rank;
-	      MyRankHtml += "	<\/td>\n";
+        }
+        RenderSelfRankList = function(datasetid) {
+            let ownrank = SelfRankData[datasetid];
+            let MyRankHtml = "";
+            // MyRankHtml += "<tr class='warning'><td colspan='1'>Your Rank</td><td colspan='4'></td></tr>";
+            if (ownrank.length == 0) {
+                MyRankHtml += "<tr>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "# -";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "--------- ";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "-";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "-";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "<\/tr>\n";
+            }
+            //只选择最小的前10个
+            _.sortBy(ownrank, function(each) {
+                return each["rank"];
+            });
 
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += Submtime;
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += ownrank[i]["time"].toFixed(3);
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "	<td>\n";
-	      MyRankHtml += ownrank[i]["result"];
-	      MyRankHtml += "	<\/td>\n";
-	      MyRankHtml += "<\/tr>\n";
-	    }
-	    // RankListHtml += "<tfoot>" + MyRankHtml + "<\/tfoot>";
-	    $("#rank_table").empty();
-	    $("#rank_table").append(RankListHtml);
-	    $("#myRank_table").find("tbody").empty();
-	    $("#myRank_table").find("tbody").append(MyRankHtml);
+            for (var i in ownrank.slice(0, 10)) {
+                let dtime = new Date(ownrank[i]["submitTime"]);
+                let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
+                let rank = ownrank[i]["rank"]
+                MyRankHtml += "<tr>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "#" + rank;
+                MyRankHtml += "	<\/td>\n";
 
-	  }
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += Submtime;
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += ownrank[i]["time"].toFixed(3);
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += ownrank[i]["result"];
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "<\/tr>\n";
+            }
+            $("#myRank_table").find("tbody").empty();
+            $("#myRank_table").find("tbody").append(MyRankHtml);
+
+        }
 	  var RenderTabList = function() {
 	    $("#rank_tab_list").empty();
 	    let RankTabHtml = "";
