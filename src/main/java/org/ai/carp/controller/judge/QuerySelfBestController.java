@@ -30,6 +30,9 @@ public class QuerySelfBestController {
     public QuerySelfBestResult get(@RequestParam("dataset") String did, HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
         BaseDataset dataset = DatasetUtils.apiGetById(did);
+        if (dataset.isFinalJudge()) {
+            return new QuerySelfBestResult(QueryTopResult.getFinalList(dataset.getId()), user);
+        }
         List<BaseCase> bestCases = new ArrayList<>();
         switch (dataset.getType()) {
             case BaseDataset.CARP:

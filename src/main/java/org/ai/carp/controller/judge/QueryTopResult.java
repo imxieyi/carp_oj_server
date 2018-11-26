@@ -12,6 +12,14 @@ public class QueryTopResult {
     private static Map<String, List<BaseCaseLite>> queryCache = new HashMap<>();
     private static Map<String, Long> queryCacheTime = new HashMap<>();
 
+    public static List<BaseCaseLite> getFinalList(String datasetId) {
+        if (queryCache.containsKey(datasetId)) {
+            return queryCache.get(datasetId);
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
     private List<BaseCaseLite> baseCases;
 
     private List<BaseCaseLite> getUserList(List<BaseCaseLite> fullList) {
@@ -84,6 +92,7 @@ class BaseCaseLite {
     private double result;
 
     // For final judge
+    private int rank;
     private int count;
 
     public BaseCaseLite(BaseCase baseCase) {
@@ -92,6 +101,11 @@ class BaseCaseLite {
         this.submitTime = baseCase.getSubmitTime();
         this.time = baseCase.getTime();
         this.count = 1;
+    }
+
+    public BaseCaseLite(BaseCase baseCase, int rank) {
+        this(baseCase);
+        this.rank = rank;
     }
 
     // For final judge
@@ -107,6 +121,10 @@ class BaseCaseLite {
         this.time += baseCase.getTime();
         this.result += baseCase.getResult();
         this.count++;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 
     public String getUserName() {
@@ -127,5 +145,9 @@ class BaseCaseLite {
 
     public int getCount() {
         return count;
+    }
+
+    public int getRank() {
+        return rank;
     }
 }

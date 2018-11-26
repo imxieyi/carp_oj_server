@@ -840,22 +840,20 @@
             let ownrank = SelfRankData[datasetid];
             let MyRankHtml = "";
             // MyRankHtml += "<tr class='warning'><td colspan='1'>Your Rank</td><td colspan='4'></td></tr>";
-            if (ownrank.length == 0) {
-                MyRankHtml += "<tr>\n";
-                MyRankHtml += "	<td>\n";
-                MyRankHtml += "# -";
-                MyRankHtml += "	<\/td>\n";
-                MyRankHtml += "	<td>\n";
-                MyRankHtml += "--------- ";
-                MyRankHtml += "	<\/td>\n";
-                MyRankHtml += "	<td>\n";
-                MyRankHtml += "-";
-                MyRankHtml += "	<\/td>\n";
-                MyRankHtml += "	<td>\n";
-                MyRankHtml += "-";
-                MyRankHtml += "	<\/td>\n";
-                MyRankHtml += "<\/tr>\n";
-            }
+            MyRankHtml += "<tr>\n";
+            MyRankHtml += "	<td>\n";
+            MyRankHtml += "# -";
+            MyRankHtml += "	<\/td>\n";
+            MyRankHtml += "	<td>\n";
+            MyRankHtml += "--------- ";
+            MyRankHtml += "	<\/td>\n";
+            MyRankHtml += "	<td>\n";
+            MyRankHtml += "-";
+            MyRankHtml += "	<\/td>\n";
+            MyRankHtml += "	<td>\n";
+            MyRankHtml += "-";
+            MyRankHtml += "	<\/td>\n";
+            MyRankHtml += "<\/tr>\n";
             //只选择最小的前10个
             _.sortBy(ownrank, function(each) {
                 return each["rank"];
