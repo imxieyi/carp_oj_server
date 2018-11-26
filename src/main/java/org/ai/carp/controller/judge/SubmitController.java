@@ -37,10 +37,10 @@ public class SubmitController {
             throw new PermissionDeniedException("Submission is closed");
         }
         BaseDataset dataset = DatasetUtils.apiGetById(postCase.dataset);
-        if (!dataset.isEnabled() || dataset.isFinalJudge()) {
+        if (!dataset.isEnabled()) {
             throw new PermissionDeniedException("Dataset is disabled!");
         }
-        if (!dataset.isSubmittable() && user.getType() > User.ADMIN) {
+        if ((!dataset.isSubmittable() || dataset.isFinalJudge()) && user.getType() > User.ADMIN) {
             throw new PermissionDeniedException("Dataset is not submittable!");
         }
         if (user.getType() == User.USER &&
