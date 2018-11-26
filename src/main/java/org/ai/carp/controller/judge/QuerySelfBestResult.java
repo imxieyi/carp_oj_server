@@ -18,12 +18,12 @@ public class QuerySelfBestResult {
     }
 
     public QuerySelfBestResult(List<BaseCaseLite> baseCases, User user) {
-        baseCases = new ArrayList<>();
+        this.baseCases = new ArrayList<>();
         for (int i=0; i<baseCases.size(); i++) {
             BaseCaseLite caseLite = baseCases.get(i);
             if (caseLite.getUserName().equals(user.getUsername())) {
                 caseLite.setRank(i + 1);
-                baseCases.add(caseLite);
+                this.baseCases.add(caseLite);
                 return;
             }
         }

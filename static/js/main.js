@@ -684,7 +684,6 @@
 	            if (d == 0) {
 	              //默认渲染第一个DataSet的排名
 	              RenderRankList(DataSetList[d]["id"]);
-                    RenderSelfRankList(DataSetList[d]["id"]);
 	            }
 	          }).fail(function(jqXHR) {
 	            if (parseInt(jqXHR["responseJSON"]["status"]) == 401) {
@@ -703,9 +702,12 @@
 	              $("#info_box").modal("hide");
 	            }, 5000);
 	          });
-	        })(d)
+	        })(d);
 			// Self best
             (function(d) {
+            	if (typeof $.cookie('username') === 'undefined') {
+                    return;
+				}
                 $.getJSON(RootUrl + "/api/judge/best?dataset=" + DataSetList[d]["id"]).success(function(data) {
                     if (typeof data == "string") {
                         data = JSON.parse(data);
@@ -726,13 +728,13 @@
                             window.location.href = "index.html";
                         }, 500);
                     }
-                    $("#info_box_msg").html("<p>It occurs a error when get Rank List data, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
+                    $("#info_box_msg").html("<p>It occurs a error when get Self Rank List data, Error:" + jqXHR["responseJSON"]["message"] + "</p>")
                     $("#info_box").modal("show");
                     setTimeout(function() {
                         $("#info_box").modal("hide");
                     }, 5000);
                 });
-            })(d)
+            })(d);
 	      }
 	    }
 	  }
@@ -840,20 +842,22 @@
             let ownrank = SelfRankData[datasetid];
             let MyRankHtml = "";
             // MyRankHtml += "<tr class='warning'><td colspan='1'>Your Rank</td><td colspan='4'></td></tr>";
-            MyRankHtml += "<tr>\n";
-            MyRankHtml += "	<td>\n";
-            MyRankHtml += "# -";
-            MyRankHtml += "	<\/td>\n";
-            MyRankHtml += "	<td>\n";
-            MyRankHtml += "--------- ";
-            MyRankHtml += "	<\/td>\n";
-            MyRankHtml += "	<td>\n";
-            MyRankHtml += "-";
-            MyRankHtml += "	<\/td>\n";
-            MyRankHtml += "	<td>\n";
-            MyRankHtml += "-";
-            MyRankHtml += "	<\/td>\n";
-            MyRankHtml += "<\/tr>\n";
+            if (ownrank.length == 0) {
+                MyRankHtml += "<tr>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "# -";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "--------- ";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "-";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "	<td>\n";
+                MyRankHtml += "-";
+                MyRankHtml += "	<\/td>\n";
+                MyRankHtml += "<\/tr>\n";
+            }
             //只选择最小的前10个
             _.sortBy(ownrank, function(each) {
                 return each["rank"];
@@ -861,7 +865,7 @@
 
             for (var i in ownrank.slice(0, 10)) {
                 let dtime = new Date(ownrank[i]["submitTime"]);
-                let Submtime = (dtime.getMonth() + 1) + '-' + dtime.getDate() + ' ' + dtime.getHours() + ':' + dtime.getMinutes() + ':' + dtime.getSeconds();
+                let Submtime = (addzero(dtime.getMonth() + 1)) + '-' + addzero(dtime.getDate()) + ' ' + addzero(dtime.getHours()) + ':' + addzero(dtime.getMinutes()) + ':' + addzero(dtime.getSeconds());
                 let rank = ownrank[i]["rank"]
                 MyRankHtml += "<tr>\n";
                 MyRankHtml += "	<td>\n";
