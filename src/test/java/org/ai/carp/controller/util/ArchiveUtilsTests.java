@@ -9,7 +9,7 @@ public class ArchiveUtilsTests {
 
     @Test(expected = InvalidRequestException.class)
     public void testInvalidArchiveConvert() {
-        ArchiveUtils.convertSubmission("123");
+        ArchiveUtils.convertSubmission("123", "CARP_solver.py");
     }
 
     @Test
@@ -17,7 +17,7 @@ public class ArchiveUtilsTests {
         Binary binary = ArchiveUtils.convertSubmission(
                 "UEsDBAoAAAAAAKKcXE0AAAAAAAAAAAAAAAAOAAAAQ0FSUF9zb2x2ZXIucHlQSwECPwAKAAAAAACi" +
                         "nFxNAAAAAAAAAAAAAAAADgAkAAAAAAAAACAAAAAAAAAAQ0FSUF9zb2x2ZXIucHkKACAAAAAAAAEA" +
-                        "GAD3IyeMsm7UAfoGneKwbtQB+gad4rBu1AFQSwUGAAAAAAEAAQBgAAAALAAAAAAA");
+                        "GAD3IyeMsm7UAfoGneKwbtQB+gad4rBu1AFQSwUGAAAAAAEAAQBgAAAALAAAAAAA", "CARP_solver.py");
         Assert.assertNotNull(binary);
     }
 
