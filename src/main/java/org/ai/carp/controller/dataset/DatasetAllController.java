@@ -25,6 +25,9 @@ public class DatasetAllController {
         datasets.addAll(Database.getInstance().getIseDatasets().findAll());
         datasets.addAll(Database.getInstance().getImpDatasets().findAll());
         datasets = datasets.stream().filter(BaseDataset::isEnabled).collect(Collectors.toList());
+        if (user.getType() > User.ADMIN) {
+            datasets = datasets.stream().filter(d -> !d.isFinalJudge()).collect(Collectors.toList());
+        }
         return new DatasetAllResponse(datasets);
     }
 
