@@ -52,6 +52,11 @@ task carpFinalFix(type: JavaExec) {
     main = "org.ai.carp.CARPJudgeFinalFix"
 }
 
+task timestampFix(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.TimestampFix"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
