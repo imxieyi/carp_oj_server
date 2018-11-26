@@ -1,6 +1,7 @@
 package org.ai.carp;
 
 import org.ai.carp.model.Database;
+import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.judge.LiteCase;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
@@ -25,6 +26,7 @@ public class CARPJudgeFinalFix {
     private static void addLiteCases() {
         Date startTime = new Date(1542964624000L);
         Database.getInstance().getCarpCases().findCARPCasesBySubmitTimeAfter(startTime)
+                .stream().filter(CARPCase::isTimedout)
                 .forEach(c -> Database.getInstance().getLiteCases().insert(new LiteCase(c)));
     }
 
