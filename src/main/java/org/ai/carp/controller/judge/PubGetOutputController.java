@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
-public class GetOutputController {
+public class PubGetOutputController {
 
     @GetMapping("/judge/details")
     public String get(@RequestParam("cid") String cid, Model model, HttpSession session) {
