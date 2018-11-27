@@ -705,7 +705,7 @@
 	        })(d);
 			// Self best
             (function(d) {
-            	if (typeof $.cookie('username') === 'undefined') {
+            	if (typeof $.cookie('username') === 'undefined' || $.cookie('username') === "null") {
                     return;
 				}
                 $.getJSON(RootUrl + "/api/judge/best?dataset=" + DataSetList[d]["id"]).success(function(data) {
