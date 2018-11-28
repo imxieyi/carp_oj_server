@@ -26,9 +26,9 @@
 <h4>Exit code</h4>
 <p th:text="${exitcode}"></p>
 <h4>Stdout</h4>
-<pre th:utext="${#strings.replace(#strings.escapeXml(stdout),'&#10;','&lt;br /&gt;')}"></pre>
+<pre th:utext="${#strings.escapeXml(stdout)}"></pre>
 <h4>Stderr</h4>
-<pre th:utext="${#strings.replace(#strings.escapeXml(stderr),'&#10;','&lt;br /&gt;')}"></pre>
+<pre th:utext="${#strings.escapeXml(stderr)}"></pre>
 <h3><a th:href="@{'/api/judge/archive?cid=' + ${id}}">Download archive</a></h3>
 </body>
 </html>
