@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/admin/judge/query")
 public class QueryUserCaseController {
 
     @GetMapping
+    @RequestMapping(value = "/api/admin/judge/query", params = {"user", "dataset"})
     public List<BaseCase> get(@RequestParam("user") String username, @RequestParam("dataset") String datasetname, HttpSession session) {
         UserUtils.getUser(session, User.ADMIN);
         User user = Database.getInstance().getUsers().findByUsername(username);
@@ -54,6 +54,22 @@ public class QueryUserCaseController {
                 break;
             default:
         }
+        return baseCases;
+    }
+
+    @GetMapping
+    @RequestMapping(value = "/api/admin/judge/query", params = {"user"})
+    public List<BaseCase> getUserOnly(@RequestParam("user") String username, HttpSession session) {
+        UserUtils.getUser(session, User.ADMIN);
+        User user = Database.getInstance().getUsers().findByUsername(username);
+        if (user == null) {
+            throw new InvalidRequestException("User does not exist!");
+        }
+        List<BaseCase> baseCases = new ArrayList<>();
+        baseCases.addAll(Database.getInstance().getCarpCases().findCARPCasesByUserOrderBySubmitTimeDesc(user));
+        baseCases.addAll(Database.getInstance().getIseCases().findISECasesByUserOrderBySubmitTimeDesc(user));
+        baseCases.addAll(Database.getInstance().getImpCases().findIMPCasesByUserOrderBySubmitTimeDesc(user));
+        baseCases.sort((a, b) -> b.getSubmitTime().compareTo(a.getSubmitTime()));
         return baseCases;
     }
 

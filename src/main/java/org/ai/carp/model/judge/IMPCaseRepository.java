@@ -13,6 +13,7 @@ public interface IMPCaseRepository extends MongoRepository<IMPCase, String> {
     List<IMPCase> findIMPCasesByUserOrderBySubmitTimeDesc(User user, Pageable pageable);
     int countIMPCasesByUser(User user);
     List<IMPCase> findIMPCasesByDatasetOrderBySubmitTimeDesc(IMPDataset dataset);
+    List<IMPCase> findIMPCasesByUserOrderBySubmitTimeDesc(User user);
     List<IMPCase> findIMPCasesByUserAndDatasetOrderBySubmitTimeDesc(User user, IMPDataset dataset);
     List<IMPCase> findIMPCasesByStatusNotIn(List<Integer> status);
     List<IMPCase> findIMPCasesByDatasetAndStatusAndValidAndTimedout(IMPDataset dataset, int status, boolean valid, boolean timedout);
