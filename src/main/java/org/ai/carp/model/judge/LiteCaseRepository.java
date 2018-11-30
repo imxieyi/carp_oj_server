@@ -10,6 +10,7 @@ import java.util.List;
 public interface LiteCaseRepository extends MongoRepository<LiteCase, String> {
 
     List<LiteCase> findLiteCasesByUserOrderBySubmitTimeDesc(User user, Pageable pageable);
+    LiteCase findLiteCaseByFullId(String fullId);
     int countLiteCasesByUser(User user);
     int countLiteCasesByUserAndSubmitTimeAfter(User user, Date startTime);
 

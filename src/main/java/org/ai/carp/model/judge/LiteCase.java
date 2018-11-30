@@ -24,6 +24,7 @@ public class LiteCase {
 
     protected Date submitTime;
 
+    @Indexed
     protected String fullId;
 
     private LiteCase() {
