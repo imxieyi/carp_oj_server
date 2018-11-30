@@ -8,18 +8,22 @@ public class ISEUtils {
         if (!CaseUtils.checkResult(iseCase)) {
             return;
         }
-        // TODO: check result
         double stdInfluence = iseCase.getDataset().getInfluence();
         String stdout = iseCase.getStdout();
-        iseCase.setInfluence(Double.valueOf(stdout));
-        boolean result = checkIsLargeBias(stdInfluence, iseCase.getInfluence(), 0.001);
-        iseCase.setValid(!result);
-        if (result) {
-            iseCase.setReason("Bias Too Large");
-        } else {
-            iseCase.setReason("Solution accepted");
+        String firstLine = stdout.replaceAll("\r", "").split("\n")[0];
+        try {
+            iseCase.setInfluence(Double.valueOf(firstLine));
+            boolean result = checkIsLargeBias(stdInfluence, iseCase.getInfluence(), 0.001);
+            iseCase.setValid(!result);
+            if (result) {
+                iseCase.setReason("Bias Too Large");
+            } else {
+                iseCase.setReason("Solution accepted");
+            }
+        } catch (NumberFormatException ignored) {
+            iseCase.setValid(false);
+            iseCase.setReason("Invalid number format");
         }
-
     }
 
     private static boolean checkIsLargeBias(double standard, double student, double toleranceRatio) {
