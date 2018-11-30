@@ -81,6 +81,7 @@ public class IMPCase extends BaseCase {
     @Override
     protected void buildDataset(ObjectNode node) {
         node.put("network", dataset.getNetwork());
+        node.put("seedCount", dataset.getSeedCount());
     }
 
     @Override

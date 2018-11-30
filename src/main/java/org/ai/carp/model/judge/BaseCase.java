@@ -261,10 +261,10 @@ public abstract class BaseCase {
         dataNode.put("data", encodedArchive);
         ObjectNode datasetNode = mapper.createObjectNode();
         buildDataset(datasetNode);
-        dataNode.put("dataset", datasetNode);
+        dataNode.set("dataset", datasetNode);
         ObjectNode rootNode = mapper.createObjectNode();
         rootNode.put("type", WebsocketHandler.CASE_DATA);
-        rootNode.put("payload", dataNode);
+        rootNode.set("payload", dataNode);
         return mapper.writeValueAsString(rootNode);
     }
 
