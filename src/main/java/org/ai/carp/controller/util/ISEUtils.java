@@ -13,7 +13,7 @@ public class ISEUtils {
         String firstLine = stdout.replaceAll("\r", "").split("\n")[0];
         try {
             iseCase.setInfluence(Double.valueOf(firstLine));
-            boolean result = checkIsLargeBias(stdInfluence, iseCase.getInfluence(), 0.001);
+            boolean result = checkIsLargeBias(stdInfluence, iseCase.getInfluence(), 0.05);
             iseCase.setValid(!result);
             if (result) {
                 iseCase.setReason("Bias Too Large");
