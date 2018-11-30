@@ -76,28 +76,28 @@
 								<h3>NOTICE</h3>
 								<p>
 									<ol style="text-align: left;">
-										<li>Login using your student ID. Default password is 123456. <b>Change password immediately after you login.</b></li>
-										<li>Be sure to submit final solution before <b>23:55 pm, Nov. 18</b>. The code in your last submission (of any dataset) will be considered final solution.</li>
+										<li>You can now see program output and download archive by clicking <b>Info</b> column. So if you haven't changed your password, <b>change it now.</b> We are not responsible for any leak of your source code.</li>
+										<li><b>Exiting program using exit(0) is unnecessary. If your program exit normally (no uncaught error), exit code is 0.</b></li>
+										<li><b>DO NOT</b> output extra logs in ISE and IMP cases.</li>
+								<li>Maximum allowed process count in container is <b>64</b>. <b>DO NOT</b> create subprocesses based on CPU core count. Also, <b>DO NOT</b> use more than 8 cores. Otherwise <a href="https://en.wikipedia.org/wiki/Context_switch">context switch</a> overhead will make your program run even slower.</li>
+										<li>Be sure to submit final solution before <b>23:55 pm, Dec. 9</b>. The code in your last submission (of any dataset) will be considered final solution.</li>
 										<li>Your code will be run on a different set of datasets after deadline. Passing existing datasets <b>DOES NOT guarantee</b> that you can pass final test.</li>
 										<li>You are only allowed to submit <b>30 times every 24 hours</b> (on a rolling basis). Only successful uploads will count.</li>
-										<li>You should submit archived program in <b>zip</b> format. Max allowed size is <b>64KB</b>. The main executable should be named <b>CARP_solver.py</b> (case sensitive) and put in <b>root directory</b>. Multiple files and subdirectories are allowed.
-											Your directory structure may look like the following:<br/>
+										<li>You should submit archived program in <b>zip</b> format. Max allowed size is <b>64KB</b>. The main executable should be named <b>ISE.py</b> (for ISE) or <b>IMP.py</b> (for IMP) and put in <b>root directory</b>. Multiple files and subdirectories are allowed.
+											Your directory structure for ISE may look like the following:<br/>
 											<pre style="text-align:left;">
-|-- CARP_solver.py
+|-- ISE.py
 |-- config.py
 `-- submodule
 		|-- submoduleA.py
 		|-- submoduleB.py
 											</pre></li>
-										<li>Your program will be executed with command: <pre>python3 CARP_solver.py $data -t $time -s $seed</pre></li>
+										<li>Your program will be executed with command: <pre>python3 ISE.py –i $network -s $seeds -m $model -t $time</pre> or <pre>python3 IMP.py –i $network -k $seedCount -m $model -t $time</pre></li>
 										<li>Do not use non-standard library except for <b>numpy</b>.</li>
 										<li>Your program is run in Docker container with no network interface.</li>
 										<li>You are allowed to use up to <b>800% CPU</b> (8 cores) and <b>2GB RAM</b>. Pay attention that <b>threading</b> in Python does not give you real parallelism.</li>
 										<li>Be sure to exit before time running out. You should leave about <b>1 second</b> for starting container and other overhead.</li>
-										<li>Exit code must be 0, otherwise it will be considered invalid.</li>
-										<li>Maximum allowed processes in container is <b>64</b>.</li>
 										<li>If you need to write temp file, write to <b>/tmp</b>. The whole RootFS is <b>read-only</b>.</li>
-										<li>Stdout except for the <b>last 256KB</b> will be discarded. Be sure not to print too many logs after printing result.</li>
 									</ol>
 								</p>
 							</div>
