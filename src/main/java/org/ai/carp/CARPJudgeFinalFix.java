@@ -92,7 +92,7 @@ public class CARPJudgeFinalFix {
     }
 
     private static void restartAllCases() {
-        String[] userNames = { "11610615", "11610205" };
+        String[] userNames = { "11610214", "11610205" };
         Date endTime = new Date(1542964624000L);
         // Query datasets
         List<CARPDataset> datasets = Database.getInstance().getCarpDatasets().findAll()
