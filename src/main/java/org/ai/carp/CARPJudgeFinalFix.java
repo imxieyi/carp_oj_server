@@ -2,6 +2,7 @@ package org.ai.carp;
 
 import org.ai.carp.model.Database;
 import org.ai.carp.model.dataset.CARPDataset;
+import org.ai.carp.model.judge.BaseCase;
 import org.ai.carp.model.judge.CARPCase;
 import org.ai.carp.model.judge.LiteCase;
 import org.ai.carp.model.user.User;
@@ -29,7 +30,8 @@ public class CARPJudgeFinalFix {
         app.run(args);
 //        fixForceQuit();
 //        restartTimedout();
-        selectLastValid();
+//        selectLastValid();
+        restartAllCases();
     }
 
     private static void fixForceQuit() {
@@ -86,6 +88,29 @@ public class CARPJudgeFinalFix {
             CARPCase newC = Database.getInstance().getCarpCases().insert(c);
             Database.getInstance().getLiteCases().insert(new LiteCase(c));
             logger.info(newC.toString());
+        }
+    }
+
+    private static void restartAllCases() {
+        String[] userNames = { "11610615", "11610205" };
+        Date endTime = new Date(1542964624000L);
+        // Query datasets
+        List<CARPDataset> datasets = Database.getInstance().getCarpDatasets().findAll()
+                .stream().filter(CARPDataset::isFinalJudge).collect(Collectors.toList());
+        // Query users
+        List<User> users = Arrays.stream(userNames).map(u ->
+                Database.getInstance().getUsers().findByUsername(u)).collect(Collectors.toList());
+        for (User u : users) {
+            for (CARPDataset dataset : datasets) {
+                // Remove old cases
+                List<CARPCase> oldCases = Database.getInstance().getCarpCases()
+                        .findCARPCasesByUserAndDatasetOrderBySubmitTimeDesc(u, dataset);
+                for (CARPCase c : oldCases) {
+                    logger.info("Restarted: {}", c.toString());
+                    c.setStatus(BaseCase.WAITING);
+                    Database.getInstance().getCarpCases().save(c);
+                }
+            }
         }
     }
 
