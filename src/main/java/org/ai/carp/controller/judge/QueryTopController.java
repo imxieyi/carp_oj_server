@@ -51,10 +51,12 @@ public class QueryTopController {
             allBaseCases = Database.getInstance().getIseCases()
                     .findISECasesByDatasetAndStatusAndValidOrderByTimeAscSubmitTimeAsc(
                             (ISEDataset)dataset, BaseCase.FINISHED, true)
-                    .stream().map(c -> (BaseCase)c).collect(Collectors.toList());
+                    .stream().filter(c -> c.getUser().getType() > User.ADMIN)
+                    .map(c -> (BaseCase)c).collect(Collectors.toList());
             invalidUids = Database.getInstance().getIseCases()
                     .findISECasesByDatasetAndStatusAndValidAndTimedout((ISEDataset)dataset, BaseCase.FINISHED, false, false)
-                    .stream().map(BaseCase::getUserId).collect(Collectors.toSet());
+                    .stream().filter(c -> c.getUser().getType() > User.ADMIN)
+                    .map(BaseCase::getUserId).collect(Collectors.toSet());
         } else if (dataset.getType() == BaseDataset.IMP) {
             allBaseCases = Database.getInstance().getImpCases()
                     .findIMPCasesByDatasetAndStatusAndValidOrderByInfluenceDescTimeAscSubmitTimeAsc(
@@ -63,7 +65,8 @@ public class QueryTopController {
                     .map(c -> (BaseCase)c).collect(Collectors.toList());
             invalidUids = Database.getInstance().getImpCases()
                     .findIMPCasesByDatasetAndStatusAndValidAndTimedout((IMPDataset)dataset, BaseCase.FINISHED, false, false)
-                    .stream().map(BaseCase::getUserId).collect(Collectors.toSet());
+                    .stream().filter(c -> c.getUser().getType() > User.ADMIN)
+                    .map(BaseCase::getUserId).collect(Collectors.toSet());
         }
         return new QueryTopResult(dataset, allBaseCases, invalidUids, user.getType() <= User.ADMIN);
     }
