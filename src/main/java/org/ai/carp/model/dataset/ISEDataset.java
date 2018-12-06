@@ -2,7 +2,6 @@ package org.ai.carp.model.dataset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.StringUtils;
 
 @Document(collection = "datasets_ise")
 public class ISEDataset extends BaseDataset {
@@ -34,15 +33,11 @@ public class ISEDataset extends BaseDataset {
     }
 
     public void setNetwork(String network) {
-        if (StringUtils.isEmpty(id)) {
-            this.network = network;
-        }
+        this.network = network;
     }
 
     public void setSeeds(String seeds) {
-        if (StringUtils.isEmpty(id)) {
-            this.seeds = seeds;
-        }
+        this.seeds = seeds;
     }
 
     private ISEDataset() {

@@ -49,4 +49,9 @@ public class LiteCase {
                 return null;
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format("LiteCase[id=%s, user=%s, type=%s]", fullId, user.getUsername(), type);
+    }
 }

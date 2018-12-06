@@ -57,6 +57,16 @@ task timestampFix(type: JavaExec) {
     main = "org.ai.carp.TimestampFix"
 }
 
+task impDatasetFix(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.IMPDatasetFix"
+}
+
+task liteCaseFix(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.LiteCaseFix"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
