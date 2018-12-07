@@ -2,7 +2,6 @@ package org.ai.carp.model.dataset;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.StringUtils;
 
 @Document(collection = "datasets_imp")
 public class IMPDataset extends BaseDataset {
@@ -27,9 +26,7 @@ public class IMPDataset extends BaseDataset {
     }
 
     public void setNetwork(String network) {
-        if (StringUtils.isEmpty(id)) {
-            this.network = network;
-        }
+        this.network = network;
     }
 
     private IMPDataset() {

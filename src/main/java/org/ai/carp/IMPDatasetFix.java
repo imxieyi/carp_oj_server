@@ -23,7 +23,7 @@ public class IMPDatasetFix {
         SpringApplication app = new SpringApplication(IMPDatasetFix.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
-        fixISE();
+//        fixISE();
         fixIMP();
     }
 
