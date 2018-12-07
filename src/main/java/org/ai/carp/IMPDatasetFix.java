@@ -23,7 +23,7 @@ public class IMPDatasetFix {
         SpringApplication app = new SpringApplication(IMPDatasetFix.class);
         app.setWebApplicationType(WebApplicationType.NONE);
         app.run(args);
-//        fixISE();
+        fixISE();
         fixIMP();
     }
 
@@ -40,8 +40,8 @@ public class IMPDatasetFix {
                         if (splitted.length < 3) {
                             break;
                         }
-                        sb.append(Integer.valueOf(splitted[0]) + 1).append(" ");
-                        sb.append(Integer.valueOf(splitted[1]) + 1).append(" ");
+                        sb.append(Integer.valueOf(splitted[0]) - 1).append(" ");
+                        sb.append(Integer.valueOf(splitted[1]) - 1).append(" ");
                         sb.append(splitted[2]).append("\n");
                     }
                     d.setNetwork(sb.toString());
@@ -49,7 +49,7 @@ public class IMPDatasetFix {
                     scanner = new Scanner(d.getSeeds());
                     while (scanner.hasNextLine()) {
                         try {
-                            sb.append(Integer.valueOf(scanner.nextLine()) + 1).append("\n");
+                            sb.append(Integer.valueOf(scanner.nextLine()) - 1).append("\n");
                         } catch (NumberFormatException e) {
                             break;
                         }
