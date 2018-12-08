@@ -35,11 +35,7 @@ public class RejudgeController {
         if (baseCase.getStatus() != CARPCase.FINISHED && baseCase.getStatus() != CARPCase.ERROR) {
             throw new InvalidRequestException("Case has not finished!");
         }
-        baseCase.setStatus(CARPCase.WAITING);
-        baseCase.setStdout("");
-        baseCase.setStderr("");
-        baseCase.setReason("");
-        baseCase.setValid(false);
+        baseCase.reset();
         baseCase = CaseUtils.saveCase(baseCase);
         JudgeRunner.queue.add(baseCase);
         return "ok";

@@ -74,6 +74,11 @@ public class CARPCase extends BaseCase {
     }
 
     @Override
+    public void setResult(double result) {
+        cost = (int) Math.round(result);
+    }
+
+    @Override
     protected String buildConfig() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();

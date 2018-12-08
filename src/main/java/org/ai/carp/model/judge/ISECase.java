@@ -64,6 +64,11 @@ public class ISECase extends BaseCase {
     }
 
     @Override
+    public void setResult(double result) {
+        influence = result;
+    }
+
+    @Override
     protected String buildConfig() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode node = mapper.createObjectNode();

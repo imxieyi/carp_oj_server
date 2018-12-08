@@ -215,6 +215,8 @@ public abstract class BaseCase {
 
     public abstract double getResult();
 
+    public abstract void setResult(double result);
+
     public String getReason() {
         return reason;
     }
@@ -224,6 +226,22 @@ public abstract class BaseCase {
     protected abstract void buildDataset(ObjectNode node);
 
     protected abstract void writeData(ZipOutputStream zos) throws IOException;
+
+    public void reset() {
+        status = BaseCase.WAITING;
+        judgeTime = null;
+        judgeWorker = null;
+        timedout = false;
+        stdout = null;
+        outOverflow = false;
+        stderr = null;
+        errOverflow = false;
+        time = 0;
+        exitcode = 0;
+        valid = false;
+        reason = null;
+        setResult(0);
+    }
 
     @JsonIgnore
     public String getWorkerJson() throws IOException {
