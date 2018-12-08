@@ -46,6 +46,14 @@ public class ISEDataset extends BaseDataset {
         this.seeds = seeds;
     }
 
+    public void setInfluence(double influence) {
+        this.influence = influence;
+    }
+
+    public void setBias(double bias) {
+        this.bias = bias;
+    }
+
     private ISEDataset() {
         super();
     }
