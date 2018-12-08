@@ -77,6 +77,9 @@
 								<p>
 									<ol style="text-align: left;">
 										<li>You can now see program output and download archive by clicking <b>Info</b> column. So if you haven't changed your password, <b>change it now.</b> We are not responsible for any leak of your source code.</li>
+										<li><b>If your program times out, it may because of exceeding memory limit.</b></li>
+										<li><b>If your program uses too much memory, it will take a long and unpredictable time for Python to clean up after finishing program.</b> A hack is to skip cleanup by calling os._exit manually at the end of your program. Be sure to flush stdout before it.</li>
+										<li>Based on the above two problems, <b>if your program times out on OJ but not on your own computer, consider monitoring memory usage.</b></li>
 										<li><b>Exiting program using exit(0) is unnecessary. If your program exit normally (no uncaught error), exit code is 0.</b></li>
 										<li><b>DO NOT</b> output extra logs in ISE and IMP cases.</li>
 								<li>Maximum allowed process count in container is <b>64</b>. <b>DO NOT</b> create subprocesses based on CPU core count. Also, <b>DO NOT</b> use more than 8 cores. Otherwise <a href="https://en.wikipedia.org/wiki/Context_switch">context switch</a> overhead will make your program run even slower.</li>
