@@ -72,6 +72,11 @@ task impResetAll(type: JavaExec) {
     main = "org.ai.carp.IMPResestAll"
 }
 
+task iseFixBias(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.ISEFixBias"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')

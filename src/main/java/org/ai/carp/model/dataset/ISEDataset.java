@@ -11,6 +11,7 @@ public class ISEDataset extends BaseDataset {
     private String seeds;
 
     private double influence;
+    private double bias;
 
     @JsonIgnore
     public String getModel() {
@@ -32,6 +33,11 @@ public class ISEDataset extends BaseDataset {
         return influence;
     }
 
+    @JsonIgnore
+    public double getBias() {
+        return bias;
+    }
+
     public void setNetwork(String network) {
         this.network = network;
     }
@@ -44,12 +50,13 @@ public class ISEDataset extends BaseDataset {
         super();
     }
 
-    public ISEDataset(String name, int time, int memory, int cpu, String model, String network, String seeds, double influence) {
+    public ISEDataset(String name, int time, int memory, int cpu, String model, String network, String seeds, double influence, double bias) {
         super(name, time, memory, cpu);
         this.model = model;
         this.network = network;
         this.seeds = seeds;
         this.influence = influence;
+        this.bias = bias;
     }
 
     @Override

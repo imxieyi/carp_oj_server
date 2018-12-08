@@ -66,7 +66,8 @@ public class IMPSetup {
                 String seeds = new Scanner(seedsFile).useDelimiter("\\Z").next().replace("\r", "");
                 ISEDataset dataset = new ISEDataset(name, Integer.valueOf(splitted[3])
                         , Integer.valueOf(splitted[4]), Integer.valueOf(splitted[5])
-                        , splitted[2], network, seeds, Double.valueOf(splitted[6]));
+                        , splitted[2], network, seeds, Double.valueOf(splitted[6])
+                        , Double.valueOf(splitted[7]));
                 dataset.setEnabled(true);
                 dataset.setSubmittable(false);
                 dataset = Database.getInstance().getIseDatasets().insert(dataset);

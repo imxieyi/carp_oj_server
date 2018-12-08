@@ -9,11 +9,12 @@ public class ISEUtils {
             return;
         }
         double stdInfluence = iseCase.getDataset().getInfluence();
+        double bias = iseCase.getDataset().getBias();
         String stdout = iseCase.getStdout();
         String firstLine = stdout.replaceAll("\r", "").split("\n")[0];
         try {
             iseCase.setInfluence(Double.valueOf(firstLine));
-            boolean result = checkIsLargeBias(stdInfluence, iseCase.getInfluence(), 0.05);
+            boolean result = checkIsLargeBias(stdInfluence, iseCase.getInfluence(), bias);
             iseCase.setValid(!result);
             if (result) {
                 iseCase.setReason("Bias Too Large");

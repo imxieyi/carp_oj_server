@@ -12,7 +12,7 @@ public class ISEUtilsTests {
     public void testCheckResult() throws IOException {
         ISEDataset dataset = new ISEDataset("test", 10, 256, 1, "IC",
                 ResourceUtils.readResource("network.txt"),
-                ResourceUtils.readResource("seeds.txt"), 5);
+                ResourceUtils.readResource("seeds.txt"), 5, 0.01);
         ISECase iseCase = new ISECase(null, dataset, null);
         iseCase.setStatus(ISECase.FINISHED);
         iseCase.setExitcode(0);
