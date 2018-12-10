@@ -28,6 +28,10 @@ public class CaseUtils {
             baseCase.setReason("Timed out");
             return false;
         }
+        if (baseCase.getExitcode() == 137) {
+            baseCase.setReason("Killed (Out of memory)");
+            return false;
+        }
         if (baseCase.getExitcode() != 0) {
             baseCase.setReason("Exit code is not zero");
             return false;
