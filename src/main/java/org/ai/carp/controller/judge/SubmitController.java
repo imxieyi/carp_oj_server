@@ -31,7 +31,7 @@ public class SubmitController {
     @PostMapping
     public SubmitResponse post(@RequestBody PostCase postCase, HttpSession session) {
         User user = UserUtils.getUser(session, User.USER);
-        if (new Date().getTime() >= 1544544000000L) {
+        if (new Date().getTime() >= 1544803200000L) {
             throw new InvalidRequestException("Deadline has passed!");
         }
         if (StringUtils.isEmpty(postCase.data)) {
