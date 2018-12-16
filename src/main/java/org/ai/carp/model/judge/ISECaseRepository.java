@@ -12,6 +12,7 @@ public interface ISECaseRepository extends MongoRepository<ISECase, String> {
 
     List<ISECase> findISECasesByUserOrderBySubmitTimeDesc(User user, Pageable pageable);
     int countCARPCasesByUser(User user);
+    ISECase findFirstByUserAndSubmitTimeBeforeOrderBySubmitTimeDesc(User user, Date endTime);
     List<ISECase> findISECasesByDatasetOrderBySubmitTimeDesc(ISEDataset dataset);
     List<ISECase> findISECasesByUserOrderBySubmitTimeDesc(User user);
     List<ISECase> findISECasesByUserAndDatasetOrderBySubmitTimeDesc(User user, ISEDataset dataset);
