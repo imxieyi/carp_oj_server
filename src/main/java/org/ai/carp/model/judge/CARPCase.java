@@ -36,6 +36,11 @@ public class CARPCase extends BaseCase {
         this.dataset = dataset;
     }
 
+    @Override
+    public void setDataset(BaseDataset dataset) {
+        this.dataset = (CARPDataset) dataset;
+    }
+
     public void setPath(String path) {
         this.path = path;
     }

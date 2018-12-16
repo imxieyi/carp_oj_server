@@ -2,20 +2,16 @@ package org.ai.carp.runner;
 
 import org.ai.carp.controller.util.CaseUtils;
 import org.ai.carp.model.Database;
-import org.ai.carp.model.judge.BaseCase;
-import org.ai.carp.model.judge.CARPCaseRepository;
-import org.ai.carp.model.judge.IMPCaseRepository;
-import org.ai.carp.model.judge.ISECaseRepository;
+import org.ai.carp.model.dataset.BaseDataset;
+import org.ai.carp.model.judge.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -28,6 +24,8 @@ public class JudgeRunner {
     private static final Logger logger = LoggerFactory.getLogger(JudgeRunner.class);
 
     public static BlockingQueue<BaseCase> queue = new LinkedBlockingQueue<>();
+
+    private static WeakHashMap<String, BaseDataset> datasetCache = new WeakHashMap<>();
 
     @Async
     public Future start() throws InterruptedException {
@@ -61,9 +59,49 @@ public class JudgeRunner {
                     finishedStatus.add(BaseCase.FINISHED);
                     finishedStatus.add(BaseCase.ERROR);
                     List<BaseCase> deadCases = new ArrayList<>();
-                    deadCases.addAll(Database.getInstance().getCarpCases().findCARPCasesByStatusNotIn(finishedStatus));
-                    deadCases.addAll(Database.getInstance().getIseCases().findISECasesByStatusNotIn(finishedStatus));
-                    deadCases.addAll(Database.getInstance().getImpCases().findIMPCasesByStatusNotIn(finishedStatus));
+                    int page = 0;
+                    int count;
+                    do {
+                        List<CARPCase> tmpCases = Database.getInstance().getCarpCases()
+                                .findCARPCasesByStatusNotIn(finishedStatus, PageRequest.of(page++, 100));
+                        count = tmpCases.size();
+                        tmpCases.forEach(cc -> {
+                            if (datasetCache.containsKey(cc.getDatasetName())) {
+                                cc.setDataset(datasetCache.get(cc.getDatasetName()));
+                            } else {
+                                datasetCache.put(cc.getDatasetName(), cc.getDataset());
+                            }
+                        });
+                        deadCases.addAll(tmpCases);
+                    } while (count == 100);
+                    page = 0;
+                    do {
+                        List<ISECase> tmpCases = Database.getInstance().getIseCases()
+                                .findISECasesByStatusNotIn(finishedStatus, PageRequest.of(page++, 100));
+                        count = tmpCases.size();
+                        tmpCases.forEach(cc -> {
+                            if (datasetCache.containsKey(cc.getDatasetName())) {
+                                cc.setDataset(datasetCache.get(cc.getDatasetName()));
+                            } else {
+                                datasetCache.put(cc.getDatasetName(), cc.getDataset());
+                            }
+                        });
+                        deadCases.addAll(tmpCases);
+                    } while (count == 100);
+                    page = 0;
+                    do {
+                        List<IMPCase> tmpCases = Database.getInstance().getImpCases()
+                                .findIMPCasesByStatusNotIn(finishedStatus, PageRequest.of(page++, 100));
+                        count = tmpCases.size();
+                        tmpCases.forEach(cc -> {
+                            if (datasetCache.containsKey(cc.getDatasetName())) {
+                                cc.setDataset(datasetCache.get(cc.getDatasetName()));
+                            } else {
+                                datasetCache.put(cc.getDatasetName(), cc.getDataset());
+                            }
+                        });
+                        deadCases.addAll(tmpCases);
+                    } while (count == 100);
                     if (deadCases.isEmpty()) {
                         continue;
                     }

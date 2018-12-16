@@ -35,6 +35,11 @@ public class ISECase extends BaseCase {
         this.dataset = dataset;
     }
 
+    @Override
+    public void setDataset(BaseDataset dataset) {
+        this.dataset = (ISEDataset) dataset;
+    }
+
     public void setInfluence(double influence) {
         this.influence = influence;
     }

@@ -69,6 +69,8 @@ public abstract class BaseCase {
 
     public abstract int getType();
 
+    public abstract void setDataset(BaseDataset dataset);
+
     public void setStatus(int status) {
         this.status = status;
     }

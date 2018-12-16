@@ -35,6 +35,11 @@ public class IMPCase extends BaseCase {
         this.dataset = dataset;
     }
 
+    @Override
+    public void setDataset(BaseDataset dataset) {
+        this.dataset = (IMPDataset) dataset;
+    }
+
     public void setInfluence(double influence) {
         this.influence = influence;
     }
