@@ -104,7 +104,7 @@ public class IMPCase extends BaseCase {
 
     @Override
     public String toString() {
-        return String.format("ISECase[id=%s, user=%s, dataset=%s, status=%d, influence=%d]",
+        return String.format("ISECase[id=%s, user=%s, dataset=%s, status=%d, influence=%f]",
                 id, user.getUsername(), dataset.getName(), status, influence);
     }
 }

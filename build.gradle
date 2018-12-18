@@ -82,6 +82,11 @@ task iseFinal(type: JavaExec) {
     main = "org.ai.carp.ISEJudgeFinal"
 }
 
+task impFinal(type: JavaExec) {
+    classpath sourceSets.main.runtimeClasspath
+    main = "org.ai.carp.IMPJudgeFinal"
+}
+
 dependencies {
     implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
