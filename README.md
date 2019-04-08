@@ -1,4 +1,7 @@
 # Server for CARP-OJ
+
+This is the repository for CRAP-OJ. It served for internal use for Artificial Intelligence (CS303) class in SUSTech during Fall 2018.
+
 - Judge worker: [carp_judge_worker](https://github.com/imxieyi/carp_judge_worker)
 
 ## Requirements
@@ -20,5 +23,9 @@ gradle addData
 gradle bootRun
 ```
 
+## Server Design Flaws
+- Mongo document references should be avoided.
+- Uploads should be stored separately.
+
 ## API Reference
-Refer to [API.md](API.md).
+Refer to [API.md](API.md). (Not updated)
